@@ -10,7 +10,7 @@
 import UIKit
 import SDWebImage
 
-enum BackgroundImageError: LocalizedError {
+nonisolated enum BackgroundImageError: LocalizedError {
     case catalogMissing
     case catalogInvalid(String)
     case downloadFailed(String)

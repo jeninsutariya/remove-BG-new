@@ -17,6 +17,8 @@ class BackgroundImageCell: UICollectionViewCell {
     /// True when the last remote load failed (tapping the cell retries).
     private(set) var loadFailed = false
     private var remoteID: Int?
+    /// Custom background file shown by this cell (async thumbnail loads check it).
+    var customFileName: String?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,6 +34,7 @@ class BackgroundImageCell: UICollectionViewCell {
         BackgroundImageService.shared.cancelThumbnail(on: imgThumb)
         imgThumb.image = nil
         remoteID = nil
+        customFileName = nil
         loadFailed = false
     }
 

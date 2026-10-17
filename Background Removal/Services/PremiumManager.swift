@@ -24,7 +24,7 @@ final class PremiumManager {
         "com.demo.test.tech.pro.monthly"
     ]
 
-    enum PurchaseError: LocalizedError {
+    nonisolated enum PurchaseError: LocalizedError {
         case productUnavailable
         case pending
         case unverified

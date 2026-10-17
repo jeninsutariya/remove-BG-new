@@ -110,7 +110,7 @@ nonisolated enum ImageUtilities {
 
     private static func encode(_ image: CGImage, type: UTType, properties: [CFString: Any]) -> Data? {
         let data = NSMutableData()
-        guard let destination = CGImageDestinationCreateWithData(data, type.identifier as CFString, 1, nil) else { return nil }
+        guard let destination = CGImageDestinationCreateWithData(data as CFMutableData, type.identifier as CFString, 1, nil) else { return nil }
         CGImageDestinationAddImage(destination, image, properties as CFDictionary)
         guard CGImageDestinationFinalize(destination) else { return nil }
         return data as Data

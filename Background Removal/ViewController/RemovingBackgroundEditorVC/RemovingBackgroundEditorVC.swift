@@ -172,7 +172,7 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     private func refreshQuality() {
         let premium = PremiumManager.shared.isPremium
-        let title = premium ? "Full quality" : "Standard quality · up to \(ExportQuality.standardMaxPixelDimension) px"
+        let title = premium ? "Full quality" : "Standard quality · up to \(Int(ExportQuality.standardMaxPixelDimension)) px"
         let symbol = premium ? "checkmark.seal.fill" : "crown.fill"
         btnQuality.setTitle("  " + title, for: .normal)
         btnQuality.setImage(UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)), for: .normal)

@@ -123,6 +123,11 @@ final class BackgroundRemovalViewModel {
         }
         runner = nil
         currentItemID = nil
+        if !queue.isEmpty {
+            // Items were queued while a cancelled run was finishing.
+            runQueueIfNeeded()
+            return
+        }
         NotificationCenter.default.post(name: Self.queueDidFinishNotification, object: self)
     }
 

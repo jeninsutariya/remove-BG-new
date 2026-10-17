@@ -51,7 +51,10 @@ class ChangeBackgroundVC: UIViewController {
     private var didApply = false
 
     private var imageEntries: [ImageEntry] {
-        [.add] + customFiles.map { .custom(fileName: $0) } + catalog.map { .remote($0) }
+        var entries: [ImageEntry] = [.add]
+        entries += customFiles.map { ImageEntry.custom(fileName: $0) }
+        entries += catalog.map { ImageEntry.remote($0) }
+        return entries
     }
 
     // MARK: - Lifecycle
@@ -323,10 +326,12 @@ extension ChangeBackgroundVC: UICollectionViewDataSource, UICollectionViewDelega
                 cell.configureAddButton()
             case .custom(let fileName):
                 cell.configure(custom: nil, selected: draft == .customImage(fileName: fileName))
+                cell.customFileName = fileName
                 let viewModel: BackgroundRemovalViewModel = self.viewModel
                 Task { [weak cell] in
                     if case .image(let image)? = try? await viewModel.resolveBackground(.customImage(fileName: fileName), maxPixel: 320) {
-                        cell?.imgThumb.image = image
+                        guard let cell, cell.customFileName == fileName else { return }
+                        cell.imgThumb.image = image
                     }
                 }
             case .remote(let background):

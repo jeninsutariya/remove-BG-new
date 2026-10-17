@@ -18,7 +18,7 @@ struct ExportedImage {
     let isPNG: Bool
 }
 
-enum ImageExportError: LocalizedError {
+nonisolated enum ImageExportError: LocalizedError {
     case nothingToExport
     case photosAccessDenied
     case renderFailed(String)
