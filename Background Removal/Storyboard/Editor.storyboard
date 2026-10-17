@@ -12,25 +12,22 @@
         <array key="Figtree-Bold.ttf">
             <string>Figtree-Bold</string>
         </array>
-        <array key="Figtree-ExtraBold.ttf">
-            <string>Figtree-ExtraBold</string>
-        </array>
-        <array key="Figtree-Regular.ttf">
-            <string>Figtree-Regular</string>
+        <array key="Figtree-Medium.ttf">
+            <string>Figtree-Medium</string>
         </array>
         <array key="Figtree-SemiBold.ttf">
             <string>Figtree-SemiBold</string>
         </array>
     </customFonts>
     <scenes>
-        <scene sceneID="edt-Jb-090">
+        <scene sceneID="rbe-Tb-099">
             <objects>
-                <viewController storyboardIdentifier="EditorVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="edt-ba-001" customClass="EditorVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="edt-ca-002">
+                <viewController storyboardIdentifier="RemovingBackgroundEditorVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-ba-001" customClass="RemovingBackgroundEditorVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rbe-ca-002">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ea-004">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ha-007">
                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
@@ -39,767 +36,409 @@
                                     <color key="titleColor" name="PrimaryText"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-fa-005"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-ga-006"/>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-ia-008"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-ja-009"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnBack:" destination="edt-ba-001" eventType="touchUpInside" id="edt-ha-007"/>
+                                    <action selector="btnBack:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-ka-010"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ka-010">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cutout" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ma-011">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="24"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ea-004">
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="44"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <state key="normal" title="Select">
+                                    <color key="titleColor" name="AccentColor"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-fa-005"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnSelect:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-ga-006"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-va-020">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-wa-021">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-za-024">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                            </view>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Aa-025">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                            </imageView>
+                                            <view contentMode="scaleToFill" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Pa-038">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                                <subviews>
+                                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Qa-039">
+                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
+                                                        <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </activityIndicatorView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Removing background…" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ra-040">
+                                                        <rect key="frame" x="0.0" y="0.0" width="300" height="20"/>
+                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Sa-041">
+                                                        <rect key="frame" x="0.0" y="0.0" width="90" height="36"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                                        <state key="normal" title="Retry">
+                                                            <color key="titleColor" name="PrimaryText"/>
+                                                        </state>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="36" id="rbe-Ta-042"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <action selector="btnRetry:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-Ua-043"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" name="Surface Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="361" priority="999" id="rbe-xa-022"/>
+                                            <constraint firstAttribute="height" constant="440" priority="999" id="rbe-ya-023"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8a-055">
+                                <rect key="frame" x="0.0" y="0.0" width="220" height="32"/>
+                                <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
+                                <state key="normal" title="Standard quality">
+                                    <color key="titleColor" name="SecondaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="rbe-9a-056"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnQuality:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-ab-057"/>
+                                </connections>
+                            </button>
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-bb-058">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="76"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="0" id="rbe-Ub-100">
+                                    <size key="itemSize" width="64" height="64"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="76" id="rbe-cb-059"/>
+                                </constraints>
+                            </collectionView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="horizontal" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-db-060">
+                                <rect key="frame" x="0.0" y="0.0" width="361" height="52"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-fb-062">
+                                        <rect key="frame" x="0.0" y="0.0" width="114" height="52"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <state key="normal" title="Background">
+                                            <color key="titleColor" name="PrimaryText"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnBackground:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-ib-065"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-gb-063">
+                                        <rect key="frame" x="0.0" y="0.0" width="114" height="52"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <state key="normal" title="Save">
+                                            <color key="titleColor" name="PrimaryText"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnSave:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-jb-066"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-hb-064">
+                                        <rect key="frame" x="0.0" y="0.0" width="114" height="52"/>
+                                        <color key="backgroundColor" name="AccentColor"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <state key="normal" title="Export">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnExport:" destination="rbe-ba-001" eventType="touchUpInside" id="rbe-kb-067"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="rbe-eb-061"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="rbe-da-003"/>
+                        <color key="backgroundColor" name="Background"/>
+                        <constraints>
+                            <constraint firstItem="rbe-ha-007" firstAttribute="top" secondItem="rbe-da-003" secondAttribute="top" constant="8" id="rbe-na-012"/>
+                            <constraint firstItem="rbe-ha-007" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" constant="16" id="rbe-oa-013"/>
+                            <constraint firstItem="rbe-da-003" firstAttribute="trailing" secondItem="rbe-ea-004" secondAttribute="trailing" constant="16" id="rbe-pa-014"/>
+                            <constraint firstItem="rbe-ea-004" firstAttribute="centerY" secondItem="rbe-ha-007" secondAttribute="centerY" id="rbe-qa-015"/>
+                            <constraint firstItem="rbe-ma-011" firstAttribute="centerX" secondItem="rbe-ca-002" secondAttribute="centerX" id="rbe-ra-016"/>
+                            <constraint firstItem="rbe-ma-011" firstAttribute="centerY" secondItem="rbe-ha-007" secondAttribute="centerY" id="rbe-sa-017"/>
+                            <constraint firstItem="rbe-ma-011" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rbe-ha-007" secondAttribute="trailing" constant="12" id="rbe-ta-018"/>
+                            <constraint firstItem="rbe-ea-004" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rbe-ma-011" secondAttribute="trailing" constant="12" id="rbe-ua-019"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="centerX" secondItem="rbe-va-020" secondAttribute="centerX" id="rbe-Ba-026"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="centerY" secondItem="rbe-va-020" secondAttribute="centerY" id="rbe-Ca-027"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="width" relation="lessThanOrEqual" secondItem="rbe-va-020" secondAttribute="width" id="rbe-Da-028"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="height" relation="lessThanOrEqual" secondItem="rbe-va-020" secondAttribute="height" id="rbe-Ea-029"/>
+                            <constraint firstItem="rbe-za-024" firstAttribute="top" secondItem="rbe-wa-021" secondAttribute="top" id="rbe-Fa-030"/>
+                            <constraint firstItem="rbe-za-024" firstAttribute="leading" secondItem="rbe-wa-021" secondAttribute="leading" id="rbe-Ga-031"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="trailing" secondItem="rbe-za-024" secondAttribute="trailing" id="rbe-Ha-032"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="bottom" secondItem="rbe-za-024" secondAttribute="bottom" id="rbe-Ja-033"/>
+                            <constraint firstItem="rbe-Aa-025" firstAttribute="top" secondItem="rbe-wa-021" secondAttribute="top" id="rbe-Ka-034"/>
+                            <constraint firstItem="rbe-Aa-025" firstAttribute="leading" secondItem="rbe-wa-021" secondAttribute="leading" id="rbe-La-035"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="trailing" secondItem="rbe-Aa-025" secondAttribute="trailing" id="rbe-Ma-036"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="bottom" secondItem="rbe-Aa-025" secondAttribute="bottom" id="rbe-Na-037"/>
+                            <constraint firstItem="rbe-Pa-038" firstAttribute="top" secondItem="rbe-wa-021" secondAttribute="top" id="rbe-Va-044"/>
+                            <constraint firstItem="rbe-Pa-038" firstAttribute="leading" secondItem="rbe-wa-021" secondAttribute="leading" id="rbe-Wa-045"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="trailing" secondItem="rbe-Pa-038" secondAttribute="trailing" id="rbe-Xa-046"/>
+                            <constraint firstItem="rbe-wa-021" firstAttribute="bottom" secondItem="rbe-Pa-038" secondAttribute="bottom" id="rbe-Ya-047"/>
+                            <constraint firstItem="rbe-Qa-039" firstAttribute="centerX" secondItem="rbe-Pa-038" secondAttribute="centerX" id="rbe-Za-048"/>
+                            <constraint firstItem="rbe-Qa-039" firstAttribute="centerY" secondItem="rbe-Pa-038" secondAttribute="centerY" constant="-28" id="rbe-2a-049"/>
+                            <constraint firstItem="rbe-Ra-040" firstAttribute="top" secondItem="rbe-Qa-039" secondAttribute="bottom" constant="12" id="rbe-3a-050"/>
+                            <constraint firstItem="rbe-Ra-040" firstAttribute="leading" secondItem="rbe-Pa-038" secondAttribute="leading" constant="20" id="rbe-4a-051"/>
+                            <constraint firstItem="rbe-Pa-038" firstAttribute="trailing" secondItem="rbe-Ra-040" secondAttribute="trailing" constant="20" id="rbe-5a-052"/>
+                            <constraint firstItem="rbe-Sa-041" firstAttribute="top" secondItem="rbe-Ra-040" secondAttribute="bottom" constant="14" id="rbe-6a-053"/>
+                            <constraint firstItem="rbe-Sa-041" firstAttribute="centerX" secondItem="rbe-Pa-038" secondAttribute="centerX" id="rbe-7a-054"/>
+                            <constraint firstItem="rbe-va-020" firstAttribute="top" secondItem="rbe-ha-007" secondAttribute="bottom" constant="12" id="rbe-mb-068"/>
+                            <constraint firstItem="rbe-va-020" firstAttribute="leading" secondItem="rbe-ca-002" secondAttribute="leading" id="rbe-nb-069"/>
+                            <constraint firstItem="rbe-ca-002" firstAttribute="trailing" secondItem="rbe-va-020" secondAttribute="trailing" id="rbe-ob-070"/>
+                            <constraint firstItem="rbe-8a-055" firstAttribute="top" secondItem="rbe-va-020" secondAttribute="bottom" constant="6" id="rbe-pb-071"/>
+                            <constraint firstItem="rbe-8a-055" firstAttribute="centerX" secondItem="rbe-ca-002" secondAttribute="centerX" id="rbe-qb-072"/>
+                            <constraint firstItem="rbe-bb-058" firstAttribute="top" secondItem="rbe-8a-055" secondAttribute="bottom" constant="8" id="rbe-rb-073"/>
+                            <constraint firstItem="rbe-bb-058" firstAttribute="leading" secondItem="rbe-ca-002" secondAttribute="leading" id="rbe-sb-074"/>
+                            <constraint firstItem="rbe-ca-002" firstAttribute="trailing" secondItem="rbe-bb-058" secondAttribute="trailing" id="rbe-tb-075"/>
+                            <constraint firstItem="rbe-db-060" firstAttribute="top" secondItem="rbe-bb-058" secondAttribute="bottom" constant="12" id="rbe-ub-076"/>
+                            <constraint firstItem="rbe-db-060" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" constant="16" id="rbe-vb-077"/>
+                            <constraint firstItem="rbe-da-003" firstAttribute="trailing" secondItem="rbe-db-060" secondAttribute="trailing" constant="16" id="rbe-wb-078"/>
+                            <constraint firstItem="rbe-da-003" firstAttribute="bottom" secondItem="rbe-db-060" secondAttribute="bottom" constant="8" id="rbe-xb-079"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnBack" destination="rbe-ha-007" id="rbe-yb-080"/>
+                        <outlet property="lblTitle" destination="rbe-ma-011" id="rbe-zb-081"/>
+                        <outlet property="btnSelect" destination="rbe-ea-004" id="rbe-Ab-082"/>
+                        <outlet property="vwPreviewContainer" destination="rbe-va-020" id="rbe-Bb-083"/>
+                        <outlet property="vwPreviewCard" destination="rbe-wa-021" id="rbe-Cb-084"/>
+                        <outlet property="vwChecker" destination="rbe-za-024" id="rbe-Db-085"/>
+                        <outlet property="imgPreview" destination="rbe-Aa-025" id="rbe-Eb-086"/>
+                        <outlet property="previewWidth" destination="rbe-xa-022" id="rbe-Fb-087"/>
+                        <outlet property="previewHeight" destination="rbe-ya-023" id="rbe-Gb-088"/>
+                        <outlet property="vwStatusOverlay" destination="rbe-Pa-038" id="rbe-Hb-089"/>
+                        <outlet property="spinner" destination="rbe-Qa-039" id="rbe-Jb-090"/>
+                        <outlet property="lblStatus" destination="rbe-Ra-040" id="rbe-Kb-091"/>
+                        <outlet property="btnRetry" destination="rbe-Sa-041" id="rbe-Lb-092"/>
+                        <outlet property="btnQuality" destination="rbe-8a-055" id="rbe-Mb-093"/>
+                        <outlet property="clvThumbnails" destination="rbe-bb-058" id="rbe-Nb-094"/>
+                        <outlet property="thumbnailsHeight" destination="rbe-cb-059" id="rbe-Pb-095"/>
+                        <outlet property="btnBackground" destination="rbe-fb-062" id="rbe-Qb-096"/>
+                        <outlet property="btnSave" destination="rbe-gb-063" id="rbe-Rb-097"/>
+                        <outlet property="btnExport" destination="rbe-hb-064" id="rbe-Sb-098"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-Vb-101" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="0" y="0.0"/>
+        </scene>
+        <scene sceneID="rbe-rd-187">
+            <objects>
+                <viewController storyboardIdentifier="ChangeBackgroundVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-Wb-102" customClass="ChangeBackgroundVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rbe-Xb-103">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-5b-109">
                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <color key="backgroundColor" name="Surface Color"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
                                 <color key="tintColor" name="PrimaryText"/>
                                 <state key="normal" title="">
                                     <color key="titleColor" name="PrimaryText"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-ma-011"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-na-012"/>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-6b-110"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-7b-111"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnUndo:" destination="edt-ba-001" eventType="touchUpInside" id="edt-ra-016"/>
+                                    <action selector="btnBack:" destination="rbe-Wb-102" eventType="touchUpInside" id="rbe-8b-112"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-oa-013">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-pa-014"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-qa-015"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnRedo:" destination="edt-ba-001" eventType="touchUpInside" id="edt-sa-017"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-xa-022">
-                                <rect key="frame" x="0.0" y="0.0" width="93" height="44"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Change Background" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-9b-113">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="24"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Zb-105">
+                                <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
                                 <color key="backgroundColor" name="AccentColor"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <state key="normal" title="Export">
+                                <state key="normal" title="Done">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="93" id="edt-ya-023"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-za-024"/>
+                                    <constraint firstAttribute="width" constant="80" id="rbe-2b-106"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-3b-107"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnExport:" destination="edt-ba-001" eventType="touchUpInside" id="edt-Aa-025"/>
+                                    <action selector="btnDone:" destination="rbe-Wb-102" eventType="touchUpInside" id="rbe-4b-108"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Da-028">
-                                <rect key="frame" x="0.0" y="0.0" width="196" height="40"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ic-122">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="420"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Fa-030">
-                                        <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
-                                        <color key="tintColor" name="AccentColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="24" id="edt-Ga-031"/>
-                                            <constraint firstAttribute="height" constant="24" id="edt-Ha-032"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background removed" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Ja-033">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="14"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="edt-Ea-029"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Za-048">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-2a-049">
-                                        <rect key="frame" x="0.0" y="0.0" width="334" height="401"/>
+                                    <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-jc-123">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-nc-126">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                            </view>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-oc-127">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="440"/>
+                                            </imageView>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Bc-140">
+                                                <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
+                                                <color key="color" name="AccentColor"/>
+                                            </activityIndicatorView>
+                                        </subviews>
                                         <color key="backgroundColor" name="Surface Color"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" customClass="EditorCanvasView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edt-3a-050">
-                                        <rect key="frame" x="0.0" y="0.0" width="334" height="401"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="334" id="edt-4a-051"/>
-                                            <constraint firstAttribute="height" constant="401" id="edt-5a-052"/>
+                                            <constraint firstAttribute="width" constant="361" priority="999" id="rbe-kc-124"/>
+                                            <constraint firstAttribute="height" constant="440" priority="999" id="rbe-mc-125"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-cb-059">
-                                <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="48" id="edt-db-060"/>
-                                    <constraint firstAttribute="height" constant="48" id="edt-eb-061"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnCompareDown:" destination="edt-ba-001" eventType="touchDown" id="edt-fb-062"/>
-                                    <action selector="btnCompareUp:" destination="edt-ba-001" eventType="touchUpInside" id="edt-gb-063"/>
-                                    <action selector="btnCompareUp:" destination="edt-ba-001" eventType="touchUpOutside" id="edt-hb-064"/>
-                                    <action selector="btnCompareUp:" destination="edt-ba-001" eventType="touchCancel" id="edt-ib-065"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Sa-041">
-                                <rect key="frame" x="0.0" y="0.0" width="369" height="96"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ec-143">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="360"/>
                                 <subviews>
-                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Ua-043">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="72"/>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Gc-145">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="36"/>
+                                        <segments>
+                                            <segment title="Images"/>
+                                            <segment title="Colors"/>
+                                        </segments>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="rbe-Hc-146"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="segCategoryChanged:" destination="rbe-Wb-102" eventType="valueChanged" id="rbe-Jc-147"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Kc-148">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="280"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0" minimumInteritemSpacing="0" id="edt-Kb-091">
-                                            <size key="itemSize" width="54" height="54"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="vertical" minimumLineSpacing="10" minimumInteritemSpacing="10" id="rbe-sd-188">
+                                            <size key="itemSize" width="110" height="110"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                     </collectionView>
-                                </subviews>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="96" id="edt-Ta-042"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="edt-da-003"/>
-                        <color key="backgroundColor" name="Background"/>
-                        <constraints>
-                            <constraint firstItem="edt-ea-004" firstAttribute="top" secondItem="edt-da-003" secondAttribute="top" constant="8" id="edt-ia-008"/>
-                            <constraint firstItem="edt-ea-004" firstAttribute="leading" secondItem="edt-da-003" secondAttribute="leading" constant="16" id="edt-ja-009"/>
-                            <constraint firstItem="edt-ka-010" firstAttribute="centerY" secondItem="edt-ea-004" secondAttribute="centerY" id="edt-ta-018"/>
-                            <constraint firstItem="edt-oa-013" firstAttribute="centerY" secondItem="edt-ea-004" secondAttribute="centerY" id="edt-ua-019"/>
-                            <constraint firstItem="edt-ka-010" firstAttribute="centerX" secondItem="edt-ca-002" secondAttribute="centerX" constant="-24" id="edt-va-020"/>
-                            <constraint firstItem="edt-oa-013" firstAttribute="centerX" secondItem="edt-ca-002" secondAttribute="centerX" constant="24" id="edt-wa-021"/>
-                            <constraint firstItem="edt-da-003" firstAttribute="trailing" secondItem="edt-xa-022" secondAttribute="trailing" constant="16" id="edt-Ba-026"/>
-                            <constraint firstItem="edt-xa-022" firstAttribute="centerY" secondItem="edt-ea-004" secondAttribute="centerY" id="edt-Ca-027"/>
-                            <constraint firstItem="edt-Fa-030" firstAttribute="leading" secondItem="edt-Da-028" secondAttribute="leading" constant="8" id="edt-Ka-034"/>
-                            <constraint firstItem="edt-Fa-030" firstAttribute="centerY" secondItem="edt-Da-028" secondAttribute="centerY" id="edt-La-035"/>
-                            <constraint firstItem="edt-Ja-033" firstAttribute="leading" secondItem="edt-Fa-030" secondAttribute="trailing" constant="8" id="edt-Ma-036"/>
-                            <constraint firstItem="edt-Da-028" firstAttribute="trailing" secondItem="edt-Ja-033" secondAttribute="trailing" constant="14" id="edt-Na-037"/>
-                            <constraint firstItem="edt-Ja-033" firstAttribute="centerY" secondItem="edt-Da-028" secondAttribute="centerY" id="edt-Pa-038"/>
-                            <constraint firstItem="edt-Da-028" firstAttribute="top" secondItem="edt-ea-004" secondAttribute="bottom" constant="12" id="edt-Qa-039"/>
-                            <constraint firstItem="edt-Da-028" firstAttribute="centerX" secondItem="edt-ca-002" secondAttribute="centerX" id="edt-Ra-040"/>
-                            <constraint firstItem="edt-Ua-043" firstAttribute="top" secondItem="edt-Sa-041" secondAttribute="top" constant="12" id="edt-Va-044"/>
-                            <constraint firstItem="edt-Ua-043" firstAttribute="leading" secondItem="edt-Sa-041" secondAttribute="leading" constant="4" id="edt-Wa-045"/>
-                            <constraint firstItem="edt-Sa-041" firstAttribute="trailing" secondItem="edt-Ua-043" secondAttribute="trailing" constant="4" id="edt-Xa-046"/>
-                            <constraint firstItem="edt-Sa-041" firstAttribute="bottom" secondItem="edt-Ua-043" secondAttribute="bottom" constant="12" id="edt-Ya-047"/>
-                            <constraint firstItem="edt-3a-050" firstAttribute="centerX" secondItem="edt-Za-048" secondAttribute="centerX" id="edt-6a-053"/>
-                            <constraint firstItem="edt-3a-050" firstAttribute="centerY" secondItem="edt-Za-048" secondAttribute="centerY" id="edt-7a-054"/>
-                            <constraint firstItem="edt-2a-049" firstAttribute="top" secondItem="edt-3a-050" secondAttribute="top" id="edt-8a-055"/>
-                            <constraint firstItem="edt-2a-049" firstAttribute="leading" secondItem="edt-3a-050" secondAttribute="leading" id="edt-9a-056"/>
-                            <constraint firstItem="edt-3a-050" firstAttribute="trailing" secondItem="edt-2a-049" secondAttribute="trailing" id="edt-ab-057"/>
-                            <constraint firstItem="edt-3a-050" firstAttribute="bottom" secondItem="edt-2a-049" secondAttribute="bottom" id="edt-bb-058"/>
-                            <constraint firstItem="edt-Za-048" firstAttribute="top" secondItem="edt-Da-028" secondAttribute="bottom" constant="8" id="edt-jb-066"/>
-                            <constraint firstItem="edt-Za-048" firstAttribute="leading" secondItem="edt-ca-002" secondAttribute="leading" id="edt-kb-067"/>
-                            <constraint firstItem="edt-ca-002" firstAttribute="trailing" secondItem="edt-Za-048" secondAttribute="trailing" id="edt-mb-068"/>
-                            <constraint firstItem="edt-Sa-041" firstAttribute="top" secondItem="edt-Za-048" secondAttribute="bottom" constant="8" id="edt-nb-069"/>
-                            <constraint firstItem="edt-Sa-041" firstAttribute="leading" secondItem="edt-da-003" secondAttribute="leading" constant="12" id="edt-ob-070"/>
-                            <constraint firstItem="edt-da-003" firstAttribute="trailing" secondItem="edt-Sa-041" secondAttribute="trailing" constant="12" id="edt-pb-071"/>
-                            <constraint firstItem="edt-da-003" firstAttribute="bottom" secondItem="edt-Sa-041" secondAttribute="bottom" constant="4" id="edt-qb-072"/>
-                            <constraint firstItem="edt-da-003" firstAttribute="trailing" secondItem="edt-cb-059" secondAttribute="trailing" constant="16" id="edt-rb-073"/>
-                            <constraint firstItem="edt-Za-048" firstAttribute="bottom" secondItem="edt-cb-059" secondAttribute="bottom" constant="4" id="edt-sb-074"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="btnBack" destination="edt-ea-004" id="edt-tb-075"/>
-                        <outlet property="btnUndo" destination="edt-ka-010" id="edt-ub-076"/>
-                        <outlet property="btnRedo" destination="edt-oa-013" id="edt-vb-077"/>
-                        <outlet property="btnExport" destination="edt-xa-022" id="edt-wb-078"/>
-                        <outlet property="vwStatusChip" destination="edt-Da-028" id="edt-xb-079"/>
-                        <outlet property="imgStatusCheck" destination="edt-Fa-030" id="edt-yb-080"/>
-                        <outlet property="vwCanvasContainer" destination="edt-Za-048" id="edt-zb-081"/>
-                        <outlet property="vwCanvasShadow" destination="edt-2a-049" id="edt-Ab-082"/>
-                        <outlet property="canvasView" destination="edt-3a-050" id="edt-Bb-083"/>
-                        <outlet property="canvasWidth" destination="edt-4a-051" id="edt-Cb-084"/>
-                        <outlet property="canvasHeight" destination="edt-5a-052" id="edt-Db-085"/>
-                        <outlet property="btnCompare" destination="edt-cb-059" id="edt-Eb-086"/>
-                        <outlet property="vwToolbar" destination="edt-Sa-041" id="edt-Fb-087"/>
-                        <outlet property="clvTools" destination="edt-Ua-043" id="edt-Gb-088"/>
-                        <outlet property="canvasBottomToToolbar" destination="edt-nb-069" id="edt-Hb-089"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="edt-Lb-092" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="0" y="0.0"/>
-        </scene>
-        <scene sceneID="edt-Fd-201">
-            <objects>
-                <viewController storyboardIdentifier="RefineEdgesVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="edt-Mb-093" customClass="RefineEdgesVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="edt-Nb-094">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Qb-096">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-Rb-097"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-Sb-098"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnBack:" destination="edt-Mb-093" eventType="touchUpInside" id="edt-Tb-099"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Wb-102">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-Xb-103"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-Yb-104"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnUndo:" destination="edt-Mb-093" eventType="touchUpInside" id="edt-4b-108"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Zb-105">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-2b-106"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-3b-107"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnRedo:" destination="edt-Mb-093" eventType="touchUpInside" id="edt-5b-109"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ac-114">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
-                                <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-bc-115">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
-                                    </scrollView>
-                                </subviews>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-9c-170">
-                                <rect key="frame" x="0.0" y="0.0" width="205" height="34"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag to erase · Pinch to zoom" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-bd-172">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.07" green="0.07" blue="0.07" alpha="0.82" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="edt-ad-171"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-gc-120">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="300"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-hc-121">
-                                        <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
-                                        <color key="backgroundColor" name="BrandPrimary"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="36" id="edt-ic-122"/>
-                                            <constraint firstAttribute="height" constant="5" id="edt-jc-123"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-kc-124">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                        <color key="backgroundColor" name="Ultra Light Blue"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                        <color key="tintColor" name="PrimaryText"/>
-                                        <state key="normal" title="">
-                                            <color key="titleColor" name="PrimaryText"/>
-                                        </state>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="edt-mc-125"/>
-                                            <constraint firstAttribute="height" constant="44" id="edt-nc-126"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="btnCancel:" destination="edt-Mb-093" eventType="touchUpInside" id="edt-oc-127"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine edges" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-pc-128">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-qc-129">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                        <color key="backgroundColor" name="AccentColor"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="">
-                                            <color key="titleColor" name="PrimaryText"/>
-                                        </state>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="edt-rc-130"/>
-                                            <constraint firstAttribute="height" constant="44" id="edt-sc-131"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="btnApply:" destination="edt-Mb-093" eventType="touchUpInside" id="edt-tc-132"/>
-                                        </connections>
-                                    </button>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="edt-uc-133">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="46"/>
-                                        <segments>
-                                            <segment title="Erase"/>
-                                            <segment title="Restore"/>
-                                        </segments>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="46" id="edt-vc-134"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="segModeChanged:" destination="edt-Mb-093" eventType="valueChanged" id="edt-wc-135"/>
-                                        </connections>
-                                    </segmentedControl>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brush size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-xc-136">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="34" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-yc-137">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
+                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Lc-149">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="280"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="vertical" minimumLineSpacing="14" minimumInteritemSpacing="12" id="rbe-td-189">
+                                            <size key="itemSize" width="48" height="48"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                    </collectionView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Mc-150">
+                                        <rect key="frame" x="0.0" y="0.0" width="345" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Medium" family="Figtree" pointSize="14"/>
                                         <color key="textColor" name="SecondaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="34" minValue="5" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="edt-zc-138">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
-                                        <color key="minimumTrackTintColor" name="AccentColor"/>
-                                        <color key="maximumTrackTintColor" name="Border Color"/>
-                                        <connections>
-                                            <action selector="sliderBrushChanged:" destination="edt-Mb-093" eventType="valueChanged" id="edt-Ac-139"/>
-                                        </connections>
-                                    </slider>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Softness" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Bc-140">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Cc-141">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="SecondaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="22" minValue="0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Dc-142">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
-                                        <color key="minimumTrackTintColor" name="AccentColor"/>
-                                        <color key="maximumTrackTintColor" name="Border Color"/>
-                                        <connections>
-                                            <action selector="sliderSoftnessChanged:" destination="edt-Mb-093" eventType="valueChanged" id="edt-Ec-143"/>
-                                        </connections>
-                                    </slider>
                                 </subviews>
                                 <color key="backgroundColor" name="Surface Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="360" id="rbe-Fc-144"/>
+                                </constraints>
                             </view>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="edt-Pb-095"/>
+                        <viewLayoutGuide key="safeArea" id="rbe-Yb-104"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
-                            <constraint firstItem="edt-Qb-096" firstAttribute="top" secondItem="edt-Pb-095" secondAttribute="top" constant="8" id="edt-Ub-100"/>
-                            <constraint firstItem="edt-Qb-096" firstAttribute="leading" secondItem="edt-Pb-095" secondAttribute="leading" constant="16" id="edt-Vb-101"/>
-                            <constraint firstItem="edt-Wb-102" firstAttribute="centerY" secondItem="edt-Qb-096" secondAttribute="centerY" id="edt-6b-110"/>
-                            <constraint firstItem="edt-Zb-105" firstAttribute="centerY" secondItem="edt-Qb-096" secondAttribute="centerY" id="edt-7b-111"/>
-                            <constraint firstItem="edt-Wb-102" firstAttribute="centerX" secondItem="edt-Nb-094" secondAttribute="centerX" constant="-24" id="edt-8b-112"/>
-                            <constraint firstItem="edt-Zb-105" firstAttribute="centerX" secondItem="edt-Nb-094" secondAttribute="centerX" constant="24" id="edt-9b-113"/>
-                            <constraint firstItem="edt-bc-115" firstAttribute="top" secondItem="edt-ac-114" secondAttribute="top" id="edt-cc-116"/>
-                            <constraint firstItem="edt-bc-115" firstAttribute="leading" secondItem="edt-ac-114" secondAttribute="leading" id="edt-dc-117"/>
-                            <constraint firstItem="edt-ac-114" firstAttribute="trailing" secondItem="edt-bc-115" secondAttribute="trailing" id="edt-ec-118"/>
-                            <constraint firstItem="edt-ac-114" firstAttribute="bottom" secondItem="edt-bc-115" secondAttribute="bottom" id="edt-fc-119"/>
-                            <constraint firstItem="edt-hc-121" firstAttribute="top" secondItem="edt-gc-120" secondAttribute="top" constant="8" id="edt-Fc-144"/>
-                            <constraint firstItem="edt-hc-121" firstAttribute="centerX" secondItem="edt-gc-120" secondAttribute="centerX" id="edt-Gc-145"/>
-                            <constraint firstItem="edt-kc-124" firstAttribute="top" secondItem="edt-gc-120" secondAttribute="top" constant="25" id="edt-Hc-146"/>
-                            <constraint firstItem="edt-kc-124" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-Jc-147"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-qc-129" secondAttribute="trailing" constant="20" id="edt-Kc-148"/>
-                            <constraint firstItem="edt-qc-129" firstAttribute="centerY" secondItem="edt-kc-124" secondAttribute="centerY" id="edt-Lc-149"/>
-                            <constraint firstItem="edt-pc-128" firstAttribute="centerY" secondItem="edt-kc-124" secondAttribute="centerY" id="edt-Mc-150"/>
-                            <constraint firstItem="edt-pc-128" firstAttribute="centerX" secondItem="edt-gc-120" secondAttribute="centerX" id="edt-Nc-151"/>
-                            <constraint firstItem="edt-uc-133" firstAttribute="top" secondItem="edt-kc-124" secondAttribute="bottom" constant="12" id="edt-Pc-152"/>
-                            <constraint firstItem="edt-uc-133" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-Qc-153"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-uc-133" secondAttribute="trailing" constant="20" id="edt-Rc-154"/>
-                            <constraint firstItem="edt-xc-136" firstAttribute="top" secondItem="edt-uc-133" secondAttribute="bottom" constant="16" id="edt-Sc-155"/>
-                            <constraint firstItem="edt-xc-136" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-Tc-156"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-yc-137" secondAttribute="trailing" constant="20" id="edt-Uc-157"/>
-                            <constraint firstItem="edt-yc-137" firstAttribute="centerY" secondItem="edt-xc-136" secondAttribute="centerY" id="edt-Vc-158"/>
-                            <constraint firstItem="edt-zc-138" firstAttribute="top" secondItem="edt-xc-136" secondAttribute="bottom" constant="6" id="edt-Wc-159"/>
-                            <constraint firstItem="edt-zc-138" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-Xc-160"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-zc-138" secondAttribute="trailing" constant="20" id="edt-Yc-161"/>
-                            <constraint firstItem="edt-Bc-140" firstAttribute="top" secondItem="edt-zc-138" secondAttribute="bottom" constant="8" id="edt-Zc-162"/>
-                            <constraint firstItem="edt-Bc-140" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-2c-163"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-Cc-141" secondAttribute="trailing" constant="20" id="edt-3c-164"/>
-                            <constraint firstItem="edt-Cc-141" firstAttribute="centerY" secondItem="edt-Bc-140" secondAttribute="centerY" id="edt-4c-165"/>
-                            <constraint firstItem="edt-Dc-142" firstAttribute="top" secondItem="edt-Bc-140" secondAttribute="bottom" constant="6" id="edt-5c-166"/>
-                            <constraint firstItem="edt-Dc-142" firstAttribute="leading" secondItem="edt-gc-120" secondAttribute="leading" constant="20" id="edt-6c-167"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="trailing" secondItem="edt-Dc-142" secondAttribute="trailing" constant="20" id="edt-7c-168"/>
-                            <constraint firstItem="edt-Pb-095" firstAttribute="bottom" secondItem="edt-Dc-142" secondAttribute="bottom" constant="14" id="edt-8c-169"/>
-                            <constraint firstItem="edt-bd-172" firstAttribute="leading" secondItem="edt-9c-170" secondAttribute="leading" constant="16" id="edt-cd-173"/>
-                            <constraint firstItem="edt-9c-170" firstAttribute="trailing" secondItem="edt-bd-172" secondAttribute="trailing" constant="16" id="edt-dd-174"/>
-                            <constraint firstItem="edt-bd-172" firstAttribute="centerY" secondItem="edt-9c-170" secondAttribute="centerY" id="edt-ed-175"/>
-                            <constraint firstItem="edt-ac-114" firstAttribute="top" secondItem="edt-Qb-096" secondAttribute="bottom" constant="8" id="edt-fd-176"/>
-                            <constraint firstItem="edt-ac-114" firstAttribute="leading" secondItem="edt-Nb-094" secondAttribute="leading" id="edt-gd-177"/>
-                            <constraint firstItem="edt-Nb-094" firstAttribute="trailing" secondItem="edt-ac-114" secondAttribute="trailing" id="edt-hd-178"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="top" secondItem="edt-ac-114" secondAttribute="bottom" constant="-36" id="edt-id-179"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="leading" secondItem="edt-Nb-094" secondAttribute="leading" id="edt-jd-180"/>
-                            <constraint firstItem="edt-Nb-094" firstAttribute="trailing" secondItem="edt-gc-120" secondAttribute="trailing" id="edt-kd-181"/>
-                            <constraint firstItem="edt-Nb-094" firstAttribute="bottom" secondItem="edt-gc-120" secondAttribute="bottom" id="edt-md-182"/>
-                            <constraint firstItem="edt-9c-170" firstAttribute="centerX" secondItem="edt-Nb-094" secondAttribute="centerX" id="edt-nd-183"/>
-                            <constraint firstItem="edt-gc-120" firstAttribute="top" secondItem="edt-9c-170" secondAttribute="bottom" constant="22" id="edt-od-184"/>
+                            <constraint firstItem="rbe-5b-109" firstAttribute="top" secondItem="rbe-Yb-104" secondAttribute="top" constant="8" id="rbe-ac-114"/>
+                            <constraint firstItem="rbe-5b-109" firstAttribute="leading" secondItem="rbe-Yb-104" secondAttribute="leading" constant="16" id="rbe-bc-115"/>
+                            <constraint firstItem="rbe-Yb-104" firstAttribute="trailing" secondItem="rbe-Zb-105" secondAttribute="trailing" constant="16" id="rbe-cc-116"/>
+                            <constraint firstItem="rbe-Zb-105" firstAttribute="centerY" secondItem="rbe-5b-109" secondAttribute="centerY" id="rbe-dc-117"/>
+                            <constraint firstItem="rbe-9b-113" firstAttribute="centerX" secondItem="rbe-Xb-103" secondAttribute="centerX" id="rbe-ec-118"/>
+                            <constraint firstItem="rbe-9b-113" firstAttribute="centerY" secondItem="rbe-5b-109" secondAttribute="centerY" id="rbe-fc-119"/>
+                            <constraint firstItem="rbe-9b-113" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rbe-5b-109" secondAttribute="trailing" constant="12" id="rbe-gc-120"/>
+                            <constraint firstItem="rbe-Zb-105" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rbe-9b-113" secondAttribute="trailing" constant="12" id="rbe-hc-121"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" id="rbe-pc-128"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="centerY" secondItem="rbe-ic-122" secondAttribute="centerY" id="rbe-qc-129"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="width" relation="lessThanOrEqual" secondItem="rbe-ic-122" secondAttribute="width" id="rbe-rc-130"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="height" relation="lessThanOrEqual" secondItem="rbe-ic-122" secondAttribute="height" id="rbe-sc-131"/>
+                            <constraint firstItem="rbe-nc-126" firstAttribute="top" secondItem="rbe-jc-123" secondAttribute="top" id="rbe-tc-132"/>
+                            <constraint firstItem="rbe-nc-126" firstAttribute="leading" secondItem="rbe-jc-123" secondAttribute="leading" id="rbe-uc-133"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="trailing" secondItem="rbe-nc-126" secondAttribute="trailing" id="rbe-vc-134"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="bottom" secondItem="rbe-nc-126" secondAttribute="bottom" id="rbe-wc-135"/>
+                            <constraint firstItem="rbe-oc-127" firstAttribute="top" secondItem="rbe-jc-123" secondAttribute="top" id="rbe-xc-136"/>
+                            <constraint firstItem="rbe-oc-127" firstAttribute="leading" secondItem="rbe-jc-123" secondAttribute="leading" id="rbe-yc-137"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="trailing" secondItem="rbe-oc-127" secondAttribute="trailing" id="rbe-zc-138"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="bottom" secondItem="rbe-oc-127" secondAttribute="bottom" id="rbe-Ac-139"/>
+                            <constraint firstItem="rbe-Bc-140" firstAttribute="centerX" secondItem="rbe-jc-123" secondAttribute="centerX" id="rbe-Cc-141"/>
+                            <constraint firstItem="rbe-Bc-140" firstAttribute="centerY" secondItem="rbe-jc-123" secondAttribute="centerY" id="rbe-Dc-142"/>
+                            <constraint firstItem="rbe-ic-122" firstAttribute="top" secondItem="rbe-5b-109" secondAttribute="bottom" constant="12" id="rbe-Nc-151"/>
+                            <constraint firstItem="rbe-ic-122" firstAttribute="leading" secondItem="rbe-Xb-103" secondAttribute="leading" id="rbe-Pc-152"/>
+                            <constraint firstItem="rbe-Xb-103" firstAttribute="trailing" secondItem="rbe-ic-122" secondAttribute="trailing" id="rbe-Qc-153"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="top" secondItem="rbe-ic-122" secondAttribute="bottom" constant="12" id="rbe-Rc-154"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="leading" secondItem="rbe-Xb-103" secondAttribute="leading" id="rbe-Sc-155"/>
+                            <constraint firstItem="rbe-Xb-103" firstAttribute="trailing" secondItem="rbe-Ec-143" secondAttribute="trailing" id="rbe-Tc-156"/>
+                            <constraint firstItem="rbe-Xb-103" firstAttribute="bottom" secondItem="rbe-Ec-143" secondAttribute="bottom" id="rbe-Uc-157"/>
+                            <constraint firstItem="rbe-Gc-145" firstAttribute="top" secondItem="rbe-Ec-143" secondAttribute="top" constant="18" id="rbe-Vc-158"/>
+                            <constraint firstItem="rbe-Gc-145" firstAttribute="leading" secondItem="rbe-Ec-143" secondAttribute="leading" constant="16" id="rbe-Wc-159"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="trailing" secondItem="rbe-Gc-145" secondAttribute="trailing" constant="16" id="rbe-Xc-160"/>
+                            <constraint firstItem="rbe-Kc-148" firstAttribute="top" secondItem="rbe-Gc-145" secondAttribute="bottom" constant="12" id="rbe-Yc-161"/>
+                            <constraint firstItem="rbe-Kc-148" firstAttribute="leading" secondItem="rbe-Ec-143" secondAttribute="leading" id="rbe-Zc-162"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="trailing" secondItem="rbe-Kc-148" secondAttribute="trailing" id="rbe-2c-163"/>
+                            <constraint firstItem="rbe-Yb-104" firstAttribute="bottom" secondItem="rbe-Kc-148" secondAttribute="bottom" id="rbe-3c-164"/>
+                            <constraint firstItem="rbe-Lc-149" firstAttribute="top" secondItem="rbe-Gc-145" secondAttribute="bottom" constant="12" id="rbe-4c-165"/>
+                            <constraint firstItem="rbe-Lc-149" firstAttribute="leading" secondItem="rbe-Ec-143" secondAttribute="leading" id="rbe-5c-166"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="trailing" secondItem="rbe-Lc-149" secondAttribute="trailing" id="rbe-6c-167"/>
+                            <constraint firstItem="rbe-Yb-104" firstAttribute="bottom" secondItem="rbe-Lc-149" secondAttribute="bottom" id="rbe-7c-168"/>
+                            <constraint firstItem="rbe-Mc-150" firstAttribute="centerY" secondItem="rbe-Kc-148" secondAttribute="centerY" id="rbe-8c-169"/>
+                            <constraint firstItem="rbe-Mc-150" firstAttribute="leading" secondItem="rbe-Ec-143" secondAttribute="leading" constant="24" id="rbe-9c-170"/>
+                            <constraint firstItem="rbe-Ec-143" firstAttribute="trailing" secondItem="rbe-Mc-150" secondAttribute="trailing" constant="24" id="rbe-ad-171"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnBack" destination="edt-Qb-096" id="edt-pd-185"/>
-                        <outlet property="btnUndo" destination="edt-Wb-102" id="edt-qd-186"/>
-                        <outlet property="btnRedo" destination="edt-Zb-105" id="edt-rd-187"/>
-                        <outlet property="vwCanvasArea" destination="edt-ac-114" id="edt-sd-188"/>
-                        <outlet property="scrollView" destination="edt-bc-115" id="edt-td-189"/>
-                        <outlet property="vwHint" destination="edt-9c-170" id="edt-ud-190"/>
-                        <outlet property="lblHint" destination="edt-bd-172" id="edt-vd-191"/>
-                        <outlet property="vwPanel" destination="edt-gc-120" id="edt-wd-192"/>
-                        <outlet property="vwGrabber" destination="edt-hc-121" id="edt-xd-193"/>
-                        <outlet property="btnPanelCancel" destination="edt-kc-124" id="edt-yd-194"/>
-                        <outlet property="btnPanelApply" destination="edt-qc-129" id="edt-zd-195"/>
-                        <outlet property="segMode" destination="edt-uc-133" id="edt-Ad-196"/>
-                        <outlet property="sliderBrush" destination="edt-zc-138" id="edt-Bd-197"/>
-                        <outlet property="lblBrushValue" destination="edt-yc-137" id="edt-Cd-198"/>
-                        <outlet property="sliderSoftness" destination="edt-Dc-142" id="edt-Dd-199"/>
-                        <outlet property="lblSoftnessValue" destination="edt-Cc-141" id="edt-Ed-200"/>
+                        <outlet property="btnBack" destination="rbe-5b-109" id="rbe-bd-172"/>
+                        <outlet property="lblTitle" destination="rbe-9b-113" id="rbe-cd-173"/>
+                        <outlet property="btnDone" destination="rbe-Zb-105" id="rbe-dd-174"/>
+                        <outlet property="vwPreviewContainer" destination="rbe-ic-122" id="rbe-ed-175"/>
+                        <outlet property="vwPreviewCard" destination="rbe-jc-123" id="rbe-fd-176"/>
+                        <outlet property="vwChecker" destination="rbe-nc-126" id="rbe-gd-177"/>
+                        <outlet property="imgPreview" destination="rbe-oc-127" id="rbe-hd-178"/>
+                        <outlet property="previewWidth" destination="rbe-kc-124" id="rbe-id-179"/>
+                        <outlet property="previewHeight" destination="rbe-mc-125" id="rbe-jd-180"/>
+                        <outlet property="spinner" destination="rbe-Bc-140" id="rbe-kd-181"/>
+                        <outlet property="vwPanel" destination="rbe-Ec-143" id="rbe-md-182"/>
+                        <outlet property="segCategory" destination="rbe-Gc-145" id="rbe-nd-183"/>
+                        <outlet property="clvImages" destination="rbe-Kc-148" id="rbe-od-184"/>
+                        <outlet property="clvColors" destination="rbe-Lc-149" id="rbe-pd-185"/>
+                        <outlet property="lblEmpty" destination="rbe-Mc-150" id="rbe-qd-186"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="edt-Gd-202" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-ud-190" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="500" y="0.0"/>
-        </scene>
-        <scene sceneID="edt-3f-335">
-            <objects>
-                <viewController storyboardIdentifier="ExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="edt-Hd-203" customClass="ExportVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="edt-Jd-204">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Ld-206">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                <color key="tintColor" name="PrimaryText"/>
-                                <state key="normal" title="">
-                                    <color key="titleColor" name="PrimaryText"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="edt-Md-207"/>
-                                    <constraint firstAttribute="height" constant="44" id="edt-Nd-208"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnBack:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-Pd-209"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Sd-212">
-                                <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
-                                <color key="textColor" name="PrimaryText"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Vd-215">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="180"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="180" priority="750" id="edt-Xd-217"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="edt-Yd-218"/>
-                                    <constraint firstAttribute="width" secondItem="edt-Vd-215" secondAttribute="height" multiplier="150:180" id="edt-Zd-219"/>
-                                </constraints>
-                            </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Wd-216">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="180"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cutout.png" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-2d-220">
-                                <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
-                                <color key="textColor" name="PrimaryText"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200 × 1440 px" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-3d-221">
-                                <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
-                                <color key="textColor" name="SecondaryText"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="edt-4d-222">
-                                <rect key="frame" x="0.0" y="0.0" width="358" height="168"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-6d-224">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="edt-7d-225">
-                                        <rect key="frame" x="0.0" y="0.0" width="132" height="44"/>
-                                        <segments>
-                                            <segment title="PNG"/>
-                                            <segment title="JPG"/>
-                                        </segments>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="132" id="edt-8d-226"/>
-                                            <constraint firstAttribute="height" constant="44" id="edt-9d-227"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="segFormatChanged:" destination="edt-Hd-203" eventType="valueChanged" id="edt-ae-228"/>
-                                        </connections>
-                                    </segmentedControl>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-be-229">
-                                        <rect key="frame" x="0.0" y="0.0" width="340" height="1"/>
-                                        <color key="backgroundColor" name="Border Color"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="edt-ce-230"/>
-                                        </constraints>
-                                    </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-de-231">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ee-232">
-                                        <rect key="frame" x="0.0" y="0.0" width="140" height="44"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="16"/>
-                                        <state key="normal" title="Original  ›">
-                                            <color key="titleColor" name="SecondaryText"/>
-                                        </state>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="edt-fe-233"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="btnSize:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-ge-234"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-he-235">
-                                        <rect key="frame" x="0.0" y="0.0" width="340" height="1"/>
-                                        <color key="backgroundColor" name="Border Color"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="edt-ie-236"/>
-                                        </constraints>
-                                    </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-je-237">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ke-238">
-                                        <rect key="frame" x="0.0" y="0.0" width="160" height="44"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="16"/>
-                                        <state key="normal" title="Transparent  ›">
-                                            <color key="titleColor" name="SecondaryText"/>
-                                        </state>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="edt-me-239"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="btnBackground:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-ne-240"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="168" id="edt-5d-223"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PNG keeps the transparent background." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Ge-259">
-                                <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
-                                <color key="textColor" name="SecondaryText"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-He-260">
-                                <rect key="frame" x="0.0" y="0.0" width="358" height="64"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Ke-262">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full resolution, no watermark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Le-263">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
-                                        <color key="textColor" name="SecondaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Me-264">
-                                        <rect key="frame" x="0.0" y="0.0" width="46" height="24"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Pe-266">
-                                                <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                                <fontDescription key="fontDescription" name="Figtree-ExtraBold" family="Figtree" pointSize="12"/>
-                                                <color key="textColor" name="Link Color"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" name="Badge Color"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="24" id="edt-Ne-265"/>
-                                        </constraints>
-                                    </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="edt-Te-270">
-                                        <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
-                                        <color key="tintColor" name="PrimaryText"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="18" id="edt-Ue-271"/>
-                                            <constraint firstAttribute="height" constant="18" id="edt-Ve-272"/>
-                                        </constraints>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-We-273">
-                                        <rect key="frame" x="0.0" y="0.0" width="358" height="64"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                        <state key="normal" title="">
-                                            <color key="titleColor" name="PrimaryText"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="btnHD:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-Xe-274"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="edt-Je-261"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-cf-287">
-                                <rect key="frame" x="0.0" y="0.0" width="358" height="58"/>
-                                <color key="backgroundColor" name="AccentColor"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
-                                <state key="normal" title="  Save to Photos">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="edt-df-288"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnSave:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-ef-289"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edt-ff-290">
-                                <rect key="frame" x="0.0" y="0.0" width="358" height="54"/>
-                                <color key="backgroundColor" name="Surface Color"/>
-                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="17"/>
-                                <state key="normal" title="  Share">
-                                    <color key="titleColor" name="AccentColor"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="edt-gf-291"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnShare:" destination="edt-Hd-203" eventType="touchUpInside" id="edt-hf-292"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="edt-Kd-205"/>
-                        <color key="backgroundColor" name="Background"/>
-                        <constraints>
-                            <constraint firstItem="edt-Ld-206" firstAttribute="top" secondItem="edt-Kd-205" secondAttribute="top" constant="8" id="edt-Qd-210"/>
-                            <constraint firstItem="edt-Ld-206" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="16" id="edt-Rd-211"/>
-                            <constraint firstItem="edt-Sd-212" firstAttribute="centerX" secondItem="edt-Jd-204" secondAttribute="centerX" id="edt-Td-213"/>
-                            <constraint firstItem="edt-Sd-212" firstAttribute="centerY" secondItem="edt-Ld-206" secondAttribute="centerY" id="edt-Ud-214"/>
-                            <constraint firstItem="edt-6d-224" firstAttribute="leading" secondItem="edt-4d-222" secondAttribute="leading" constant="18" id="edt-oe-241"/>
-                            <constraint firstItem="edt-6d-224" firstAttribute="centerY" secondItem="edt-4d-222" secondAttribute="top" constant="30" id="edt-pe-242"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="trailing" secondItem="edt-7d-225" secondAttribute="trailing" constant="8" id="edt-qe-243"/>
-                            <constraint firstItem="edt-7d-225" firstAttribute="centerY" secondItem="edt-6d-224" secondAttribute="centerY" id="edt-re-244"/>
-                            <constraint firstItem="edt-be-229" firstAttribute="top" secondItem="edt-4d-222" secondAttribute="top" constant="60" id="edt-se-245"/>
-                            <constraint firstItem="edt-be-229" firstAttribute="leading" secondItem="edt-4d-222" secondAttribute="leading" constant="18" id="edt-te-246"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="trailing" secondItem="edt-be-229" secondAttribute="trailing" id="edt-ue-247"/>
-                            <constraint firstItem="edt-de-231" firstAttribute="leading" secondItem="edt-4d-222" secondAttribute="leading" constant="18" id="edt-ve-248"/>
-                            <constraint firstItem="edt-de-231" firstAttribute="centerY" secondItem="edt-4d-222" secondAttribute="top" constant="87" id="edt-we-249"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="trailing" secondItem="edt-ee-232" secondAttribute="trailing" constant="14" id="edt-xe-250"/>
-                            <constraint firstItem="edt-ee-232" firstAttribute="centerY" secondItem="edt-de-231" secondAttribute="centerY" id="edt-ye-251"/>
-                            <constraint firstItem="edt-he-235" firstAttribute="top" secondItem="edt-4d-222" secondAttribute="top" constant="113" id="edt-ze-252"/>
-                            <constraint firstItem="edt-he-235" firstAttribute="leading" secondItem="edt-4d-222" secondAttribute="leading" constant="18" id="edt-Ae-253"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="trailing" secondItem="edt-he-235" secondAttribute="trailing" id="edt-Be-254"/>
-                            <constraint firstItem="edt-je-237" firstAttribute="leading" secondItem="edt-4d-222" secondAttribute="leading" constant="18" id="edt-Ce-255"/>
-                            <constraint firstItem="edt-je-237" firstAttribute="centerY" secondItem="edt-4d-222" secondAttribute="top" constant="140" id="edt-De-256"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="trailing" secondItem="edt-ke-238" secondAttribute="trailing" constant="14" id="edt-Ee-257"/>
-                            <constraint firstItem="edt-ke-238" firstAttribute="centerY" secondItem="edt-je-237" secondAttribute="centerY" id="edt-Fe-258"/>
-                            <constraint firstItem="edt-Pe-266" firstAttribute="leading" secondItem="edt-Me-264" secondAttribute="leading" constant="10" id="edt-Qe-267"/>
-                            <constraint firstItem="edt-Me-264" firstAttribute="trailing" secondItem="edt-Pe-266" secondAttribute="trailing" constant="10" id="edt-Re-268"/>
-                            <constraint firstItem="edt-Pe-266" firstAttribute="centerY" secondItem="edt-Me-264" secondAttribute="centerY" id="edt-Se-269"/>
-                            <constraint firstItem="edt-Ke-262" firstAttribute="leading" secondItem="edt-He-260" secondAttribute="leading" constant="18" id="edt-Ye-275"/>
-                            <constraint firstItem="edt-Ke-262" firstAttribute="top" secondItem="edt-He-260" secondAttribute="top" constant="11" id="edt-Ze-276"/>
-                            <constraint firstItem="edt-Le-263" firstAttribute="leading" secondItem="edt-Ke-262" secondAttribute="leading" id="edt-2e-277"/>
-                            <constraint firstItem="edt-Le-263" firstAttribute="top" secondItem="edt-Ke-262" secondAttribute="bottom" constant="2" id="edt-3e-278"/>
-                            <constraint firstItem="edt-He-260" firstAttribute="trailing" secondItem="edt-Te-270" secondAttribute="trailing" constant="14" id="edt-4e-279"/>
-                            <constraint firstItem="edt-Te-270" firstAttribute="centerY" secondItem="edt-He-260" secondAttribute="centerY" id="edt-5e-280"/>
-                            <constraint firstItem="edt-Te-270" firstAttribute="leading" secondItem="edt-Me-264" secondAttribute="trailing" constant="6" id="edt-6e-281"/>
-                            <constraint firstItem="edt-Me-264" firstAttribute="centerY" secondItem="edt-He-260" secondAttribute="centerY" id="edt-7e-282"/>
-                            <constraint firstItem="edt-We-273" firstAttribute="top" secondItem="edt-He-260" secondAttribute="top" id="edt-8e-283"/>
-                            <constraint firstItem="edt-We-273" firstAttribute="leading" secondItem="edt-He-260" secondAttribute="leading" id="edt-9e-284"/>
-                            <constraint firstItem="edt-He-260" firstAttribute="trailing" secondItem="edt-We-273" secondAttribute="trailing" id="edt-af-285"/>
-                            <constraint firstItem="edt-He-260" firstAttribute="bottom" secondItem="edt-We-273" secondAttribute="bottom" id="edt-bf-286"/>
-                            <constraint firstItem="edt-Vd-215" firstAttribute="top" secondItem="edt-Ld-206" secondAttribute="bottom" constant="16" id="edt-if-293"/>
-                            <constraint firstItem="edt-Vd-215" firstAttribute="centerX" secondItem="edt-Jd-204" secondAttribute="centerX" id="edt-jf-294"/>
-                            <constraint firstItem="edt-Wd-216" firstAttribute="top" secondItem="edt-Vd-215" secondAttribute="top" id="edt-kf-295"/>
-                            <constraint firstItem="edt-Wd-216" firstAttribute="leading" secondItem="edt-Vd-215" secondAttribute="leading" id="edt-mf-296"/>
-                            <constraint firstItem="edt-Vd-215" firstAttribute="trailing" secondItem="edt-Wd-216" secondAttribute="trailing" id="edt-nf-297"/>
-                            <constraint firstItem="edt-Vd-215" firstAttribute="bottom" secondItem="edt-Wd-216" secondAttribute="bottom" id="edt-of-298"/>
-                            <constraint firstItem="edt-2d-220" firstAttribute="top" secondItem="edt-Vd-215" secondAttribute="bottom" constant="12" id="edt-pf-299"/>
-                            <constraint firstItem="edt-2d-220" firstAttribute="centerX" secondItem="edt-Jd-204" secondAttribute="centerX" id="edt-qf-300"/>
-                            <constraint firstItem="edt-3d-221" firstAttribute="top" secondItem="edt-2d-220" secondAttribute="bottom" constant="2" id="edt-rf-301"/>
-                            <constraint firstItem="edt-3d-221" firstAttribute="centerX" secondItem="edt-Jd-204" secondAttribute="centerX" id="edt-sf-302"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="top" secondItem="edt-3d-221" secondAttribute="bottom" constant="20" id="edt-tf-303"/>
-                            <constraint firstItem="edt-4d-222" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="16" id="edt-uf-304"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="trailing" secondItem="edt-4d-222" secondAttribute="trailing" constant="16" id="edt-vf-305"/>
-                            <constraint firstItem="edt-Ge-259" firstAttribute="top" secondItem="edt-4d-222" secondAttribute="bottom" constant="8" id="edt-wf-306"/>
-                            <constraint firstItem="edt-Ge-259" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="34" id="edt-xf-307"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="trailing" secondItem="edt-Ge-259" secondAttribute="trailing" constant="20" id="edt-yf-308"/>
-                            <constraint firstItem="edt-He-260" firstAttribute="top" secondItem="edt-Ge-259" secondAttribute="bottom" constant="20" id="edt-zf-309"/>
-                            <constraint firstItem="edt-He-260" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="16" id="edt-Af-310"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="trailing" secondItem="edt-He-260" secondAttribute="trailing" constant="16" id="edt-Bf-311"/>
-                            <constraint firstItem="edt-cf-287" firstAttribute="top" relation="greaterThanOrEqual" secondItem="edt-He-260" secondAttribute="bottom" constant="20" id="edt-Cf-312"/>
-                            <constraint firstItem="edt-cf-287" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="16" id="edt-Df-313"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="trailing" secondItem="edt-cf-287" secondAttribute="trailing" constant="16" id="edt-Ef-314"/>
-                            <constraint firstItem="edt-ff-290" firstAttribute="top" secondItem="edt-cf-287" secondAttribute="bottom" constant="10" id="edt-Ff-315"/>
-                            <constraint firstItem="edt-ff-290" firstAttribute="leading" secondItem="edt-Kd-205" secondAttribute="leading" constant="16" id="edt-Gf-316"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="trailing" secondItem="edt-ff-290" secondAttribute="trailing" constant="16" id="edt-Hf-317"/>
-                            <constraint firstItem="edt-Kd-205" firstAttribute="bottom" secondItem="edt-ff-290" secondAttribute="bottom" constant="8" id="edt-Jf-318"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="btnBack" destination="edt-Ld-206" id="edt-Kf-319"/>
-                        <outlet property="vwPreviewChecker" destination="edt-Vd-215" id="edt-Lf-320"/>
-                        <outlet property="imgPreview" destination="edt-Wd-216" id="edt-Mf-321"/>
-                        <outlet property="lblFileName" destination="edt-2d-220" id="edt-Nf-322"/>
-                        <outlet property="lblDimensions" destination="edt-3d-221" id="edt-Pf-323"/>
-                        <outlet property="vwOptions" destination="edt-4d-222" id="edt-Qf-324"/>
-                        <outlet property="segFormat" destination="edt-7d-225" id="edt-Rf-325"/>
-                        <outlet property="btnSize" destination="edt-ee-232" id="edt-Sf-326"/>
-                        <outlet property="btnBackground" destination="edt-ke-238" id="edt-Tf-327"/>
-                        <outlet property="lblNote" destination="edt-Ge-259" id="edt-Uf-328"/>
-                        <outlet property="vwHD" destination="edt-He-260" id="edt-Vf-329"/>
-                        <outlet property="lblHDSubtitle" destination="edt-Le-263" id="edt-Wf-330"/>
-                        <outlet property="vwProBadge" destination="edt-Me-264" id="edt-Xf-331"/>
-                        <outlet property="imgHDChevron" destination="edt-Te-270" id="edt-Yf-332"/>
-                        <outlet property="btnSave" destination="edt-cf-287" id="edt-Zf-333"/>
-                        <outlet property="btnShare" destination="edt-ff-290" id="edt-2f-334"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="edt-4f-336" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1000" y="0.0"/>
         </scene>
     </scenes>
     <resources>
@@ -809,18 +448,6 @@
         <namedColor name="Background">
             <color red="0.961" green="0.98" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Badge Color">
-            <color red="0.851" green="0.925" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Border Color">
-            <color red="0.863" green="0.914" blue="0.969" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="BrandPrimary">
-            <color red="0.788" green="0.863" blue="0.949" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Link Color">
-            <color red="0.043" green="0.369" blue="0.843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="PrimaryText">
             <color red="0.059" green="0.11" blue="0.18" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -829,9 +456,6 @@
         </namedColor>
         <namedColor name="Surface Color">
             <color red="1.0" green="1.0" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Ultra Light Blue">
-            <color red="0.918" green="0.953" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

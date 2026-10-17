@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="pro-ba-001" customClass="ProcessedImageCell" customModule="Background_Removal" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pro-ca-002">
+                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pro-da-003">
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pro-ea-004">
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pro-fa-005">
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.35" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="pro-ga-006">
+                                <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pro-ha-007">
+                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="pro-ia-008"/>
+                                    <constraint firstAttribute="height" constant="22" id="pro-ja-009"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pro-ka-010">
+                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+                                <color key="tintColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="pro-ma-011"/>
+                                    <constraint firstAttribute="height" constant="22" id="pro-na-012"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" name="Ultra Light Blue"/>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="pro-La-035"/>
+            <constraints>
+                <constraint firstItem="pro-ca-002" firstAttribute="top" secondItem="pro-ba-001" secondAttribute="top" id="pro-oa-013"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="leading" secondItem="pro-ba-001" secondAttribute="leading" id="pro-pa-014"/>
+                <constraint firstItem="pro-ba-001" firstAttribute="trailing" secondItem="pro-ca-002" secondAttribute="trailing" id="pro-qa-015"/>
+                <constraint firstItem="pro-ba-001" firstAttribute="bottom" secondItem="pro-ca-002" secondAttribute="bottom" id="pro-ra-016"/>
+                <constraint firstItem="pro-da-003" firstAttribute="top" secondItem="pro-ca-002" secondAttribute="top" id="pro-sa-017"/>
+                <constraint firstItem="pro-da-003" firstAttribute="leading" secondItem="pro-ca-002" secondAttribute="leading" id="pro-ta-018"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="trailing" secondItem="pro-da-003" secondAttribute="trailing" id="pro-ua-019"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="bottom" secondItem="pro-da-003" secondAttribute="bottom" id="pro-va-020"/>
+                <constraint firstItem="pro-ea-004" firstAttribute="top" secondItem="pro-ca-002" secondAttribute="top" id="pro-wa-021"/>
+                <constraint firstItem="pro-ea-004" firstAttribute="leading" secondItem="pro-ca-002" secondAttribute="leading" id="pro-xa-022"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="trailing" secondItem="pro-ea-004" secondAttribute="trailing" id="pro-ya-023"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="bottom" secondItem="pro-ea-004" secondAttribute="bottom" id="pro-za-024"/>
+                <constraint firstItem="pro-fa-005" firstAttribute="top" secondItem="pro-ca-002" secondAttribute="top" id="pro-Aa-025"/>
+                <constraint firstItem="pro-fa-005" firstAttribute="leading" secondItem="pro-ca-002" secondAttribute="leading" id="pro-Ba-026"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="trailing" secondItem="pro-fa-005" secondAttribute="trailing" id="pro-Ca-027"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="bottom" secondItem="pro-fa-005" secondAttribute="bottom" id="pro-Da-028"/>
+                <constraint firstItem="pro-ga-006" firstAttribute="centerX" secondItem="pro-ca-002" secondAttribute="centerX" id="pro-Ea-029"/>
+                <constraint firstItem="pro-ga-006" firstAttribute="centerY" secondItem="pro-ca-002" secondAttribute="centerY" id="pro-Fa-030"/>
+                <constraint firstItem="pro-ha-007" firstAttribute="centerX" secondItem="pro-ca-002" secondAttribute="centerX" id="pro-Ga-031"/>
+                <constraint firstItem="pro-ha-007" firstAttribute="centerY" secondItem="pro-ca-002" secondAttribute="centerY" id="pro-Ha-032"/>
+                <constraint firstItem="pro-ka-010" firstAttribute="top" secondItem="pro-ca-002" secondAttribute="top" constant="4" id="pro-Ja-033"/>
+                <constraint firstItem="pro-ca-002" firstAttribute="trailing" secondItem="pro-ka-010" secondAttribute="trailing" constant="4" id="pro-Ka-034"/>
+            </constraints>
+            <size key="customSize" width="64" height="64"/>
+            <connections>
+                <outlet property="vwContainer" destination="pro-ca-002" id="pro-Ma-036"/>
+                <outlet property="vwChecker" destination="pro-da-003" id="pro-Na-037"/>
+                <outlet property="imgThumb" destination="pro-ea-004" id="pro-Pa-038"/>
+                <outlet property="vwDim" destination="pro-fa-005" id="pro-Qa-039"/>
+                <outlet property="spinner" destination="pro-ga-006" id="pro-Ra-040"/>
+                <outlet property="imgStatus" destination="pro-ha-007" id="pro-Sa-041"/>
+                <outlet property="imgCheck" destination="pro-ka-010" id="pro-Ta-042"/>
+            </connections>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.086" green="0.467" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Ultra Light Blue">
+            <color red="0.918" green="0.953" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

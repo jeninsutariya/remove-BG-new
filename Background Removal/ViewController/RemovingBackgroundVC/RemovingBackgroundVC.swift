@@ -4,6 +4,9 @@
 //
 //  Created by Jenin Sutariya on 16/10/26.
 //
+//  Processing screen: shows each photo while Apple Vision removes its background,
+//  reveals the real transparent result, then opens the editor.
+//
 
 import UIKit
 
@@ -16,42 +19,46 @@ class RemovingBackgroundVC: UIViewController {
     @IBOutlet weak var lblStatus: UILabel!
     @IBOutlet weak var lblPercent: UILabel!
 
+    // MARK: - Input
+
+    /// Single photo (kept for existing callers).
     var image: UIImage?
+    /// Photos from ImageSourcePickerVC (one or many).
+    var pickedImages: [PickedImage] = []
+    /// Existing project to (re)process instead of creating a new one.
+    var viewModel: BackgroundRemovalViewModel?
+
+    enum Destination {
+        case editor
+        case changeBackground
+    }
+    /// What opens after processing.
+    var destination: Destination = .editor
 
     // MARK: - Views
 
     private let mainView = UIView()
-    private let baseImageView = UIImageView()      // checkerboard
-    private let removebgImageView = UIImageView()  // result (cut-out)
-    private let imageView = UIImageView()          // original (on top, masked)
-
-    // MARK: - Scan animation
+    private let baseImageView = UIImageView()      // checkerboard (UI only)
+    private let removebgImageView = UIImageView()  // transparent result
+    private let imageView = UIImageView()          // original photo
 
     private let scanColor = UIColor(red: 0.16, green: 0.42, blue: 1.0, alpha: 1.0)
-    private let scanLineView = UIView()
-    private let scanTrailLayer = CAGradientLayer()
-    private let revealMaskLayer = CALayer()
-
-    private let scanLineHeight: CGFloat = 3
-    private let scanTrailHeight: CGFloat = 70
-    private let sweepDuration: CFTimeInterval = 1.8
-
-    private var displayLink: CADisplayLink?
-    private var sweepStart: CFTimeInterval = 0
-    private var scanProgress: CGFloat = 0
-    private var isRevealing = false
-    private var resultImage: UIImage?
+    private let scanView = UIView()
+    private let scanGlowLayer = CAGradientLayer()
+    private let scanLineLayer = CALayer()
+    private let scanHeight: CGFloat = 90
 
     private var mainWidthConstraint: NSLayoutConstraint?
     private var mainHeightConstraint: NSLayoutConstraint?
 
-    // MARK: - Processing state
+    // MARK: - State
 
-    private var session: EditSession?
-    private var processingTask: Task<Void, Never>?
-    private var processingStart = CACurrentMediaTime()
-    private var progress: Float = 0
-    private var didOpenEditor = false
+    private var displayedImageSize: CGSize?
+    private var displayIndex = 0
+    private var displayedItemID: UUID?
+    private var isRevealing = false
+    private var didFinish = false
+    private var observers: [NSObjectProtocol] = []
 
     // MARK: - Lifecycle
 
@@ -59,104 +66,35 @@ class RemovingBackgroundVC: UIViewController {
         super.viewDidLoad()
         setupImageView()
         setupScanViews()
-        setupProgress()
-        startBackgroundRemoval()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        startScanning()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        stopScanning()   // CADisplayLink retains self, so always invalidate
+        progressView.progress = 0
+        lblStatus.text = "Preparing photos…"
+        lblPercent.text = ""
+        mainView.alpha = 0
+        prepareProject()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateImageSize()
-        layoutScan(progress: scanProgress)
-    }
-
-    // MARK: - Background Removal
-
-    /// Runs Vision off the main thread; the scan animation reveals the result when it's ready.
-    private func startBackgroundRemoval() {
-        guard let image else { return }
-        let working = BGRemovalEngine.normalized(image)
-        guard let cgImage = working.cgImage else {
-            showFailure(BGRemovalError.unavailable("this image format isn't supported"))
-            return
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        scanView.bounds = CGRect(x: 0, y: 0, width: mainView.bounds.width, height: scanHeight)
+        if scanView.layer.animation(forKey: "scan") == nil {
+            scanView.center = CGPoint(x: mainView.bounds.midX, y: 0)
         }
-        processingStart = CACurrentMediaTime()
-        processingTask = Task { [weak self] in
-            do {
-                let mask = try await Task.detached(priority: .userInitiated) {
-                    try BGRemovalEngine.makeMask(for: cgImage)
-                }.value
-                guard let self, !Task.isCancelled else { return }
-                let session = EditSession(original: working, mask: mask)
-                self.session = session
-                self.resultImage = session.cutout   // picked up by the next sweep in tick(_:)
-            } catch {
-                guard let self, !Task.isCancelled else { return }
-                self.showFailure(error)
-            }
-        }
+        scanGlowLayer.frame = scanView.bounds
+        scanLineLayer.frame = CGRect(x: 0, y: scanHeight / 2 - 1.5, width: mainView.bounds.width, height: 3)
+        CATransaction.commit()
     }
 
-    private func setupProgress() {
-        progressView.progress = 0
-        lblStatus.text = "Preparing photo"
-        lblPercent.text = "0%"
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isMovingFromParent || didFinish { stopScanning(animated: false) }
     }
 
-    private func updateProgress() {
-        if isRevealing {
-            progress = max(progress, 0.9 + 0.1 * Float(scanProgress))
-        } else if resultImage == nil {
-            // Ease towards 90% while Vision is working.
-            let elapsed = CACurrentMediaTime() - processingStart
-            progress = Float(0.9 * (1 - exp(-elapsed / 1.6)))
-        }
-        progressView.setProgress(progress, animated: false)
-        let percent = Int((progress * 100).rounded())
-        lblPercent.text = "\(percent)%"
-        switch percent {
-        case ..<20: lblStatus.text = "Preparing photo"
-        case ..<55: lblStatus.text = "Finding the subject"
-        case ..<90: lblStatus.text = "Detecting edges"
-        case ..<100: lblStatus.text = "Cleaning up"
-        default: lblStatus.text = "Done"
-        }
+    deinit {
+        observers.forEach { NotificationCenter.default.removeObserver($0) }
     }
-
-    private func showFailure(_ error: Error) {
-        stopScanning()
-        let alert = UIAlertController(title: "Couldn't remove the background",
-                                      message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        })
-        present(alert, animated: true)
-    }
-
-    /// Replaces this screen with the editor (07 Result & Editor).
-    private func openEditor() {
-        guard !didOpenEditor, let session, let nav = navigationController else { return }
-        didOpenEditor = true
-        let editor = EditorVC.fatchEditorInstance()
-        editor.session = session
-        var stack = nav.viewControllers
-        if let index = stack.firstIndex(of: self) {
-            stack[index] = editor
-        } else {
-            stack.append(editor)
-        }
-        nav.setViewControllers(stack, animated: true)
-    }
-
 
     // MARK: - Setup Image View
 
@@ -179,17 +117,16 @@ class RemovingBackgroundVC: UIViewController {
             mainHeightConstraint!
         ])
 
-        // 1. Checkerboard (bottom)
+        // 1. Checkerboard (bottom) – visual indicator only.
         baseImageView.contentMode = .scaleAspectFill
         baseImageView.image = UIImage(named: "Remove BG Image")
 
-        // 2. Result – empty until processing finishes
+        // 2. Transparent result.
         removebgImageView.contentMode = .scaleAspectFit
-        removebgImageView.image = nil
+        removebgImageView.alpha = 0
 
-        // 3. Original (top) – gets masked away from the top during reveal
+        // 3. Original photo (top) – fades away when the result is ready.
         imageView.contentMode = .scaleAspectFit
-        imageView.image = image
 
         [baseImageView, removebgImageView, imageView].forEach { iv in
             iv.translatesAutoresizingMaskIntoConstraints = false
@@ -206,145 +143,263 @@ class RemovingBackgroundVC: UIViewController {
     }
 
     private func setupScanViews() {
-        // Mask on the original image: only the area BELOW the line stays visible
-        revealMaskLayer.backgroundColor = UIColor.black.cgColor
-        imageView.layer.mask = revealMaskLayer
-
-        // Soft blue glow trailing above the line
-        scanTrailLayer.colors = [
-            scanColor.withAlphaComponent(0.0).cgColor,
-            scanColor.withAlphaComponent(0.35).cgColor
+        // Soft glow around a bright line; moved with Core Animation (no per-frame work).
+        scanGlowLayer.colors = [
+            scanColor.withAlphaComponent(0).cgColor,
+            scanColor.withAlphaComponent(0.28).cgColor,
+            scanColor.withAlphaComponent(0).cgColor
         ]
-        scanTrailLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        scanTrailLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        mainView.layer.addSublayer(scanTrailLayer)
+        scanGlowLayer.locations = [0, 0.5, 1]
+        scanView.layer.addSublayer(scanGlowLayer)
 
-        // The bright line itself, with a glow
-        scanLineView.backgroundColor = scanColor
-        scanLineView.layer.shadowColor = scanColor.cgColor
-        scanLineView.layer.shadowOpacity = 1
-        scanLineView.layer.shadowRadius = 8
-        scanLineView.layer.shadowOffset = .zero
-        mainView.addSubview(scanLineView)
+        scanLineLayer.backgroundColor = scanColor.cgColor
+        scanLineLayer.shadowColor = scanColor.cgColor
+        scanLineLayer.shadowOpacity = 1
+        scanLineLayer.shadowRadius = 8
+        scanLineLayer.shadowOffset = .zero
+        scanView.layer.addSublayer(scanLineLayer)
 
-        layoutScan(progress: 0)
+        scanView.isUserInteractionEnabled = false
+        scanView.alpha = 0
+        mainView.addSubview(scanView)
     }
 
-    // MARK: - Scan Loop
+    // MARK: - Project
+
+    private func prepareProject() {
+        observeViewModel()
+        guard viewModel == nil else {
+            beginDisplay()
+            return
+        }
+        var photos = pickedImages
+        if photos.isEmpty, let image {
+            photos = [PickedImage(source: .image(image), suggestedName: nil)]
+        }
+        guard !photos.isEmpty else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+        Task { [weak self] in
+            do {
+                let model = try await BackgroundRemovalViewModel.create(from: photos)
+                guard let self else { return }
+                self.viewModel = model
+                self.observeViewModel()
+                self.beginDisplay()
+            } catch {
+                guard let self else { return }
+                self.lblStatus.text = "Couldn't read the photos"
+                self.presentErrorAlert(title: "Couldn't open the photos", message: error.localizedDescription)
+            }
+        }
+    }
+
+    private func observeViewModel() {
+        guard let viewModel, observers.isEmpty else { return }
+        let center = NotificationCenter.default
+        observers.append(center.addObserver(forName: BackgroundRemovalViewModel.itemDidChangeNotification,
+                                            object: viewModel, queue: .main) { [weak self] note in
+            guard let id = note.userInfo?[BackgroundRemovalViewModel.itemIDKey] as? UUID else { return }
+            MainActor.assumeIsolated { self?.itemDidChange(id) }
+        })
+        observers.append(center.addObserver(forName: BackgroundRemovalViewModel.queueDidFinishNotification,
+                                            object: viewModel, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.updateProgress() }
+        })
+    }
+
+    private func beginDisplay() {
+        guard let viewModel else { return }
+        // Start at the first item that still needs work (or the first item).
+        displayIndex = viewModel.items.firstIndex { !$0.isCompleted } ?? 0
+        showItem(at: displayIndex)
+        viewModel.startProcessing()
+        updateProgress()
+    }
+
+    // MARK: - Display
+
+    private func showItem(at index: Int) {
+        guard let viewModel, viewModel.items.indices.contains(index) else {
+            finish()
+            return
+        }
+        let item = viewModel.items[index]
+        displayedItemID = item.id
+        isRevealing = false
+        updateLabels(for: item, index: index)
+
+        Task { [weak self] in
+            guard let self else { return }
+            let preview = await viewModel.originalPreview(for: item.id, maxPixel: 1600)
+            guard self.displayedItemID == item.id else { return }
+            self.imageView.image = preview
+            self.imageView.alpha = 1
+            self.removebgImageView.image = nil
+            self.removebgImageView.alpha = 0
+            self.displayedImageSize = preview?.size
+            self.updateImageSize()
+            self.view.layoutIfNeeded()
+
+            // Fade in + gentle scale into position.
+            self.mainView.transform = CGAffineTransform(scaleX: 0.94, y: 0.94)
+            UIView.animate(withDuration: 0.45, delay: 0, options: [.curveEaseOut]) {
+                self.mainView.alpha = 1
+                self.mainView.transform = .identity
+            }
+
+            if let current = viewModel.item(item.id) {
+                switch current.status {
+                case .completed: self.reveal(current)
+                case .failed: self.showFailure(current)
+                case .waiting, .processing: self.startScanning()
+                }
+            }
+        }
+    }
+
+    private func itemDidChange(_ id: UUID) {
+        updateProgress()
+        guard id == displayedItemID, !isRevealing, let item = viewModel?.item(id) else { return }
+        updateLabels(for: item, index: displayIndex)
+        switch item.status {
+        case .completed: reveal(item)
+        case .failed: showFailure(item)
+        case .processing, .waiting: startScanning()
+        }
+    }
+
+    private func updateLabels(for item: BackgroundRemovalItem, index: Int) {
+        let total = viewModel?.items.count ?? 1
+        lblTitle.text = "Removing background"
+        lblSubtitle.text = total > 1 ? "Image \(index + 1) of \(total)" : "Finding the subject and cleaning edges"
+        switch item.status {
+        case .waiting: lblStatus.text = "Waiting…"
+        case .processing: lblStatus.text = "Detecting the subject with Apple Vision"
+        case .completed: lblStatus.text = "Background removed"
+        case .failed: lblStatus.text = "Couldn't process this photo"
+        }
+    }
+
+    /// Progress = finished photos / total (real work, no simulated percentage).
+    private func updateProgress() {
+        guard let viewModel else { return }
+        let total = viewModel.items.count
+        let finished = viewModel.items.filter { $0.status == .completed || $0.status == .failed }.count
+        progressView.setProgress(Float(finished) / Float(max(total, 1)), animated: true)
+        lblPercent.text = total > 1 ? "\(finished)/\(total)" : (finished == 1 ? "Done" : "")
+    }
+
+    // MARK: - Scan animation
 
     private func startScanning() {
-        stopScanning()
-        isRevealing = false
-        sweepStart = CACurrentMediaTime()
-        let link = CADisplayLink(target: self, selector: #selector(tick(_:)))
-        link.add(to: .main, forMode: .common)
-        displayLink = link
+        guard scanView.layer.animation(forKey: "scan") == nil, mainView.bounds.height > 0 else { return }
+        scanView.center = CGPoint(x: mainView.bounds.midX, y: 0)
+        let move = CABasicAnimation(keyPath: "position.y")
+        move.fromValue = 0
+        move.toValue = mainView.bounds.height
+        move.duration = 1.6
+        move.autoreverses = true
+        move.repeatCount = .infinity
+        move.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        scanView.layer.add(move, forKey: "scan")
+        UIView.animate(withDuration: 0.25) { self.scanView.alpha = 1 }
     }
 
-    private func stopScanning() {
-        displayLink?.invalidate()
-        displayLink = nil
+    private func stopScanning(animated: Bool) {
+        let removeAnimation = { self.scanView.layer.removeAnimation(forKey: "scan") }
+        guard animated else {
+            scanView.alpha = 0
+            removeAnimation()
+            return
+        }
+        UIView.animate(withDuration: 0.2, animations: { self.scanView.alpha = 0 }) { _ in removeAnimation() }
     }
 
-    @objc private func tick(_ link: CADisplayLink) {
-        updateProgress()
-        let t = CGFloat((link.timestamp - sweepStart) / sweepDuration)
+    /// Fades the original background away to reveal the real transparent result.
+    private func reveal(_ item: BackgroundRemovalItem) {
+        guard let viewModel, !isRevealing else { return }
+        isRevealing = true
+        stopScanning(animated: true)
+        Task { [weak self] in
+            guard let self else { return }
+            let foreground = await viewModel.foregroundPreview(for: item.id, maxPixel: 1600)
+            guard self.displayedItemID == item.id else { return }
+            self.removebgImageView.image = foreground
+            UIView.animate(withDuration: 0.55, delay: 0, options: [.curveEaseInOut]) {
+                self.imageView.alpha = 0
+                self.removebgImageView.alpha = 1
+            } completion: { _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [weak self] in
+                    self?.advance()
+                }
+            }
+        }
+    }
 
-        if t >= 1 {
-            if isRevealing {
-                finishReveal()
-            } else if let result = resultImage {
-                // Result is ready → next sweep reveals it
-                removebgImageView.image = result
-                isRevealing = true
-                sweepStart = link.timestamp
-                scanProgress = 0
-                layoutScan(progress: 0)
-            } else {
-                // Still processing → sweep again
-                sweepStart = link.timestamp
-                scanProgress = 0
-                layoutScan(progress: 0)
+    private func showFailure(_ item: BackgroundRemovalItem) {
+        stopScanning(animated: true)
+        guard let viewModel else { return }
+        if viewModel.items.count == 1 {
+            presentErrorAlert(title: "Couldn't remove the background",
+                              message: item.errorMessage ?? "Please try again.",
+                              retryTitle: "Try Again") { [weak self] in
+                guard let self else { return }
+                self.isRevealing = false
+                self.startScanning()
+                viewModel.retry(item.id)
             }
             return
         }
-
-        scanProgress = easeInOut(t)
-        layoutScan(progress: scanProgress)
+        // Batch: keep going; the editor lets the user retry this photo later.
+        isRevealing = true
+        UIView.animate(withDuration: 0.3) { self.imageView.alpha = 0.45 }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in self?.advance() }
     }
 
-    private func finishReveal() {
-        stopScanning()
-        scanProgress = 1
-        layoutScan(progress: 1)
-        imageView.isHidden = true
-        hideScanLine()
-        progress = 1
-        updateProgress()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
-            self?.openEditor()
+    private func advance() {
+        guard let viewModel else { return }
+        displayIndex += 1
+        if displayIndex < viewModel.items.count {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.mainView.alpha = 0
+            }, completion: { _ in
+                self.showItem(at: self.displayIndex)
+            })
+        } else {
+            finish()
         }
     }
 
-    private func hideScanLine() {
-        UIView.animate(withDuration: 0.3) {
-            self.scanLineView.alpha = 0
+    private func finish() {
+        guard !didFinish, let viewModel else { return }
+        guard !viewModel.project.completedItems.isEmpty else {
+            presentErrorAlert(title: "No backgrounds removed",
+                              message: viewModel.items.first?.errorMessage ?? "None of the photos could be processed.",
+                              retryTitle: "Try Again") { [weak self] in
+                guard let self else { return }
+                viewModel.startProcessing(viewModel.items.map(\.id))
+                self.displayIndex = 0
+                self.showItem(at: 0)
+            }
+            return
         }
-        let fade = CABasicAnimation(keyPath: "opacity")
-        fade.fromValue = 1
-        fade.toValue = 0
-        fade.duration = 0.3
-        scanTrailLayer.opacity = 0
-        scanTrailLayer.add(fade, forKey: "fade")
-    }
-
-    /// Positions the line, glow and mask for a progress value 0...1
-    private func layoutScan(progress: CGFloat) {
-        let bounds = mainView.bounds
-        guard bounds.width > 0, bounds.height > 0 else { return }
-
-        let y = bounds.height * progress
-
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-
-        scanLineView.frame = CGRect(x: 0,
-                                    y: y - scanLineHeight / 2,
-                                    width: bounds.width,
-                                    height: scanLineHeight)
-
-        scanTrailLayer.frame = CGRect(x: 0,
-                                      y: y - scanTrailHeight,
-                                      width: bounds.width,
-                                      height: scanTrailHeight)
-
-        // While processing: show the whole original.
-        // While revealing: show the original only below the line.
-        revealMaskLayer.frame = isRevealing
-            ? CGRect(x: 0, y: y, width: bounds.width, height: max(0, bounds.height - y))
-            : bounds
-
-        CATransaction.commit()
-    }
-
-    private func easeInOut(_ t: CGFloat) -> CGFloat {
-        t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2
+        didFinish = true
+        lblStatus.text = "Background removed"
+        openEditor()
     }
 
     // MARK: - Update Image Size
 
     private func updateImageSize() {
-        guard let image = image else { return }
-
+        guard let imageSize = displayedImageSize ?? image?.size else { return }
         let containerSize = veBackground.bounds.size
-        let imageSize = image.size
-
         guard containerSize.width > 0, containerSize.height > 0,
               imageSize.width > 0, imageSize.height > 0 else { return }
 
         let scale = min(containerSize.width / imageSize.width,
                         containerSize.height / imageSize.height)
-
         let fittedWidth = imageSize.width * scale
         let fittedHeight = imageSize.height * scale
 
@@ -357,11 +412,30 @@ class RemovingBackgroundVC: UIViewController {
         }
     }
 
+    // MARK: - Navigation
+
+    private func openEditor() {
+        guard let viewModel, let nav = navigationController else { return }
+        let editor = RemovingBackgroundEditorVC.fatchEditorInstance()
+        editor.viewModel = viewModel
+        var stack = nav.viewControllers
+        let index = stack.firstIndex(of: self) ?? stack.count
+        stack.removeSubrange(index...)
+        stack.append(editor)
+        if destination == .changeBackground, let first = viewModel.project.completedItems.first {
+            let change = ChangeBackgroundVC.fatchEditorInstance()
+            change.viewModel = viewModel
+            change.itemID = first.id
+            stack.append(change)
+        }
+        nav.setViewControllers(stack, animated: true)
+    }
+
     // MARK: - Cancel
 
     @IBAction func btnCancel(_ sender: UIButton) {
-        processingTask?.cancel()
-        stopScanning()
+        viewModel?.cancelProcessing()
+        stopScanning(animated: false)
         navigationController?.popViewController(animated: true)
     }
 }

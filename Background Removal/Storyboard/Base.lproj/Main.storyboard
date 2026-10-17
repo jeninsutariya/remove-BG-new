@@ -2101,6 +2101,9 @@ Remove</string>
                                 <state key="normal" title="Restore purchases">
                                     <color key="titleColor" name="AccentColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="btnRestore:" destination="HuN-WE-KLc" eventType="touchUpInside" id="puR-st-001"/>
+                                </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JJI-4B-gIh">
                                 <rect key="frame" x="0.0" y="173" width="393" height="679"/>
@@ -2427,6 +2430,9 @@ Remove</string>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isCircleOn" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="btnContinue:" destination="HuN-WE-KLc" eventType="touchUpInside" id="puC-nt-001"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2486,6 +2492,8 @@ Remove</string>
                     <tabBarItem key="tabBarItem" title="Pro" image="ProTab" selectedImage="ProTab" id="Jvp-vu-KEH"/>
                     <connections>
                         <outlet property="tblProdact" destination="RM1-PW-ghH" id="osv-ei-p1n"/>
+                        <outlet property="btnContinue" destination="ujn-Wj-2TR" id="puC-ou-001"/>
+                        <outlet property="btnRestore" destination="HTQ-LP-jSu" id="puR-ou-001"/>
                         <outlet property="tblProdactHeight" destination="JHz-8e-UqL" id="ZZT-94-CQr"/>
                         <outlet property="vwLimage" destination="Dxs-hf-qah" id="qhI-Gl-urY"/>
                         <outlet property="vwRimage" destination="zxF-a5-r4m" id="VwW-c3-O86"/>

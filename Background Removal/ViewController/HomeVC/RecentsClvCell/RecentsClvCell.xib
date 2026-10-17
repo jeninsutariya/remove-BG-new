@@ -48,6 +48,9 @@
                 <constraint firstItem="igp-B6-FHF" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="twM-iy-WHh"/>
             </constraints>
             <size key="customSize" width="284" height="202"/>
+            <connections>
+                <outlet property="imgRecent" destination="ke3-eL-0ma" id="rcC-im-001"/>
+            </connections>
             <point key="canvasLocation" x="317.55725190839695" y="207.04225352112678"/>
         </collectionViewCell>
     </objects>

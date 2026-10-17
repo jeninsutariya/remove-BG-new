@@ -11,6 +11,21 @@ import AVFoundation
 
 protocol ImageSourcePickerDelegate: AnyObject {
     func imageSourcePicker(_ picker: ImageSourcePickerVC,didSelect images: [UIImage])
+    /// Memory-friendly variant: gallery photos arrive as temporary files (not decoded), in selection order.
+    func imageSourcePicker(_ picker: ImageSourcePickerVC, didPick images: [PickedImage])
+}
+
+extension ImageSourcePickerDelegate {
+    func imageSourcePicker(_ picker: ImageSourcePickerVC,didSelect images: [UIImage]) {}
+
+    /// Default keeps existing `didSelect` delegates working.
+    func imageSourcePicker(_ picker: ImageSourcePickerVC, didPick images: [PickedImage]) {
+        let decoded = images.compactMap { photo -> UIImage? in
+            defer { photo.discardTemporaryFile() }
+            return photo.loadImage(maxPixel: BackgroundRemovalService.maxProcessingDimension)
+        }
+        imageSourcePicker(picker, didSelect: decoded)
+    }
 }
 
 enum ImageSelectionMode {
@@ -72,6 +87,7 @@ class ImageSourcePickerVC: UIViewController {
         var configuration = PHPickerConfiguration()
         
         configuration.filter = .images
+        configuration.selection = .ordered
         
         switch selectionMode {
         case .single:
@@ -142,11 +158,11 @@ class ImageSourcePickerVC: UIViewController {
         present(picker, animated: true)
     }
     
-    private func returnSelectedImages(_ images: [UIImage]) {
+    private func returnSelectedImages(_ images: [PickedImage]) {
         
         delegate?.imageSourcePicker(
             self,
-            didSelect: images
+            didPick: images
         )
         
         dismiss(animated: true)
@@ -219,49 +235,22 @@ extension ImageSourcePickerVC: PHPickerViewControllerDelegate {
             return
         }
         
-        let group = DispatchGroup()
-        let lock = NSLock()
-        
-        var selectedImages: [Int: UIImage] = [:]
-        
-        for (index, result) in results.enumerated() {
-            
-            let provider = result.itemProvider
-            
-            guard provider.canLoadObject(ofClass: UIImage.self) else {
-                continue
-            }
-            
-            group.enter()
-            
-            provider.loadObject(ofClass: UIImage.self) {
-                object, error in
-                
-                defer {
-                    group.leave()
-                }
-                
-                guard let image = object as? UIImage else {
-                    return
-                }
-                
-                lock.lock()
-                selectedImages[index] = image
-                lock.unlock()
-            }
-        }
-        
-        group.notify(queue: .main) { [weak self] in
+        // Copy the picked files (no full-size decode); order follows the user's selection.
+        LoaderView.shared.show()
+        Task { [weak self] in
+            let images = await PhotoPickerLoader.load(results)
+            LoaderView.shared.hide()
             
             guard let self = self else {
+                images.forEach { $0.discardTemporaryFile() }
                 return
             }
             
-            let images = selectedImages
-                .sorted { $0.key < $1.key }
-                .map { $0.value }
-            
             guard !images.isEmpty else {
+                self.showAlert(
+                    title: "Couldn't Open Photo",
+                    message: "The selected photos couldn't be loaded. Please try again."
+                )
                 return
             }
             
@@ -285,7 +274,7 @@ extension ImageSourcePickerVC: UIImagePickerControllerDelegate,UINavigationContr
                 return
             }
             
-            self.returnSelectedImages([image])
+            self.returnSelectedImages([PickedImage(source: .image(image), suggestedName: nil)])
         }
     }
     

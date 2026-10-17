@@ -42,6 +42,12 @@ class HomeVC: UIViewController {
     @IBOutlet weak var vwPageOne: UIView!
     var timer: Timer?
     var currentIndex = 0
+    /// Saved projects shown in Recents (newest first).
+    var recentProjects: [BackgroundRemovalProject] = []
+    /// What the next picked photos are for.
+    var pendingDestination: RemovingBackgroundVC.Destination = .editor
+    private var storageObserver: NSObjectProtocol?
+    static let batchSelectionLimit = 20
     var homeCardData: [HomeCardModel] = [
         HomeCardModel(title: "Batch Remove", subtitle: "Clear a whole album at once", topImage: "top bg home", bottomImage: "bottom bg home", id: 1),
         HomeCardModel(title: "Change Background", subtitle: "Pick a color or photo backdrop", topImage: "top chang bg", bottomImage: "bottom chang bg", id: 2),
@@ -62,6 +68,23 @@ class HomeVC: UIViewController {
         setTransform(self.vwChangeBGImage)
         setTransform(self.vwTextBehindImage)
         setTransform(self.vwBatchRemoveImage)
+        
+        storageObserver = NotificationCenter.default.addObserver(forName: ProjectStorageService.didChangeNotification,
+                                                                 object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.reloadRecents() }
+        }
+        reloadRecents()
+    }
+    
+    func reloadRecents() {
+        Task { [weak self] in
+            let projects = await Task.detached(priority: .utility) {
+                Array(ProjectStorageService.shared.loadAllProjects().prefix(10))
+            }.value
+            guard let self else { return }
+            self.recentProjects = projects
+            self.clvRecents.reloadData()
+        }
     }
     func setupCollectionView(){
         self.clvCardView.delegate = self
@@ -156,9 +179,15 @@ class HomeVC: UIViewController {
     }
     
     func selectRemoveBG() {
+        openImagePicker(mode: .single, destination: .editor)
+    }
+    
+    func openImagePicker(mode: ImageSelectionMode, destination: RemovingBackgroundVC.Destination) {
+        pendingDestination = destination
         let sheetVC = ImageSourcePickerVC.fatchInstance()
         sheetVC.delegate = self
-        sheetVC.selectionMode = .single
+        sheetVC.selectionMode = mode
+        sheetVC.maximumSelectionLimit = HomeVC.batchSelectionLimit
         let contentHeight = calculateContentHeight(for: sheetVC)
         showImageSourcePicker(from: self,vc: sheetVC,contentHeight: contentHeight)
     }
@@ -174,10 +203,24 @@ class HomeVC: UIViewController {
         self.selectRemoveBG()
     }
     @IBAction func btnChangeBackground(_ sender: UIButton) {
+        openImagePicker(mode: .single, destination: .changeBackground)
     }
     @IBAction func btnTextBehind(_ sender: UIButton) {
     }
     @IBAction func btnBatchRemove(_ sender: UIButton) {
+        openImagePicker(mode: .multiple, destination: .editor)
+    }
+    
+    func openProject(_ project: BackgroundRemovalProject) {
+        // Reload from disk so the latest saved state is used.
+        guard let latest = ProjectStorageService.shared.loadProject(id: project.id) else {
+            showToast(message: "This project is no longer available")
+            reloadRecents()
+            return
+        }
+        let vc = RemovingBackgroundEditorVC.fatchEditorInstance()
+        vc.viewModel = BackgroundRemovalViewModel(project: latest)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     
@@ -186,7 +229,7 @@ class HomeVC: UIViewController {
 extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.clvRecents{
-            return 10
+            return recentProjects.count
         }else{
             return homeCardData.count
         }
@@ -195,6 +238,7 @@ extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.clvRecents{
             let  cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentsClvCell", for: indexPath) as! RecentsClvCell
+            cell.setData(project: recentProjects[indexPath.row])
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeClvCell", for: indexPath) as! HomeClvCell
@@ -217,27 +261,32 @@ extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollect
         setPageViewAnimate()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == clvRecents {
+            openProject(recentProjects[indexPath.row])
+            return
+        }
         guard collectionView == clvCardView else { return }
         let item = homeCardData[indexPath.row]
         print("click = \(item.title),\(item.subtitle) = id: \(item.id)")
+        switch item.id {
+        case 1:
+            openImagePicker(mode: .multiple, destination: .editor)
+        case 2:
+            openImagePicker(mode: .single, destination: .changeBackground)
+        default:
+            break
+        }
     }
 }
 
 extension HomeVC: ImageSourcePickerDelegate{
-    func imageSourcePicker(_ picker: ImageSourcePickerVC, didSelect images: [UIImage]) {
+    func imageSourcePicker(_ picker: ImageSourcePickerVC, didPick images: [PickedImage]) {
         print("Selected images: \(images.count)")
+        guard !images.isEmpty else { return }
         
-        if let firstImage = images.first {
-            let vc = RemovingBackgroundVC.fatchInstance()
-            vc.image = firstImage
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-        
-        // Process all selected images.
-//        for image in images {
-//            // Add your image-processing logic here.
-//        }
+        let vc = RemovingBackgroundVC.fatchInstance()
+        vc.pickedImages = images
+        vc.destination = pendingDestination
+        self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
 }

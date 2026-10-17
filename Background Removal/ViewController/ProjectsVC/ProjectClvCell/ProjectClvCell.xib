@@ -95,6 +95,7 @@
             <connections>
                 <outlet property="lblName" destination="Tev-S7-8pk" id="Z1V-SD-ACb"/>
                 <outlet property="lbltype" destination="Wrs-2s-V3s" id="FNy-ax-TdM"/>
+                <outlet property="imgThumb" destination="mqS-rc-DAW" id="pjC-im-001"/>
             </connections>
             <point key="canvasLocation" x="328.24427480916029" y="200"/>
         </collectionViewCell>
