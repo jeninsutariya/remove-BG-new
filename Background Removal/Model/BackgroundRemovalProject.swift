@@ -32,7 +32,7 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
         self.modifiedAt = Date()
     }
 
-    private enum CodingKeys: String, CodingKey {
+    nonisolated private enum CodingKeys: String, CodingKey {
         case id, name, items, exportSettings, mode, createdAt, modifiedAt
     }
 

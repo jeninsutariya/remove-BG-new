@@ -11,7 +11,7 @@ nonisolated struct BackgroundImage: Decodable, Identifiable, Hashable {
     let id: Int
     let image: URL
 
-    private enum CodingKeys: String, CodingKey {
+    nonisolated private enum CodingKeys: String, CodingKey {
         case id, image, url, imageURL = "image_url", imageUrl
     }
 

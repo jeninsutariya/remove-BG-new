@@ -72,7 +72,7 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         self.modifiedAt = Date()
     }
 
-    private enum CodingKeys: String, CodingKey {
+    nonisolated private enum CodingKeys: String, CodingKey {
         case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, createdAt, modifiedAt
     }
 

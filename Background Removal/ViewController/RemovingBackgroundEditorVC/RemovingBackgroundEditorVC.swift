@@ -34,7 +34,8 @@ class RemovingBackgroundEditorVC: UIViewController {
     @IBOutlet weak var thumbnailsHeight: NSLayoutConstraint!
     @IBOutlet weak var vwToolbar: UIView!
     @IBOutlet weak var clvTools: UICollectionView!
-    @IBOutlet weak var containerBottom: NSLayoutConstraint!
+    /// Strong: it is deactivated while a tool sheet is open.
+    @IBOutlet var containerBottom: NSLayoutConstraint!
 
     /// Set by the presenter before the screen appears.
     var viewModel: BackgroundRemovalViewModel!
@@ -279,8 +280,10 @@ class RemovingBackgroundEditorVC: UIViewController {
                 guard let self, !Task.isCancelled else { return }
                 showToast(message: "This background couldn't be loaded. Check your connection.")
                 if self.draftBackground != nil, case .remoteImage = background {
-                    self.draftBackground = BackgroundSelection.none
-                    (self.activePanel as? BackgroundToolView)?.configure(viewModel: viewModel, selection: .none)
+                    // Fall back to the saved background; ✓ then changes nothing.
+                    self.draftBackground = nil
+                    let saved = self.currentItem?.background ?? BackgroundSelection.none
+                    (self.activePanel as? BackgroundToolView)?.configure(viewModel: viewModel, selection: saved)
                     self.renderPreview()
                 }
             }

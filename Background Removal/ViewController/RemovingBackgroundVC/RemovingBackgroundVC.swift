@@ -250,7 +250,7 @@ class RemovingBackgroundVC: UIViewController {
                 self.mainView.transform = .identity
             }
 
-            if let current = viewModel.item(item.id) {
+            if let current = viewModel.item(item.id), !self.isRevealing {
                 switch current.status {
                 case .completed: self.reveal(current)
                 case .failed: self.showFailure(current)
@@ -340,6 +340,8 @@ class RemovingBackgroundVC: UIViewController {
     }
 
     private func showFailure(_ item: BackgroundRemovalItem) {
+        guard !isRevealing else { return }   // already handled for this photo
+        isRevealing = true
         stopScanning(animated: true)
         guard let viewModel else { return }
         if viewModel.items.count == 1 {

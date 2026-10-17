@@ -85,7 +85,7 @@ nonisolated enum EditorTool: String, CaseIterable {
         switch self {
         case .background: return "square.stack.3d.up"
         case .refine: return "eraser"
-        case .shadow: return "person.crop.circle.badge"
+        case .shadow: return "circle.lefthalf.filled"
         case .resize: return "crop"
         }
     }

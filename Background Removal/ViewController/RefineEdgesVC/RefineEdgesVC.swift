@@ -55,6 +55,8 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     private var lastPoint: CGPoint?
     private var history: [CGImage] = []
     private var historyIndex = 0
+    /// True once a stroke was made (history may have dropped the initial matte).
+    private var didEdit = false
     private var needsMaskRefresh = false
     private var displayLink: CADisplayLink?
     private var canvasSize: CGSize = .zero
@@ -311,6 +313,7 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         history.append(snapshot)
         if history.count > 8 { history.removeFirst() }   // full-size mattes are large
         historyIndex = history.count - 1
+        didEdit = true
         updateUndoButtons()
     }
 
@@ -325,7 +328,7 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     }
 
     private func close(apply: Bool) {
-        if apply, historyIndex > 0 {
+        if apply, didEdit {
             onApply?(history[historyIndex])
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
