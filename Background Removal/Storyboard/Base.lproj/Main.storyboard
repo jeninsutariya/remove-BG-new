@@ -2600,6 +2600,11 @@ Remove</string>
                     </view>
                     <connections>
                         <outlet property="veBackground" destination="9C8-Gf-JVc" id="t9g-mB-dLz"/>
+                        <outlet property="lblPercent" destination="mDY-0G-unp" id="rbP-lP-001"/>
+                        <outlet property="lblStatus" destination="6q2-a4-fFw" id="rbP-lS-002"/>
+                        <outlet property="lblSubtitle" destination="dJA-AA-Koj" id="rbP-lU-003"/>
+                        <outlet property="lblTitle" destination="Zzc-rv-pEY" id="rbP-lT-004"/>
+                        <outlet property="progressView" destination="hod-h2-ZTO" id="rbP-pV-005"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mdW-Uw-bqq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

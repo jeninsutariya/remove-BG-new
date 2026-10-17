@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB5E00000000000000000002 /* BGRemovalEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000001 /* BGRemovalEngine.swift */; };
+		AB5E00000000000000000004 /* EditModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000003 /* EditModels.swift */; };
+		AB5E00000000000000000006 /* EditSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000005 /* EditSession.swift */; };
+		AB5E00000000000000000008 /* EditorViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000007 /* EditorViews.swift */; };
+		AB5E0000000000000000000A /* MaskBrushCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000009 /* MaskBrushCanvas.swift */; };
+		AB5E0000000000000000000D /* EditorToolClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000000C /* EditorToolClvCell.swift */; };
+		AB5E0000000000000000000F /* EditorToolClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000000E /* EditorToolClvCell.xib */; };
+		AB5E00000000000000000012 /* ColorSwatchClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000011 /* ColorSwatchClvCell.swift */; };
+		AB5E00000000000000000014 /* ColorSwatchClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000013 /* ColorSwatchClvCell.xib */; };
+		AB5E00000000000000000017 /* BackgroundToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000016 /* BackgroundToolView.swift */; };
+		AB5E00000000000000000019 /* BackgroundToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000018 /* BackgroundToolView.xib */; };
+		AB5E0000000000000000001B /* TextToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000001A /* TextToolView.swift */; };
+		AB5E0000000000000000001D /* TextToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000001C /* TextToolView.xib */; };
+		AB5E0000000000000000001F /* ShadowToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000001E /* ShadowToolView.swift */; };
+		AB5E00000000000000000021 /* ShadowToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000020 /* ShadowToolView.xib */; };
+		AB5E00000000000000000023 /* ResizeToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000022 /* ResizeToolView.swift */; };
+		AB5E00000000000000000025 /* ResizeToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000024 /* ResizeToolView.xib */; };
+		AB5E00000000000000000028 /* EditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000027 /* EditorVC.swift */; };
+		AB5E0000000000000000002B /* RefineEdgesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000002A /* RefineEdgesVC.swift */; };
+		AB5E0000000000000000002E /* ExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5E0000000000000000002D /* ExportVC.swift */; };
+		AB5E00000000000000000031 /* Editor.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB5E00000000000000000030 /* Editor.storyboard */; };
 		DE0C509D307A604D007992F3 /* SettingsTVCCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE0C509C307A604D007992F3 /* SettingsTVCCell.xib */; };
 		DE0C509E307A604D007992F3 /* SettingsTVCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0C509B307A604D007992F3 /* SettingsTVCCell.swift */; };
 		DE13340B3083728500441C3F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = DE13340A3083728500441C3F /* Lottie */; };
@@ -69,6 +90,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB5E00000000000000000001 /* BGRemovalEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BGRemovalEngine.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000003 /* EditModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModels.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000005 /* EditSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSession.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000007 /* EditorViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViews.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000009 /* MaskBrushCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskBrushCanvas.swift; sourceTree = "<group>"; };
+		AB5E0000000000000000000C /* EditorToolClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorToolClvCell.swift; sourceTree = "<group>"; };
+		AB5E0000000000000000000E /* EditorToolClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditorToolClvCell.xib; sourceTree = "<group>"; };
+		AB5E00000000000000000011 /* ColorSwatchClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSwatchClvCell.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000013 /* ColorSwatchClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ColorSwatchClvCell.xib; sourceTree = "<group>"; };
+		AB5E00000000000000000016 /* BackgroundToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundToolView.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000018 /* BackgroundToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackgroundToolView.xib; sourceTree = "<group>"; };
+		AB5E0000000000000000001A /* TextToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToolView.swift; sourceTree = "<group>"; };
+		AB5E0000000000000000001C /* TextToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextToolView.xib; sourceTree = "<group>"; };
+		AB5E0000000000000000001E /* ShadowToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowToolView.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000020 /* ShadowToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShadowToolView.xib; sourceTree = "<group>"; };
+		AB5E00000000000000000022 /* ResizeToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeToolView.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000024 /* ResizeToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResizeToolView.xib; sourceTree = "<group>"; };
+		AB5E00000000000000000027 /* EditorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorVC.swift; sourceTree = "<group>"; };
+		AB5E0000000000000000002A /* RefineEdgesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefineEdgesVC.swift; sourceTree = "<group>"; };
+		AB5E0000000000000000002D /* ExportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVC.swift; sourceTree = "<group>"; };
+		AB5E00000000000000000030 /* Editor.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Editor.storyboard; sourceTree = "<group>"; };
 		DE0C509B307A604D007992F3 /* SettingsTVCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCCell.swift; sourceTree = "<group>"; };
 		DE0C509C307A604D007992F3 /* SettingsTVCCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsTVCCell.xib; sourceTree = "<group>"; };
 		DE1D493D3072B28300E35E44 /* Background Removal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Background Removal.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,6 +183,78 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5E0000000000000000000B /* BackgroundRemoval */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E00000000000000000001 /* BGRemovalEngine.swift */,
+				AB5E00000000000000000003 /* EditModels.swift */,
+				AB5E00000000000000000005 /* EditSession.swift */,
+				AB5E00000000000000000007 /* EditorViews.swift */,
+				AB5E00000000000000000009 /* MaskBrushCanvas.swift */,
+			);
+			path = BackgroundRemoval;
+			sourceTree = "<group>";
+		};
+		AB5E00000000000000000010 /* EditorToolClvCell */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E0000000000000000000C /* EditorToolClvCell.swift */,
+				AB5E0000000000000000000E /* EditorToolClvCell.xib */,
+			);
+			path = EditorToolClvCell;
+			sourceTree = "<group>";
+		};
+		AB5E00000000000000000015 /* ColorSwatchClvCell */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E00000000000000000011 /* ColorSwatchClvCell.swift */,
+				AB5E00000000000000000013 /* ColorSwatchClvCell.xib */,
+			);
+			path = ColorSwatchClvCell;
+			sourceTree = "<group>";
+		};
+		AB5E00000000000000000026 /* ToolPanels */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E00000000000000000016 /* BackgroundToolView.swift */,
+				AB5E00000000000000000018 /* BackgroundToolView.xib */,
+				AB5E0000000000000000001A /* TextToolView.swift */,
+				AB5E0000000000000000001C /* TextToolView.xib */,
+				AB5E0000000000000000001E /* ShadowToolView.swift */,
+				AB5E00000000000000000020 /* ShadowToolView.xib */,
+				AB5E00000000000000000022 /* ResizeToolView.swift */,
+				AB5E00000000000000000024 /* ResizeToolView.xib */,
+			);
+			path = ToolPanels;
+			sourceTree = "<group>";
+		};
+		AB5E00000000000000000029 /* EditorVC */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E00000000000000000027 /* EditorVC.swift */,
+				AB5E00000000000000000010 /* EditorToolClvCell */,
+				AB5E00000000000000000015 /* ColorSwatchClvCell */,
+				AB5E00000000000000000026 /* ToolPanels */,
+			);
+			path = EditorVC;
+			sourceTree = "<group>";
+		};
+		AB5E0000000000000000002C /* RefineEdgesVC */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E0000000000000000002A /* RefineEdgesVC.swift */,
+			);
+			path = RefineEdgesVC;
+			sourceTree = "<group>";
+		};
+		AB5E0000000000000000002F /* ExportVC */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E0000000000000000002D /* ExportVC.swift */,
+			);
+			path = ExportVC;
+			sourceTree = "<group>";
+		};
 		DE0C509A307A6036007992F3 /* SettingsTVCCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,6 +549,7 @@
 		DEF0DFDA3073AE52004B8CA8 /* Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				AB5E00000000000000000030 /* Editor.storyboard */,
 				DEF0DFCC3073786D004B8CA8 /* LaunchScreen.storyboard */,
 				DEF0DFCE3073786D004B8CA8 /* Main.storyboard */,
 			);
@@ -444,6 +559,7 @@
 		DEF0DFDB3073AE5B004B8CA8 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				AB5E0000000000000000000B /* BackgroundRemoval */,
 				DE971B8130740D89006631C7 /* UIViewController+Extension */,
 				DE971B7E30740D85006631C7 /* IBInspectable+Extension */,
 				DE971B8F30740DC7006631C7 /* UserDefaults+Extension */,
@@ -461,6 +577,9 @@
 		DEF0DFDC3073AE66004B8CA8 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				AB5E00000000000000000029 /* EditorVC */,
+				AB5E0000000000000000002C /* RefineEdgesVC */,
+				AB5E0000000000000000002F /* ExportVC */,
 				DE4921F5308249E8003E4794 /* RemovingBackgroundVC */,
 				DEA2B1423081477A001EBD36 /* ImageSourcePickerVC */,
 				DEC5D243307BC746001EA26C /* ProUpgradeVC */,
@@ -542,6 +661,13 @@
 		DE1D493B3072B28300E35E44 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				AB5E0000000000000000000F /* EditorToolClvCell.xib in Resources */,
+				AB5E00000000000000000014 /* ColorSwatchClvCell.xib in Resources */,
+				AB5E00000000000000000019 /* BackgroundToolView.xib in Resources */,
+				AB5E0000000000000000001D /* TextToolView.xib in Resources */,
+				AB5E00000000000000000021 /* ShadowToolView.xib in Resources */,
+				AB5E00000000000000000025 /* ResizeToolView.xib in Resources */,
+				AB5E00000000000000000031 /* Editor.storyboard in Resources */,
 				DEF0DFD53073786D004B8CA8 /* Assets.xcassets in Resources */,
 				DEF0DFD73073786D004B8CA8 /* LaunchScreen.storyboard in Resources */,
 				DE7FAE1A307772B7001E7D59 /* ProjectClvCell.xib in Resources */,
@@ -575,6 +701,20 @@
 		DE1D49393072B28300E35E44 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				AB5E00000000000000000002 /* BGRemovalEngine.swift in Sources */,
+				AB5E00000000000000000004 /* EditModels.swift in Sources */,
+				AB5E00000000000000000006 /* EditSession.swift in Sources */,
+				AB5E00000000000000000008 /* EditorViews.swift in Sources */,
+				AB5E0000000000000000000A /* MaskBrushCanvas.swift in Sources */,
+				AB5E0000000000000000000D /* EditorToolClvCell.swift in Sources */,
+				AB5E00000000000000000012 /* ColorSwatchClvCell.swift in Sources */,
+				AB5E00000000000000000017 /* BackgroundToolView.swift in Sources */,
+				AB5E0000000000000000001B /* TextToolView.swift in Sources */,
+				AB5E0000000000000000001F /* ShadowToolView.swift in Sources */,
+				AB5E00000000000000000023 /* ResizeToolView.swift in Sources */,
+				AB5E00000000000000000028 /* EditorVC.swift in Sources */,
+				AB5E0000000000000000002B /* RefineEdgesVC.swift in Sources */,
+				AB5E0000000000000000002E /* ExportVC.swift in Sources */,
 				DE8F75B730777BC6005E6A66 /* SearchVC.swift in Sources */,
 				DE7FAE1530777201001E7D59 /* ProjectsVC.swift in Sources */,
 				DE971B8830740DA9006631C7 /* Colors+Extension.swift in Sources */,
@@ -643,6 +783,7 @@
 				INFOPLIST_FILE = "Background Removal/Supporting Files /Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Remove BG";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is required to capture photos for background removal";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving your cutouts to your photo library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -678,6 +819,7 @@
 				INFOPLIST_FILE = "Background Removal/Supporting Files /Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Remove BG";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is required to capture photos for background removal";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving your cutouts to your photo library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

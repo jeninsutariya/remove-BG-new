@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Figtree-Bold.ttf">
+            <string>Figtree-Bold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" customClass="BackgroundToolView" customModule="Background_Removal" customModuleProvider="target" id="bac-ba-001">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="296"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bac-da-003">
+                    <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
+                    <color key="backgroundColor" name="BrandPrimary"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="36" id="bac-ea-004"/>
+                        <constraint firstAttribute="height" constant="5" id="bac-fa-005"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bac-ga-006">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="Ultra Light Blue"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" name="PrimaryText"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="bac-ha-007"/>
+                        <constraint firstAttribute="height" constant="44" id="bac-ia-008"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelCancel:" destination="bac-ba-001" eventType="touchUpInside" id="bac-ja-009"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bac-ka-010">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                    <color key="textColor" name="PrimaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bac-ma-011">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="AccentColor"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="bac-na-012"/>
+                        <constraint firstAttribute="height" constant="44" id="bac-oa-013"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelApply:" destination="bac-ba-001" eventType="touchUpInside" id="bac-pa-014"/>
+                    </connections>
+                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bac-ya-023">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="46"/>
+                    <segments>
+                        <segment title="Color"/>
+                        <segment title="Photo"/>
+                    </segments>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="46" id="bac-za-024"/>
+                    </constraints>
+                    <connections>
+                        <action selector="segColorPhotoChanged:" destination="bac-ba-001" eventType="valueChanged" id="bac-Aa-025"/>
+                    </connections>
+                </segmentedControl>
+                <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bac-Ba-026">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="114"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="vertical" minimumLineSpacing="6" minimumInteritemSpacing="4" id="bac-cb-059">
+                        <size key="itemSize" width="54" height="54"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="114" id="bac-Ca-027"/>
+                    </constraints>
+                </collectionView>
+                <view contentMode="scaleToFill" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bac-Da-028">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="114"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bac-Ea-029">
+                            <rect key="frame" x="0.0" y="0.0" width="350" height="48"/>
+                            <color key="backgroundColor" name="Ultra Light Blue"/>
+                            <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                            <color key="tintColor" name="PrimaryText"/>
+                            <state key="normal" title="  Choose from Photos">
+                                <color key="titleColor" name="PrimaryText"/>
+                            </state>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="48" id="bac-Fa-030"/>
+                            </constraints>
+                            <connections>
+                                <action selector="btnChoosePhoto:" destination="bac-ba-001" eventType="touchUpInside" id="bac-Ga-031"/>
+                            </connections>
+                        </button>
+                        <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bac-Ha-032">
+                            <rect key="frame" x="0.0" y="0.0" width="350" height="54"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="8" minimumInteritemSpacing="8" id="bac-db-060">
+                                <size key="itemSize" width="54" height="54"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="54" id="bac-Ja-033"/>
+                            </constraints>
+                        </collectionView>
+                    </subviews>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="bac-ca-002"/>
+            <color key="backgroundColor" name="Surface Color"/>
+            <constraints>
+                <constraint firstItem="bac-da-003" firstAttribute="top" secondItem="bac-ba-001" secondAttribute="top" constant="8" id="bac-qa-015"/>
+                <constraint firstItem="bac-da-003" firstAttribute="centerX" secondItem="bac-ba-001" secondAttribute="centerX" id="bac-ra-016"/>
+                <constraint firstItem="bac-ga-006" firstAttribute="top" secondItem="bac-ba-001" secondAttribute="top" constant="25" id="bac-sa-017"/>
+                <constraint firstItem="bac-ga-006" firstAttribute="leading" secondItem="bac-ba-001" secondAttribute="leading" constant="20" id="bac-ta-018"/>
+                <constraint firstItem="bac-ba-001" firstAttribute="trailing" secondItem="bac-ma-011" secondAttribute="trailing" constant="20" id="bac-ua-019"/>
+                <constraint firstItem="bac-ma-011" firstAttribute="centerY" secondItem="bac-ga-006" secondAttribute="centerY" id="bac-va-020"/>
+                <constraint firstItem="bac-ka-010" firstAttribute="centerY" secondItem="bac-ga-006" secondAttribute="centerY" id="bac-wa-021"/>
+                <constraint firstItem="bac-ka-010" firstAttribute="centerX" secondItem="bac-ba-001" secondAttribute="centerX" id="bac-xa-022"/>
+                <constraint firstItem="bac-ya-023" firstAttribute="top" secondItem="bac-ga-006" secondAttribute="bottom" constant="12" id="bac-Ka-034"/>
+                <constraint firstItem="bac-ya-023" firstAttribute="leading" secondItem="bac-ba-001" secondAttribute="leading" constant="20" id="bac-La-035"/>
+                <constraint firstItem="bac-ba-001" firstAttribute="trailing" secondItem="bac-ya-023" secondAttribute="trailing" constant="20" id="bac-Ma-036"/>
+                <constraint firstItem="bac-Ba-026" firstAttribute="top" secondItem="bac-ya-023" secondAttribute="bottom" constant="16" id="bac-Na-037"/>
+                <constraint firstItem="bac-Ba-026" firstAttribute="leading" secondItem="bac-ba-001" secondAttribute="leading" constant="16" id="bac-Pa-038"/>
+                <constraint firstItem="bac-ba-001" firstAttribute="trailing" secondItem="bac-Ba-026" secondAttribute="trailing" constant="16" id="bac-Qa-039"/>
+                <constraint firstItem="bac-ca-002" firstAttribute="bottom" secondItem="bac-Ba-026" secondAttribute="bottom" constant="12" id="bac-Ra-040"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="top" secondItem="bac-Ba-026" secondAttribute="top" id="bac-Sa-041"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="leading" secondItem="bac-Ba-026" secondAttribute="leading" constant="4" id="bac-Ta-042"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="trailing" secondItem="bac-Ba-026" secondAttribute="trailing" constant="-4" id="bac-Ua-043"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="bottom" secondItem="bac-Ba-026" secondAttribute="bottom" id="bac-Va-044"/>
+                <constraint firstItem="bac-Ea-029" firstAttribute="top" secondItem="bac-Da-028" secondAttribute="top" id="bac-Wa-045"/>
+                <constraint firstItem="bac-Ea-029" firstAttribute="leading" secondItem="bac-Da-028" secondAttribute="leading" id="bac-Xa-046"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="trailing" secondItem="bac-Ea-029" secondAttribute="trailing" id="bac-Ya-047"/>
+                <constraint firstItem="bac-Ha-032" firstAttribute="top" secondItem="bac-Ea-029" secondAttribute="bottom" constant="10" id="bac-Za-048"/>
+                <constraint firstItem="bac-Ha-032" firstAttribute="leading" secondItem="bac-Da-028" secondAttribute="leading" id="bac-2a-049"/>
+                <constraint firstItem="bac-Da-028" firstAttribute="trailing" secondItem="bac-Ha-032" secondAttribute="trailing" id="bac-3a-050"/>
+            </constraints>
+            <connections>
+                <outlet property="btnCancelPanel" destination="bac-ga-006" id="bac-4a-051"/>
+                <outlet property="btnApplyPanel" destination="bac-ma-011" id="bac-5a-052"/>
+                <outlet property="vwGrabber" destination="bac-da-003" id="bac-6a-053"/>
+                <outlet property="segColorPhoto" destination="bac-ya-023" id="bac-7a-054"/>
+                <outlet property="clvColors" destination="bac-Ba-026" id="bac-8a-055"/>
+                <outlet property="vwPhotoPanel" destination="bac-Da-028" id="bac-9a-056"/>
+                <outlet property="btnChoosePhoto" destination="bac-Ea-029" id="bac-ab-057"/>
+                <outlet property="clvPhotos" destination="bac-Ha-032" id="bac-bb-058"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.086" green="0.467" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="BrandPrimary">
+            <color red="0.788" green="0.863" blue="0.949" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color red="0.059" green="0.11" blue="0.18" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Surface Color">
+            <color red="1.0" green="1.0" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Ultra Light Blue">
+            <color red="0.918" green="0.953" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

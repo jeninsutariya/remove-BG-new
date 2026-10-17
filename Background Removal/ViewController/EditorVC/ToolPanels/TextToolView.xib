@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Figtree-Bold.ttf">
+            <string>Figtree-Bold</string>
+        </array>
+        <array key="Figtree-ExtraBold.ttf">
+            <string>Figtree-ExtraBold</string>
+        </array>
+        <array key="Figtree-Medium.ttf">
+            <string>Figtree-Medium</string>
+        </array>
+        <array key="Figtree-Regular.ttf">
+            <string>Figtree-Regular</string>
+        </array>
+        <array key="Figtree-SemiBold.ttf">
+            <string>Figtree-SemiBold</string>
+        </array>
+        <array key="InstrumentSerif-Italic.ttf">
+            <string>InstrumentSerif-Italic</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" customClass="TextToolView" customModule="Background_Removal" customModuleProvider="target" id="tex-ba-001">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="346"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tex-da-003">
+                    <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
+                    <color key="backgroundColor" name="BrandPrimary"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="36" id="tex-ea-004"/>
+                        <constraint firstAttribute="height" constant="5" id="tex-fa-005"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-ga-006">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="Ultra Light Blue"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" name="PrimaryText"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="tex-ha-007"/>
+                        <constraint firstAttribute="height" constant="44" id="tex-ia-008"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelCancel:" destination="tex-ba-001" eventType="touchUpInside" id="tex-ja-009"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text Behind" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tex-ka-010">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                    <color key="textColor" name="PrimaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-ma-011">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="AccentColor"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="tex-na-012"/>
+                        <constraint firstAttribute="height" constant="44" id="tex-oa-013"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelApply:" destination="tex-ba-001" eventType="touchUpInside" id="tex-pa-014"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tex-ya-023">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="48"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="HELLO" placeholder="Your text" minimumFontSize="12" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Aa-025">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
+                            <color key="textColor" name="PrimaryText"/>
+                            <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="done"/>
+                        </textField>
+                    </subviews>
+                    <color key="backgroundColor" name="Ultra Light Blue"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="tex-za-024"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Fa-030">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Ga-031" tag="0">
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
+                            <color key="backgroundColor" name="Surface Color"/>
+                            <fontDescription key="fontDescription" name="Figtree-ExtraBold" family="Figtree" pointSize="15"/>
+                            <state key="normal" title="Bold">
+                                <color key="titleColor" name="PrimaryText"/>
+                            </state>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="tex-Ha-032"/>
+                            </constraints>
+                            <connections>
+                                <action selector="btnStyle:" destination="tex-ba-001" eventType="touchUpInside" id="tex-Ja-033"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Ka-034" tag="1">
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
+                            <color key="backgroundColor" name="Surface Color"/>
+                            <fontDescription key="fontDescription" name="InstrumentSerif-Italic" family="Instrument Serif" pointSize="19"/>
+                            <state key="normal" title="Serif">
+                                <color key="titleColor" name="PrimaryText"/>
+                            </state>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="tex-La-035"/>
+                            </constraints>
+                            <connections>
+                                <action selector="btnStyle:" destination="tex-ba-001" eventType="touchUpInside" id="tex-Ma-036"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Na-037" tag="2">
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
+                            <color key="backgroundColor" name="Surface Color"/>
+                            <fontDescription key="fontDescription" name="Figtree-Medium" family="Figtree" pointSize="15"/>
+                            <state key="normal" title="Light">
+                                <color key="titleColor" name="PrimaryText"/>
+                            </state>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="tex-Pa-038"/>
+                            </constraints>
+                            <connections>
+                                <action selector="btnStyle:" destination="tex-ba-001" eventType="touchUpInside" id="tex-Qa-039"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Ra-040" tag="3">
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
+                            <color key="backgroundColor" name="Surface Color"/>
+                            <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                            <state key="normal" title="WIDE">
+                                <color key="titleColor" name="PrimaryText"/>
+                            </state>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="tex-Sa-041"/>
+                            </constraints>
+                            <connections>
+                                <action selector="btnStyle:" destination="tex-ba-001" eventType="touchUpInside" id="tex-Ta-042"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="tex-Ua-043">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="54"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="4" id="tex-wb-078">
+                        <size key="itemSize" width="54" height="54"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="54" id="tex-Va-044"/>
+                    </constraints>
+                </collectionView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tex-7a-054">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                    <color key="textColor" name="PrimaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tex-8a-055">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
+                    <color key="textColor" name="SecondaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="76" minValue="20" maxValue="160" translatesAutoresizingMaskIntoConstraints="NO" id="tex-db-060">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
+                    <color key="minimumTrackTintColor" name="AccentColor"/>
+                    <color key="maximumTrackTintColor" name="Border Color"/>
+                    <connections>
+                        <action selector="sliderSizeChanged:" destination="tex-ba-001" eventType="valueChanged" id="tex-eb-061"/>
+                    </connections>
+                </slider>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="tex-ca-002"/>
+            <color key="backgroundColor" name="Surface Color"/>
+            <constraints>
+                <constraint firstItem="tex-da-003" firstAttribute="top" secondItem="tex-ba-001" secondAttribute="top" constant="8" id="tex-qa-015"/>
+                <constraint firstItem="tex-da-003" firstAttribute="centerX" secondItem="tex-ba-001" secondAttribute="centerX" id="tex-ra-016"/>
+                <constraint firstItem="tex-ga-006" firstAttribute="top" secondItem="tex-ba-001" secondAttribute="top" constant="25" id="tex-sa-017"/>
+                <constraint firstItem="tex-ga-006" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="20" id="tex-ta-018"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-ma-011" secondAttribute="trailing" constant="20" id="tex-ua-019"/>
+                <constraint firstItem="tex-ma-011" firstAttribute="centerY" secondItem="tex-ga-006" secondAttribute="centerY" id="tex-va-020"/>
+                <constraint firstItem="tex-ka-010" firstAttribute="centerY" secondItem="tex-ga-006" secondAttribute="centerY" id="tex-wa-021"/>
+                <constraint firstItem="tex-ka-010" firstAttribute="centerX" secondItem="tex-ba-001" secondAttribute="centerX" id="tex-xa-022"/>
+                <constraint firstItem="tex-Aa-025" firstAttribute="leading" secondItem="tex-ya-023" secondAttribute="leading" constant="20" id="tex-Ba-026"/>
+                <constraint firstItem="tex-ya-023" firstAttribute="trailing" secondItem="tex-Aa-025" secondAttribute="trailing" constant="12" id="tex-Ca-027"/>
+                <constraint firstItem="tex-Aa-025" firstAttribute="top" secondItem="tex-ya-023" secondAttribute="top" id="tex-Da-028"/>
+                <constraint firstItem="tex-ya-023" firstAttribute="bottom" secondItem="tex-Aa-025" secondAttribute="bottom" id="tex-Ea-029"/>
+                <constraint firstItem="tex-ya-023" firstAttribute="top" secondItem="tex-ga-006" secondAttribute="bottom" constant="12" id="tex-Wa-045"/>
+                <constraint firstItem="tex-ya-023" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="20" id="tex-Xa-046"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-ya-023" secondAttribute="trailing" constant="20" id="tex-Ya-047"/>
+                <constraint firstItem="tex-Fa-030" firstAttribute="top" secondItem="tex-ya-023" secondAttribute="bottom" constant="12" id="tex-Za-048"/>
+                <constraint firstItem="tex-Fa-030" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="20" id="tex-2a-049"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-Fa-030" secondAttribute="trailing" constant="20" id="tex-3a-050"/>
+                <constraint firstItem="tex-Ua-043" firstAttribute="top" secondItem="tex-Fa-030" secondAttribute="bottom" constant="8" id="tex-4a-051"/>
+                <constraint firstItem="tex-Ua-043" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="15" id="tex-5a-052"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-Ua-043" secondAttribute="trailing" constant="15" id="tex-6a-053"/>
+                <constraint firstItem="tex-7a-054" firstAttribute="top" secondItem="tex-Ua-043" secondAttribute="bottom" constant="8" id="tex-9a-056"/>
+                <constraint firstItem="tex-7a-054" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="20" id="tex-ab-057"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-8a-055" secondAttribute="trailing" constant="20" id="tex-bb-058"/>
+                <constraint firstItem="tex-8a-055" firstAttribute="centerY" secondItem="tex-7a-054" secondAttribute="centerY" id="tex-cb-059"/>
+                <constraint firstItem="tex-db-060" firstAttribute="top" secondItem="tex-7a-054" secondAttribute="bottom" constant="6" id="tex-fb-062"/>
+                <constraint firstItem="tex-db-060" firstAttribute="leading" secondItem="tex-ba-001" secondAttribute="leading" constant="20" id="tex-gb-063"/>
+                <constraint firstItem="tex-ba-001" firstAttribute="trailing" secondItem="tex-db-060" secondAttribute="trailing" constant="20" id="tex-hb-064"/>
+                <constraint firstItem="tex-ca-002" firstAttribute="bottom" secondItem="tex-db-060" secondAttribute="bottom" constant="14" id="tex-ib-065"/>
+            </constraints>
+            <connections>
+                <outlet property="btnCancelPanel" destination="tex-ga-006" id="tex-ob-070"/>
+                <outlet property="btnApplyPanel" destination="tex-ma-011" id="tex-pb-071"/>
+                <outlet property="vwGrabber" destination="tex-da-003" id="tex-qb-072"/>
+                <outlet property="vwField" destination="tex-ya-023" id="tex-rb-073"/>
+                <outlet property="txtText" destination="tex-Aa-025" id="tex-sb-074"/>
+                <outlet property="clvColors" destination="tex-Ua-043" id="tex-tb-075"/>
+                <outlet property="lblSizeValue" destination="tex-8a-055" id="tex-ub-076"/>
+                <outlet property="sliderSize" destination="tex-db-060" id="tex-vb-077"/>
+                <outletCollection property="btnStyles" destination="tex-Ga-031" collectionClass="NSMutableArray" id="tex-jb-066"/>
+                <outletCollection property="btnStyles" destination="tex-Ka-034" collectionClass="NSMutableArray" id="tex-kb-067"/>
+                <outletCollection property="btnStyles" destination="tex-Na-037" collectionClass="NSMutableArray" id="tex-mb-068"/>
+                <outletCollection property="btnStyles" destination="tex-Ra-040" collectionClass="NSMutableArray" id="tex-nb-069"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.086" green="0.467" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Border Color">
+            <color red="0.863" green="0.914" blue="0.969" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="BrandPrimary">
+            <color red="0.788" green="0.863" blue="0.949" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color red="0.059" green="0.11" blue="0.18" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SecondaryText">
+            <color red="0.353" green="0.42" blue="0.502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Surface Color">
+            <color red="1.0" green="1.0" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Ultra Light Blue">
+            <color red="0.918" green="0.953" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

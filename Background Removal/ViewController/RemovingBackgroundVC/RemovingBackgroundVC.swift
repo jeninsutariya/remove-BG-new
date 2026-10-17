@@ -6,11 +6,15 @@
 //
 
 import UIKit
-import BackgroundRemoval
 
 class RemovingBackgroundVC: UIViewController {
 
     @IBOutlet weak var veBackground: UIView!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblSubtitle: UILabel!
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var lblStatus: UILabel!
+    @IBOutlet weak var lblPercent: UILabel!
 
     var image: UIImage?
 
@@ -41,12 +45,22 @@ class RemovingBackgroundVC: UIViewController {
     private var mainWidthConstraint: NSLayoutConstraint?
     private var mainHeightConstraint: NSLayoutConstraint?
 
+    // MARK: - Processing state
+
+    private var session: EditSession?
+    private var processingTask: Task<Void, Never>?
+    private var processingStart = CACurrentMediaTime()
+    private var progress: Float = 0
+    private var didOpenEditor = false
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageView()
         setupScanViews()
+        setupProgress()
+        startBackgroundRemoval()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -67,7 +81,82 @@ class RemovingBackgroundVC: UIViewController {
 
     // MARK: - Background Removal
 
-   
+    /// Runs Vision off the main thread; the scan animation reveals the result when it's ready.
+    private func startBackgroundRemoval() {
+        guard let image else { return }
+        let working = BGRemovalEngine.normalized(image)
+        guard let cgImage = working.cgImage else {
+            showFailure(BGRemovalError.unavailable("this image format isn't supported"))
+            return
+        }
+        processingStart = CACurrentMediaTime()
+        processingTask = Task { [weak self] in
+            do {
+                let mask = try await Task.detached(priority: .userInitiated) {
+                    try BGRemovalEngine.makeMask(for: cgImage)
+                }.value
+                guard let self, !Task.isCancelled else { return }
+                let session = EditSession(original: working, mask: mask)
+                self.session = session
+                self.resultImage = session.cutout   // picked up by the next sweep in tick(_:)
+            } catch {
+                guard let self, !Task.isCancelled else { return }
+                self.showFailure(error)
+            }
+        }
+    }
+
+    private func setupProgress() {
+        progressView.progress = 0
+        lblStatus.text = "Preparing photo"
+        lblPercent.text = "0%"
+    }
+
+    private func updateProgress() {
+        if isRevealing {
+            progress = max(progress, 0.9 + 0.1 * Float(scanProgress))
+        } else if resultImage == nil {
+            // Ease towards 90% while Vision is working.
+            let elapsed = CACurrentMediaTime() - processingStart
+            progress = Float(0.9 * (1 - exp(-elapsed / 1.6)))
+        }
+        progressView.setProgress(progress, animated: false)
+        let percent = Int((progress * 100).rounded())
+        lblPercent.text = "\(percent)%"
+        switch percent {
+        case ..<20: lblStatus.text = "Preparing photo"
+        case ..<55: lblStatus.text = "Finding the subject"
+        case ..<90: lblStatus.text = "Detecting edges"
+        case ..<100: lblStatus.text = "Cleaning up"
+        default: lblStatus.text = "Done"
+        }
+    }
+
+    private func showFailure(_ error: Error) {
+        stopScanning()
+        let alert = UIAlertController(title: "Couldn't remove the background",
+                                      message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
+    }
+
+    /// Replaces this screen with the editor (07 Result & Editor).
+    private func openEditor() {
+        guard !didOpenEditor, let session, let nav = navigationController else { return }
+        didOpenEditor = true
+        let editor = EditorVC.fatchEditorInstance()
+        editor.session = session
+        var stack = nav.viewControllers
+        if let index = stack.firstIndex(of: self) {
+            stack[index] = editor
+        } else {
+            stack.append(editor)
+        }
+        nav.setViewControllers(stack, animated: true)
+    }
+
 
     // MARK: - Setup Image View
 
@@ -158,6 +247,7 @@ class RemovingBackgroundVC: UIViewController {
     }
 
     @objc private func tick(_ link: CADisplayLink) {
+        updateProgress()
         let t = CGFloat((link.timestamp - sweepStart) / sweepDuration)
 
         if t >= 1 {
@@ -189,6 +279,11 @@ class RemovingBackgroundVC: UIViewController {
         layoutScan(progress: 1)
         imageView.isHidden = true
         hideScanLine()
+        progress = 1
+        updateProgress()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
+            self?.openEditor()
+        }
     }
 
     private func hideScanLine() {
@@ -265,6 +360,8 @@ class RemovingBackgroundVC: UIViewController {
     // MARK: - Cancel
 
     @IBAction func btnCancel(_ sender: UIButton) {
+        processingTask?.cancel()
+        stopScanning()
         navigationController?.popViewController(animated: true)
     }
 }
