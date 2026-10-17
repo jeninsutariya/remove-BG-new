@@ -52,7 +52,6 @@ class RemovingBackgroundVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startScanning()
-        removeBackground()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,26 +67,7 @@ class RemovingBackgroundVC: UIViewController {
 
     // MARK: - Background Removal
 
-    private func removeBackground() {
-        guard let inputImage = image else { return }
-
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let outputImage = try BackgroundRemoval().removeBackground(image: inputImage)
-                DispatchQueue.main.async {
-                    // The scan loop picks this up at the end of the current sweep
-                    // and runs one final "reveal" sweep.
-                    self.resultImage = outputImage
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.stopScanning()
-                    self.hideScanLine()
-                    print("Failed to remove background: \(error)")
-                }
-            }
-        }
-    }
+   
 
     // MARK: - Setup Image View
 
