@@ -3,8 +3,9 @@
 //  Background Removal
 //
 //  Renders final images with the central export-quality policy and saves them to Photos.
-//  • No background → PNG with the real alpha channel (never the checkerboard).
-//  • Background applied → JPEG at the quality's compression.
+//  • Automatic format: no background → PNG with the real alpha channel (never the checkerboard),
+//    background applied → JPEG at the quality's compression. The Export screen can force PNG/JPG.
+//  • Each item's Shadow / Resize edits are rendered by the same compositor as the preview.
 //
 
 import UIKit
@@ -43,7 +44,8 @@ final class ImageExportService {
 
     /// Renders completed items one at a time (bounded memory), reporting progress 0…1.
     func renderOutputs(for items: [BackgroundRemovalItem], in viewModel: BackgroundRemovalViewModel,
-                       quality: ExportQuality, progress: ((Double) -> Void)? = nil) async throws -> [ExportedImage] {
+                       quality: ExportQuality, options: ExportOptions = ExportOptions(),
+                       progress: ((Double) -> Void)? = nil) async throws -> [ExportedImage] {
         let ready = items.filter(\.isCompleted)
         guard !ready.isEmpty else { throw ImageExportError.nothingToExport }
         var names = UniqueFileNamer()
@@ -53,17 +55,18 @@ final class ImageExportService {
             guard let foreground = await viewModel.fullForeground(for: item.id) else {
                 throw ImageExportError.renderFailed(item.sourceName ?? "Image \(index + 1)")
             }
-            let background = try await viewModel.resolveBackground(item.background)
-            let maxDimension = quality.maxPixelDimension
+            let background = try await viewModel.resolveBackground(options.background(for: item))
+            let maxDimension = options.maxDimension(for: quality)
             let jpegQuality = quality.jpegQuality
+            let edits = item.edits
+            let asPNG = options.format(for: item) == .png
             let rendered = await Task.detached(priority: .userInitiated) { () -> (Data, Bool)? in
                 autoreleasepool { () -> (Data, Bool)? in
                     guard let cg = ImageCompositingService.shared.compose(foreground: foreground, background: background,
-                                                                          maxDimension: maxDimension) else { return nil }
-                    if background.isOpaque {
-                        return ImageUtilities.jpegData(cg, quality: jpegQuality).map { ($0, false) }
-                    }
-                    return ImageUtilities.pngData(cg).map { ($0, true) }
+                                                                          edits: edits, maxDimension: maxDimension)
+                    else { return nil }
+                    if asPNG { return ImageUtilities.pngData(cg).map { ($0, true) } }
+                    return ImageUtilities.jpegData(cg, quality: jpegQuality).map { ($0, false) }
                 }
             }.value
             guard let rendered else {
@@ -79,6 +82,7 @@ final class ImageExportService {
 
     /// Renders and saves the items to the photo library. Completes only after Photos confirms.
     func saveToPhotos(items: [BackgroundRemovalItem], in viewModel: BackgroundRemovalViewModel,
+                      options: ExportOptions = ExportOptions(),
                       progress: ((Double) -> Void)? = nil) async throws -> Int {
         guard !isBusy else { return 0 }
         isBusy = true
@@ -88,7 +92,7 @@ final class ImageExportService {
         guard status == .authorized || status == .limited else { throw ImageExportError.photosAccessDenied }
 
         let quality = PremiumManager.shared.exportQuality
-        let outputs = try await renderOutputs(for: items, in: viewModel, quality: quality) { value in
+        let outputs = try await renderOutputs(for: items, in: viewModel, quality: quality, options: options) { value in
             progress?(value * 0.8)
         }
         for (index, output) in outputs.enumerated() {

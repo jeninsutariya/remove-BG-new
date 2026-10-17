@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Figtree-Bold.ttf">
+            <string>Figtree-Bold</string>
+        </array>
+        <array key="Figtree-Regular.ttf">
+            <string>Figtree-Regular</string>
+        </array>
+        <array key="Figtree-SemiBold.ttf">
+            <string>Figtree-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" customClass="ResizeToolView" customModule="Background_Removal" customModuleProvider="target" id="res-ba-001">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="230"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="res-da-003">
+                    <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
+                    <color key="backgroundColor" name="BrandPrimary"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="36" id="res-ea-004"/>
+                        <constraint firstAttribute="height" constant="5" id="res-fa-005"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="res-ga-006">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="Ultra Light Blue"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" name="PrimaryText"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="res-ha-007"/>
+                        <constraint firstAttribute="height" constant="44" id="res-ia-008"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelCancel:" destination="res-ba-001" eventType="touchUpInside" id="res-ja-009"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resize" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="res-ka-010">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                    <color key="textColor" name="PrimaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="res-ma-011">
+                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" name="AccentColor"/>
+                    <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="">
+                        <color key="titleColor" name="PrimaryText"/>
+                    </state>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="44" id="res-na-012"/>
+                        <constraint firstAttribute="height" constant="44" id="res-oa-013"/>
+                    </constraints>
+                    <connections>
+                        <action selector="btnPanelApply:" destination="res-ba-001" eventType="touchUpInside" id="res-pa-014"/>
+                    </connections>
+                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="res-ya-023">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="44"/>
+                    <segments>
+                        <segment title="Original"/>
+                        <segment title="1:1"/>
+                        <segment title="4:5"/>
+                        <segment title="3:4"/>
+                        <segment title="9:16"/>
+                        <segment title="16:9"/>
+                    </segments>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="res-za-024"/>
+                    </constraints>
+                    <connections>
+                        <action selector="segRatioChanged:" destination="res-ba-001" eventType="valueChanged" id="res-Aa-025"/>
+                    </connections>
+                </segmentedControl>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subject size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="res-Ea-029">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                    <color key="textColor" name="PrimaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="res-Fa-030">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                    <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
+                    <color key="textColor" name="SecondaryText"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="50" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="res-La-035">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
+                    <color key="minimumTrackTintColor" name="AccentColor"/>
+                    <color key="maximumTrackTintColor" name="Border Color"/>
+                    <connections>
+                        <action selector="sliderScaleChanged:" destination="res-ba-001" eventType="valueChanged" id="res-Ma-036"/>
+                    </connections>
+                </slider>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="res-ca-002"/>
+            <color key="backgroundColor" name="Surface Color"/>
+            <constraints>
+                <constraint firstItem="res-da-003" firstAttribute="top" secondItem="res-ba-001" secondAttribute="top" constant="8" id="res-qa-015"/>
+                <constraint firstItem="res-da-003" firstAttribute="centerX" secondItem="res-ba-001" secondAttribute="centerX" id="res-ra-016"/>
+                <constraint firstItem="res-ga-006" firstAttribute="top" secondItem="res-ba-001" secondAttribute="top" constant="25" id="res-sa-017"/>
+                <constraint firstItem="res-ga-006" firstAttribute="leading" secondItem="res-ba-001" secondAttribute="leading" constant="20" id="res-ta-018"/>
+                <constraint firstItem="res-ba-001" firstAttribute="trailing" secondItem="res-ma-011" secondAttribute="trailing" constant="20" id="res-ua-019"/>
+                <constraint firstItem="res-ma-011" firstAttribute="centerY" secondItem="res-ga-006" secondAttribute="centerY" id="res-va-020"/>
+                <constraint firstItem="res-ka-010" firstAttribute="centerY" secondItem="res-ga-006" secondAttribute="centerY" id="res-wa-021"/>
+                <constraint firstItem="res-ka-010" firstAttribute="centerX" secondItem="res-ba-001" secondAttribute="centerX" id="res-xa-022"/>
+                <constraint firstItem="res-ya-023" firstAttribute="top" secondItem="res-ga-006" secondAttribute="bottom" constant="14" id="res-Ba-026"/>
+                <constraint firstItem="res-ya-023" firstAttribute="leading" secondItem="res-ba-001" secondAttribute="leading" constant="20" id="res-Ca-027"/>
+                <constraint firstItem="res-ba-001" firstAttribute="trailing" secondItem="res-ya-023" secondAttribute="trailing" constant="20" id="res-Da-028"/>
+                <constraint firstItem="res-Ea-029" firstAttribute="top" secondItem="res-ya-023" secondAttribute="bottom" constant="18" id="res-Ga-031"/>
+                <constraint firstItem="res-Ea-029" firstAttribute="leading" secondItem="res-ba-001" secondAttribute="leading" constant="20" id="res-Ha-032"/>
+                <constraint firstItem="res-ba-001" firstAttribute="trailing" secondItem="res-Fa-030" secondAttribute="trailing" constant="20" id="res-Ja-033"/>
+                <constraint firstItem="res-Fa-030" firstAttribute="centerY" secondItem="res-Ea-029" secondAttribute="centerY" id="res-Ka-034"/>
+                <constraint firstItem="res-La-035" firstAttribute="top" secondItem="res-Ea-029" secondAttribute="bottom" constant="6" id="res-Na-037"/>
+                <constraint firstItem="res-La-035" firstAttribute="leading" secondItem="res-ba-001" secondAttribute="leading" constant="20" id="res-Pa-038"/>
+                <constraint firstItem="res-ba-001" firstAttribute="trailing" secondItem="res-La-035" secondAttribute="trailing" constant="20" id="res-Qa-039"/>
+                <constraint firstItem="res-ca-002" firstAttribute="bottom" secondItem="res-La-035" secondAttribute="bottom" constant="18" id="res-Ra-040"/>
+            </constraints>
+            <connections>
+                <outlet property="btnCancelPanel" destination="res-ga-006" id="res-Sa-041"/>
+                <outlet property="btnApplyPanel" destination="res-ma-011" id="res-Ta-042"/>
+                <outlet property="vwGrabber" destination="res-da-003" id="res-Ua-043"/>
+                <outlet property="segRatio" destination="res-ya-023" id="res-Va-044"/>
+                <outlet property="sliderScale" destination="res-La-035" id="res-Wa-045"/>
+                <outlet property="lblScaleValue" destination="res-Fa-030" id="res-Xa-046"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.086" green="0.467" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Border Color">
+            <color red="0.863" green="0.914" blue="0.969" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="BrandPrimary">
+            <color red="0.788" green="0.863" blue="0.949" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color red="0.059" green="0.11" blue="0.18" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SecondaryText">
+            <color red="0.353" green="0.42" blue="0.502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Surface Color">
+            <color red="1.0" green="1.0" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Ultra Light Blue">
+            <color red="0.918" green="0.953" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

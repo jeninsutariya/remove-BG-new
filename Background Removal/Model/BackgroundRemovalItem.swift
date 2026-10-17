@@ -54,6 +54,8 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
     var status: ItemProcessingStatus
     var errorMessage: String?
     var background: BackgroundSelection
+    /// Shadow / Resize edits (non-destructive).
+    var edits: ItemEdits
     var createdAt: Date
     var modifiedAt: Date
 
@@ -65,8 +67,28 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         self.status = .waiting
         self.errorMessage = nil
         self.background = .none
+        self.edits = .unedited
         self.createdAt = Date()
         self.modifiedAt = Date()
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, createdAt, modifiedAt
+    }
+
+    /// Tolerant decoding so projects saved by older versions still open.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        sourceName = try c.decodeIfPresent(String.self, forKey: .sourceName)
+        originalFileName = try c.decode(String.self, forKey: .originalFileName)
+        foregroundFileName = try c.decodeIfPresent(String.self, forKey: .foregroundFileName)
+        status = (try? c.decode(ItemProcessingStatus.self, forKey: .status)) ?? .waiting
+        errorMessage = try c.decodeIfPresent(String.self, forKey: .errorMessage)
+        background = (try? c.decode(BackgroundSelection.self, forKey: .background)) ?? BackgroundSelection.none
+        edits = (try? c.decode(ItemEdits.self, forKey: .edits)) ?? ItemEdits.unedited
+        createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
+        modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()
     }
 
     var isCompleted: Bool { status == .completed && foregroundFileName != nil }

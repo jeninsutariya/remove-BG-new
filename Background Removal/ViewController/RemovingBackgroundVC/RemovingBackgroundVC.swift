@@ -182,7 +182,8 @@ class RemovingBackgroundVC: UIViewController {
         }
         Task { [weak self] in
             do {
-                let model = try await BackgroundRemovalViewModel.create(from: photos)
+                let mode: EditorMode = self?.destination == .changeBackground ? .changeBackground : .removeBackground
+                let model = try await BackgroundRemovalViewModel.create(from: photos, mode: mode)
                 guard let self else { return }
                 self.viewModel = model
                 self.observeViewModel()
@@ -422,12 +423,7 @@ class RemovingBackgroundVC: UIViewController {
         let index = stack.firstIndex(of: self) ?? stack.count
         stack.removeSubrange(index...)
         stack.append(editor)
-        if destination == .changeBackground, let first = viewModel.project.completedItems.first {
-            let change = ChangeBackgroundVC.fatchEditorInstance()
-            change.viewModel = viewModel
-            change.itemID = first.id
-            stack.append(change)
-        }
+        // Change Background projects open the editor with the Background sheet already showing.
         nav.setViewControllers(stack, animated: true)
     }
 

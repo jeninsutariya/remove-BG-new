@@ -88,10 +88,23 @@
 		C0DE0000000000000000002C /* BackgroundColorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000002B /* BackgroundColorCell.xib */; };
 		C0DE0000000000000000002F /* EditorSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000002E /* EditorSupport.swift */; };
 		C0DE00000000000000000032 /* RemovingBackgroundEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000031 /* RemovingBackgroundEditorVC.swift */; };
-		C0DE00000000000000000035 /* ChangeBackgroundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000034 /* ChangeBackgroundVC.swift */; };
 		C0DE00000000000000000038 /* Editor.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000037 /* Editor.storyboard */; };
 		C0DE0000000000000000003A /* image_urls.json in Resources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000039 /* image_urls.json */; };
 		C0DE0000000000000000003E /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE0000000000000000003D /* SDWebImage */; };
+		C0DE00000000000000000040 /* ItemEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000003F /* ItemEdits.swift */; };
+		C0DE00000000000000000042 /* MaskRefineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000041 /* MaskRefineService.swift */; };
+		C0DE00000000000000000044 /* EditorToolPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000043 /* EditorToolPanel.swift */; };
+		C0DE00000000000000000046 /* EditorToolClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000045 /* EditorToolClvCell.swift */; };
+		C0DE00000000000000000048 /* EditorToolClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000047 /* EditorToolClvCell.xib */; };
+		C0DE0000000000000000004A /* BackgroundToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000049 /* BackgroundToolView.swift */; };
+		C0DE0000000000000000004C /* BackgroundToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000004B /* BackgroundToolView.xib */; };
+		C0DE0000000000000000004E /* ShadowToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000004D /* ShadowToolView.swift */; };
+		C0DE00000000000000000050 /* ShadowToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000004F /* ShadowToolView.xib */; };
+		C0DE00000000000000000052 /* ResizeToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000051 /* ResizeToolView.swift */; };
+		C0DE00000000000000000054 /* ResizeToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000053 /* ResizeToolView.xib */; };
+		C0DE00000000000000000056 /* MaskBrushCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000055 /* MaskBrushCanvas.swift */; };
+		C0DE00000000000000000059 /* RefineEdgesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000058 /* RefineEdgesVC.swift */; };
+		C0DE0000000000000000005C /* ExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000005B /* ExportVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -177,9 +190,22 @@
 		C0DE0000000000000000002B /* BackgroundColorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackgroundColorCell.xib; sourceTree = "<group>"; };
 		C0DE0000000000000000002E /* EditorSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSupport.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000031 /* RemovingBackgroundEditorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovingBackgroundEditorVC.swift; sourceTree = "<group>"; };
-		C0DE00000000000000000034 /* ChangeBackgroundVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeBackgroundVC.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000037 /* Editor.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Editor.storyboard; sourceTree = "<group>"; };
 		C0DE00000000000000000039 /* image_urls.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = image_urls.json; sourceTree = "<group>"; };
+		C0DE0000000000000000003F /* ItemEdits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEdits.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000041 /* MaskRefineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskRefineService.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000043 /* EditorToolPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorToolPanel.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000045 /* EditorToolClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorToolClvCell.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000047 /* EditorToolClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditorToolClvCell.xib; sourceTree = "<group>"; };
+		C0DE00000000000000000049 /* BackgroundToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundToolView.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000004B /* BackgroundToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackgroundToolView.xib; sourceTree = "<group>"; };
+		C0DE0000000000000000004D /* ShadowToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowToolView.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000004F /* ShadowToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShadowToolView.xib; sourceTree = "<group>"; };
+		C0DE00000000000000000051 /* ResizeToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeToolView.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000053 /* ResizeToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResizeToolView.xib; sourceTree = "<group>"; };
+		C0DE00000000000000000055 /* MaskBrushCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskBrushCanvas.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000058 /* RefineEdgesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefineEdgesVC.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000005B /* ExportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -481,6 +507,11 @@
 		DEF0DFD93073AE46004B8CA8 /* Supporting Files  */ = {
 			isa = PBXGroup;
 			children = (
+				C0DE0000000000000000005A /* RefineEdgesVC */,
+				C0DE0000000000000000005D /* ExportVC */,
+				C0DE00000000000000000057 /* Editor */,
+				C0DE00000000000000000041 /* MaskRefineService.swift */,
+				C0DE0000000000000000003F /* ItemEdits.swift */,
 				DEF0DFCA3073786D004B8CA8 /* Info.plist */,
 				DEF0DFC83073786D004B8CA8 /* AppDelegate.swift */,
 				DEF0DFCF3073786D004B8CA8 /* SceneDelegate.swift */,
@@ -519,7 +550,6 @@
 			isa = PBXGroup;
 			children = (
 				C0DE00000000000000000033 /* RemovingBackgroundEditorVC */,
-				C0DE00000000000000000036 /* ChangeBackgroundVC */,
 				DE4921F5308249E8003E4794 /* RemovingBackgroundVC */,
 				DEA2B1423081477A001EBD36 /* ImageSourcePickerVC */,
 				DEC5D243307BC746001EA26C /* ProUpgradeVC */,
@@ -596,20 +626,45 @@
 			path = RemovingBackgroundEditorVC;
 			sourceTree = "<group>";
 		};
-		C0DE00000000000000000036 /* ChangeBackgroundVC */ = {
-			isa = PBXGroup;
-			children = (
-				C0DE00000000000000000034 /* ChangeBackgroundVC.swift */,
-			);
-			path = ChangeBackgroundVC;
-			sourceTree = "<group>";
-		};
 		C0DE0000000000000000003B /* Data */ = {
 			isa = PBXGroup;
 			children = (
 				C0DE00000000000000000039 /* image_urls.json */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000057 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000043 /* EditorToolPanel.swift */,
+				C0DE00000000000000000045 /* EditorToolClvCell.swift */,
+				C0DE00000000000000000047 /* EditorToolClvCell.xib */,
+				C0DE00000000000000000049 /* BackgroundToolView.swift */,
+				C0DE0000000000000000004B /* BackgroundToolView.xib */,
+				C0DE0000000000000000004D /* ShadowToolView.swift */,
+				C0DE0000000000000000004F /* ShadowToolView.xib */,
+				C0DE00000000000000000051 /* ResizeToolView.swift */,
+				C0DE00000000000000000053 /* ResizeToolView.xib */,
+				C0DE00000000000000000055 /* MaskBrushCanvas.swift */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		C0DE0000000000000000005A /* RefineEdgesVC */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000058 /* RefineEdgesVC.swift */,
+			);
+			path = RefineEdgesVC;
+			sourceTree = "<group>";
+		};
+		C0DE0000000000000000005D /* ExportVC */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE0000000000000000005B /* ExportVC.swift */,
+			);
+			path = ExportVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -676,6 +731,10 @@
 		DE1D493B3072B28300E35E44 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				C0DE00000000000000000048 /* EditorToolClvCell.xib in Resources */,
+				C0DE0000000000000000004C /* BackgroundToolView.xib in Resources */,
+				C0DE00000000000000000050 /* ShadowToolView.xib in Resources */,
+				C0DE00000000000000000054 /* ResizeToolView.xib in Resources */,
 				C0DE00000000000000000024 /* ProcessedImageCell.xib in Resources */,
 				C0DE00000000000000000028 /* BackgroundImageCell.xib in Resources */,
 				C0DE0000000000000000002C /* BackgroundColorCell.xib in Resources */,
@@ -714,6 +773,16 @@
 		DE1D49393072B28300E35E44 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				C0DE00000000000000000040 /* ItemEdits.swift in Sources */,
+				C0DE00000000000000000042 /* MaskRefineService.swift in Sources */,
+				C0DE00000000000000000044 /* EditorToolPanel.swift in Sources */,
+				C0DE00000000000000000046 /* EditorToolClvCell.swift in Sources */,
+				C0DE0000000000000000004A /* BackgroundToolView.swift in Sources */,
+				C0DE0000000000000000004E /* ShadowToolView.swift in Sources */,
+				C0DE00000000000000000052 /* ResizeToolView.swift in Sources */,
+				C0DE00000000000000000056 /* MaskBrushCanvas.swift in Sources */,
+				C0DE00000000000000000059 /* RefineEdgesVC.swift in Sources */,
+				C0DE0000000000000000005C /* ExportVC.swift in Sources */,
 				C0DE00000000000000000002 /* BackgroundImage.swift in Sources */,
 				C0DE00000000000000000004 /* BackgroundRemovalItem.swift in Sources */,
 				C0DE00000000000000000006 /* BackgroundRemovalProject.swift in Sources */,
@@ -734,7 +803,6 @@
 				C0DE0000000000000000002A /* BackgroundColorCell.swift in Sources */,
 				C0DE0000000000000000002F /* EditorSupport.swift in Sources */,
 				C0DE00000000000000000032 /* RemovingBackgroundEditorVC.swift in Sources */,
-				C0DE00000000000000000035 /* ChangeBackgroundVC.swift in Sources */,
 				DE8F75B730777BC6005E6A66 /* SearchVC.swift in Sources */,
 				DE7FAE1530777201001E7D59 /* ProjectsVC.swift in Sources */,
 				DE971B8830740DA9006631C7 /* Colors+Extension.swift in Sources */,

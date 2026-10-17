@@ -40,3 +40,49 @@ nonisolated enum ExportQuality: String, Codable {
         }
     }
 }
+
+/// File format chosen on the Export screen.
+nonisolated enum ExportFormat: Int, Codable, CaseIterable {
+    case png, jpg
+
+    var title: String { self == .png ? "PNG" : "JPG" }
+    var fileExtension: String { self == .png ? "png" : "jpg" }
+}
+
+/// Export screen choices. Every value is applied on top of the central quality policy.
+nonisolated struct ExportOptions: Equatable {
+    /// nil = automatic (PNG when transparent, otherwise JPEG).
+    var format: ExportFormat?
+    /// Extra size limit (Large / Medium / Small); the quality limit still applies.
+    var maxDimension: CGFloat?
+    /// Replaces each item's own background (e.g. "Transparent" or "White").
+    var backgroundOverride: BackgroundSelection?
+
+    init(format: ExportFormat? = nil, maxDimension: CGFloat? = nil, backgroundOverride: BackgroundSelection? = nil) {
+        self.format = format
+        self.maxDimension = maxDimension
+        self.backgroundOverride = backgroundOverride
+    }
+
+    /// Effective long-side limit for a quality.
+    func maxDimension(for quality: ExportQuality) -> CGFloat? {
+        switch (maxDimension, quality.maxPixelDimension) {
+        case let (a?, b?): return min(a, b)
+        case let (a?, nil): return a
+        case let (nil, b?): return b
+        case (nil, nil): return nil
+        }
+    }
+
+    /// Background actually rendered for an item (JPEG has no transparency → white).
+    func background(for item: BackgroundRemovalItem) -> BackgroundSelection {
+        let selection = backgroundOverride ?? item.background
+        if format == .jpg, selection.isTransparent { return .color(hex: "FFFFFF") }
+        return selection
+    }
+
+    /// Format actually written for an item.
+    func format(for item: BackgroundRemovalItem) -> ExportFormat {
+        format ?? (background(for: item).isTransparent ? .png : .jpg)
+    }
+}

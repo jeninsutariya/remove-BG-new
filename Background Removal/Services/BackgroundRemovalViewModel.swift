@@ -3,7 +3,7 @@
 //  Background Removal
 //
 //  State of one project shared by RemovingBackgroundVC, RemovingBackgroundEditorVC and
-//  ChangeBackgroundVC: items, sequential processing queue, caches and background selection.
+//  ExportVC / RefineEdgesVC: items, sequential processing queue, caches, backgrounds and edits.
 //
 //  • Items are processed one at a time (Waiting → Processing → Completed / Failed).
 //  • An item is never queued twice and a completed item is never processed again.
@@ -11,6 +11,14 @@
 //
 
 import UIKit
+
+/// One undo/redo step of the editor.
+nonisolated struct ItemSnapshot: Equatable {
+    let itemID: UUID
+    let background: BackgroundSelection
+    let edits: ItemEdits
+    let foregroundFileName: String?
+}
 
 final class BackgroundRemovalViewModel {
 
@@ -39,12 +47,12 @@ final class BackgroundRemovalViewModel {
     // MARK: - Creation
 
     /// Creates a project from picked photos. Photos are decoded and stored one at a time.
-    static func create(from picked: [PickedImage]) async throws -> BackgroundRemovalViewModel {
+    static func create(from picked: [PickedImage], mode: EditorMode = .removeBackground) async throws -> BackgroundRemovalViewModel {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, HH:mm"
         let name = picked.count > 1 ? "Batch · \(formatter.string(from: Date()))"
                                     : (picked.first?.suggestedName ?? "Cutout · \(formatter.string(from: Date()))")
-        var project = BackgroundRemovalProject(name: name)
+        var project = BackgroundRemovalProject(name: name, mode: mode)
         let storage = ProjectStorageService.shared
         let projectID = project.id
 
@@ -185,14 +193,79 @@ final class BackgroundRemovalViewModel {
         try? storage.save(project)
     }
 
-    /// Stores the background for one item only (other items keep theirs).
+    /// Stores the background for one item only (other items keep theirs). Replaced custom
+    /// files are kept until `purgeUnusedFiles()` so undo can bring them back.
     func setBackground(_ selection: BackgroundSelection, for id: UUID) {
         guard let old = item(id)?.background, old != selection else { return }
-        invalidateImages(for: id)
         update(id) { $0.background = selection }
-        if let oldFile = old.customFileName {
-            storage.deleteFileIfUnreferenced(oldFile, in: project)
+    }
+
+    /// Stores the Shadow / Resize edits of one item.
+    func setEdits(_ edits: ItemEdits, for id: UUID) {
+        guard let old = item(id)?.edits, old != edits else { return }
+        update(id) { $0.edits = edits }
+    }
+
+    /// Restores an editor undo/redo state.
+    func restore(_ snapshot: ItemSnapshot) {
+        guard let current = item(snapshot.itemID) else { return }
+        if current.foregroundFileName != snapshot.foregroundFileName {
+            foregroundCache.removeObject(forKey: snapshot.itemID as NSUUID)
         }
+        update(snapshot.itemID) {
+            $0.background = snapshot.background
+            $0.edits = snapshot.edits
+            if let foreground = snapshot.foregroundFileName { $0.foregroundFileName = foreground }
+        }
+    }
+
+    func snapshot(of id: UUID) -> ItemSnapshot? {
+        item(id).map { ItemSnapshot(itemID: id, background: $0.background, edits: $0.edits,
+                                    foregroundFileName: $0.foregroundFileName) }
+    }
+
+    /// Deletes files no item references any more (call when leaving the editor).
+    func purgeUnusedFiles() {
+        guard !isProcessing else { return }
+        storage.purgeUnreferencedFiles(in: project)
+    }
+
+    // MARK: - Refine
+
+    /// Original photo and current matte for Refine Edges (same pixel size).
+    func refineInputs(for id: UUID) async -> (original: UIImage, mask: CGImage)? {
+        guard let item = item(id), item.isCompleted else { return nil }
+        let projectID = project.id
+        let storage = self.storage
+        let originalName = item.originalFileName
+        let foreground = await fullForeground(for: id)
+        return await Task.detached(priority: .userInitiated) { () -> (original: UIImage, mask: CGImage)? in
+            guard let original = storage.loadImage(originalName, projectID: projectID,
+                                                    maxPixel: BackgroundRemovalService.maxProcessingDimension),
+                  let originalCG = ImageUtilities.uprightCGImage(from: original),
+                  let foregroundCG = foreground.flatMap({ ImageUtilities.uprightCGImage(from: $0) }),
+                  let mask = MaskRefineService.alphaMask(of: foregroundCG,
+                                                         size: CGSize(width: originalCG.width, height: originalCG.height))
+            else { return nil }
+            return (UIImage(cgImage: originalCG, scale: 1, orientation: .up), mask)
+        }.value
+    }
+
+    /// Rebuilds the foreground from the original and the refined matte, and saves it as a new file.
+    func applyRefinedMask(_ mask: CGImage, original: UIImage, for id: UUID) async throws {
+        guard item(id) != nil else { return }
+        let projectID = project.id
+        let storage = self.storage
+        let (fileName, foreground) = try await Task.detached(priority: .userInitiated) { () throws -> (String, UIImage) in
+            guard let originalCG = original.cgImage,
+                  let cut = MaskRefineService.cutout(original: originalCG, mask: mask) else {
+                throw BackgroundRemovalError.compositingFailed
+            }
+            let image = UIImage(cgImage: cut, scale: 1, orientation: .up)
+            return (try storage.saveForeground(image, itemID: id, projectID: projectID), image)
+        }.value
+        foregroundCache.setObject(foreground, forKey: id as NSUUID)
+        update(id) { $0.foregroundFileName = fileName }
     }
 
     /// Saves a user-picked background into the project folder.
@@ -267,14 +340,16 @@ final class BackgroundRemovalViewModel {
         return await originalPreview(for: id, maxPixel: 240)
     }
 
-    /// Preview composited with the same service used for export (smaller size).
-    func compositePreview(for id: UUID, background: BackgroundSelection, maxPixel: CGFloat = 1400) async throws -> UIImage? {
+    /// Preview composited with the same service and edits used for export (smaller size).
+    func compositePreview(for id: UUID, background: BackgroundSelection, edits: ItemEdits? = nil,
+                          maxPixel: CGFloat = 1400) async throws -> UIImage? {
         guard let foreground = await foregroundPreview(for: id, maxPixel: maxPixel) else { return nil }
-        if background.isTransparent { return foreground }
+        let edits = edits ?? item(id)?.edits ?? ItemEdits.unedited
+        if background.isTransparent, edits == ItemEdits.unedited { return foreground }
         let resolved = try await resolveBackground(background, maxPixel: maxPixel * 1.5)
         let compositor = self.compositor
         return await Task.detached(priority: .userInitiated) {
-            compositor.composeImage(foreground: foreground, background: resolved)
+            compositor.composeImage(foreground: foreground, background: resolved, edits: edits)
         }.value
     }
 

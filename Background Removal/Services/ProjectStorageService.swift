@@ -136,6 +136,22 @@ nonisolated final class ProjectStorageService: Sendable {
         try? fileManager.removeItem(at: fileURL(fileName, projectID: project.id))
     }
 
+    /// Deletes image files of the project that no item references any more
+    /// (old foregrounds after Refine, backgrounds that were replaced).
+    func purgeUnreferencedFiles(in project: BackgroundRemovalProject) {
+        var keep: Set<String> = ["project.json"]
+        for item in project.items {
+            keep.insert(item.originalFileName)
+            if let name = item.foregroundFileName { keep.insert(name) }
+            if let name = item.background.customFileName { keep.insert(name) }
+        }
+        let directory = folder(for: project.id)
+        let files = (try? fileManager.contentsOfDirectory(atPath: directory.path)) ?? []
+        for file in files where !keep.contains(file) {
+            try? fileManager.removeItem(at: directory.appendingPathComponent(file))
+        }
+    }
+
     // MARK: - Images
 
     /// Stores the original once (JPEG 0.95 of the upright image ≤ maxDimension).
@@ -150,7 +166,8 @@ nonisolated final class ProjectStorageService: Sendable {
     /// Stores the transparent foreground as PNG (alpha preserved).
     func saveForeground(_ image: UIImage, itemID: UUID, projectID: UUID) throws -> String {
         guard let cg = image.cgImage, let data = ImageUtilities.pngData(cg) else { throw ProjectStorageError.encodingFailed }
-        let name = "foreground_\(itemID.uuidString).png"
+        // Unique per version so undo can return to an earlier (e.g. pre-refine) foreground.
+        let name = "foreground_\(itemID.uuidString)_\(UUID().uuidString.prefix(8)).png"
         try write(data, name: name, projectID: projectID)
         return name
     }

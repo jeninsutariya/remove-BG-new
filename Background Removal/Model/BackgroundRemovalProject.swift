@@ -17,16 +17,34 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
     var name: String
     var items: [BackgroundRemovalItem]
     var exportSettings: ProjectExportSettings
+    /// Flow that created the project (decides the editor tools).
+    var mode: EditorMode
     var createdAt: Date
     var modifiedAt: Date
 
-    init(id: UUID = UUID(), name: String, items: [BackgroundRemovalItem] = []) {
+    init(id: UUID = UUID(), name: String, items: [BackgroundRemovalItem] = [], mode: EditorMode = .removeBackground) {
         self.id = id
         self.name = name
         self.items = items
         self.exportSettings = ProjectExportSettings()
+        self.mode = mode
         self.createdAt = Date()
         self.modifiedAt = Date()
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, items, exportSettings, mode, createdAt, modifiedAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        name = (try? c.decode(String.self, forKey: .name)) ?? "Cutout"
+        items = try c.decode([BackgroundRemovalItem].self, forKey: .items)
+        exportSettings = (try? c.decode(ProjectExportSettings.self, forKey: .exportSettings)) ?? ProjectExportSettings()
+        mode = (try? c.decode(EditorMode.self, forKey: .mode)) ?? .removeBackground
+        createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
+        modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()
     }
 
     var completedItems: [BackgroundRemovalItem] { items.filter(\.isCompleted) }

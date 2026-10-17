@@ -2,44 +2,65 @@
 //  RemovingBackgroundEditorVC.swift
 //  Background Removal
 //
-//  Result screen: large preview (checkerboard behind transparent areas – UI only),
-//  thumbnail strip for multi-image projects, and Background / Save / Export actions.
+//  07 Result & Editor: canvas preview (checkerboard behind transparent areas – UI only),
+//  undo / redo, hold-to-compare, thumbnail strip for batch projects and the tool bar:
+//  • Remove Background / Batch Remove → Refine, Shadow, Resize
+//  • Change Background               → Background, Refine, Shadow, Resize
+//  The preview is rendered by ImageCompositingService – the same code as the export.
 //
 
 import UIKit
+import PhotosUI
 
 class RemovingBackgroundEditorVC: UIViewController {
 
     @IBOutlet weak var btnBack: UIButton!
-    @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var btnSelect: UIButton!
-    @IBOutlet weak var vwPreviewContainer: UIView!
-    @IBOutlet weak var vwPreviewCard: UIView!
+    @IBOutlet weak var btnUndo: UIButton!
+    @IBOutlet weak var btnRedo: UIButton!
+    @IBOutlet weak var btnExport: UIButton!
+    @IBOutlet weak var vwStatusChip: UIView!
+    @IBOutlet weak var imgStatusIcon: UIImageView!
+    @IBOutlet weak var lblStatus: UILabel!
+    @IBOutlet weak var btnStatus: UIButton!
+    @IBOutlet weak var vwCanvasContainer: UIView!
+    @IBOutlet weak var vwCanvasCard: UIView!
+    @IBOutlet weak var canvasWidth: NSLayoutConstraint!
+    @IBOutlet weak var canvasHeight: NSLayoutConstraint!
     @IBOutlet weak var vwChecker: CheckerboardView!
     @IBOutlet weak var imgPreview: UIImageView!
-    @IBOutlet weak var previewWidth: NSLayoutConstraint!
-    @IBOutlet weak var previewHeight: NSLayoutConstraint!
-    @IBOutlet weak var vwStatusOverlay: UIView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
-    @IBOutlet weak var lblStatus: UILabel!
-    @IBOutlet weak var btnRetry: UIButton!
-    @IBOutlet weak var btnQuality: UIButton!
+    @IBOutlet weak var btnCompare: UIButton!
     @IBOutlet weak var clvThumbnails: UICollectionView!
     @IBOutlet weak var thumbnailsHeight: NSLayoutConstraint!
-    @IBOutlet weak var btnBackground: UIButton!
-    @IBOutlet weak var btnSave: UIButton!
-    @IBOutlet weak var btnExport: UIButton!
+    @IBOutlet weak var vwToolbar: UIView!
+    @IBOutlet weak var clvTools: UICollectionView!
+    @IBOutlet weak var containerBottom: NSLayoutConstraint!
 
     /// Set by the presenter before the screen appears.
     var viewModel: BackgroundRemovalViewModel!
 
     private var currentItemID: UUID?
-    private var isSelecting = false
-    private var selectedIDs = Set<UUID>()
+    private var tools: [EditorTool] { viewModel.project.mode.tools }
+
+    // Preview
     private var previewTask: Task<Void, Never>?
     private var previewSize: CGSize?
+    private var lastPreview: UIImage?
+    private var isComparing = false
+
+    // Tool sheet in progress (preview only until ✓)
+    private var activePanel: EditorToolPanel?
+    private var panelBottom: NSLayoutConstraint?
+    private var containerToPanel: NSLayoutConstraint?
+    private var draftBackground: BackgroundSelection?
+    private var draftEdits: ItemEdits?
+    private var didAutoOpenBackground = false
+
+    // Undo / redo per image
+    private var undoStacks: [UUID: [ItemSnapshot]] = [:]
+    private var redoStacks: [UUID: [ItemSnapshot]] = [:]
+
     private var observers: [NSObjectProtocol] = []
-    private var exportTask: Task<Void, Never>?
 
     // MARK: - Lifecycle
 
@@ -48,22 +69,26 @@ class RemovingBackgroundEditorVC: UIViewController {
         currentItemID = viewModel.project.completedItems.first?.id ?? viewModel.items.first?.id
         setupViews()
         observe()
-        reloadAll()
+        reloadThumbnails()
+        showCurrentItem(animated: false)
         // Resume items that were not finished (e.g. after relaunch). Failed items wait for Retry.
         if viewModel.hasPendingItems { viewModel.startProcessing() }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Background may have changed in ChangeBackgroundVC.
-        refreshQuality()
         clvThumbnails.reloadData()
         showCurrentItem(animated: false)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        autoOpenBackgroundIfNeeded()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        fitPreview()
+        fitCanvas()
     }
 
     deinit {
@@ -74,59 +99,55 @@ class RemovingBackgroundEditorVC: UIViewController {
     // MARK: - Setup
 
     private func setupViews() {
-        btnBack.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)), for: .normal)
-        btnBack.setTitle(nil, for: .normal)
+        btnBack.setSymbol("chevron.left", size: 17, weight: .bold)
+        btnBack.tintColor = UIColor(named: "PrimaryText")
         btnBack.layer.cornerRadius = 22
+        btnBack.layer.borderWidth = 1
+        btnBack.layer.borderColor = UIColor(named: "Border Color")?.cgColor
         btnBack.accessibilityLabel = "Back"
+        btnUndo.setSymbol("arrow.uturn.backward", size: 19)
+        btnRedo.setSymbol("arrow.uturn.forward", size: 19)
+        btnUndo.accessibilityLabel = "Undo"
+        btnRedo.accessibilityLabel = "Redo"
+        btnExport.layer.cornerRadius = 22
 
-        vwPreviewCard.layer.cornerRadius = 22
-        vwPreviewCard.layer.cornerCurve = .continuous
-        vwPreviewCard.clipsToBounds = true
-        vwPreviewCard.layer.borderWidth = 1
-        vwPreviewCard.layer.borderColor = UIColor(named: "Border Color")?.cgColor
+        vwStatusChip.layer.cornerRadius = 20
+        vwStatusChip.layer.shadowColor = UIColor.black.cgColor
+        vwStatusChip.layer.shadowOpacity = 0.06
+        vwStatusChip.layer.shadowRadius = 10
+        vwStatusChip.layer.shadowOffset = CGSize(width: 0, height: 4)
+
+        vwCanvasCard.layer.cornerRadius = 24
+        vwCanvasCard.layer.cornerCurve = .continuous
+        vwCanvasCard.clipsToBounds = true
+        vwChecker.cellSize = 14
         imgPreview.contentMode = .scaleAspectFit
         imgPreview.isAccessibilityElement = true
 
-        vwStatusOverlay.backgroundColor = UIColor.black.withAlphaComponent(0.45)
-        lblStatus.textColor = .white
-        spinner.color = .white
-        btnRetry.layer.cornerRadius = 18
-        btnRetry.contentEdgeInsets = UIEdgeInsets(top: 8, left: 18, bottom: 8, right: 18)
+        btnCompare.setSymbol("rectangle.lefthalf.inset.filled", size: 17)
+        btnCompare.tintColor = UIColor(named: "PrimaryText")
+        btnCompare.layer.cornerRadius = 24
+        btnCompare.accessibilityLabel = "Hold to compare with the original"
 
-        configureAction(btnBackground, title: "Background", symbol: "photo.on.rectangle.angled", filled: false)
-        configureAction(btnSave, title: "Save", symbol: "square.and.arrow.down", filled: false)
-        configureAction(btnExport, title: "Export", symbol: "square.and.arrow.up", filled: true)
+        vwToolbar.layer.cornerRadius = 28
+        vwToolbar.layer.shadowColor = UIColor.black.cgColor
+        vwToolbar.layer.shadowOpacity = 0.06
+        vwToolbar.layer.shadowRadius = 14
+        vwToolbar.layer.shadowOffset = CGSize(width: 0, height: 4)
+
+        clvTools.register(UINib(nibName: "EditorToolClvCell", bundle: nil), forCellWithReuseIdentifier: "EditorToolClvCell")
+        clvTools.dataSource = self
+        clvTools.delegate = self
+        clvTools.isScrollEnabled = false
 
         clvThumbnails.register(UINib(nibName: "ProcessedImageCell", bundle: nil), forCellWithReuseIdentifier: "ProcessedImageCell")
         clvThumbnails.dataSource = self
         clvThumbnails.delegate = self
         clvThumbnails.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         if let layout = clvThumbnails.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.itemSize = CGSize(width: 64, height: 64)
+            layout.itemSize = CGSize(width: 56, height: 56)
             layout.minimumLineSpacing = 10
         }
-    }
-
-    private func configureAction(_ button: UIButton, title: String, symbol: String, filled: Bool) {
-        var config = filled ? UIButton.Configuration.filled() : UIButton.Configuration.tinted()
-        config.cornerStyle = .large
-        config.image = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .semibold))
-        config.imagePadding = 6
-        config.baseBackgroundColor = filled ? UIColor(named: "AccentColor") : UIColor(named: "Ultra Light Blue")
-        config.baseForegroundColor = filled ? .white : UIColor(named: "PrimaryText")
-        var attributes = AttributeContainer()
-        attributes.font = UIFont(name: "Figtree-Bold", size: 15) ?? .systemFont(ofSize: 15, weight: .bold)
-        config.attributedTitle = AttributedString(title, attributes: attributes)
-        button.configuration = config
-        button.backgroundColor = .clear
-    }
-
-    private func setActionTitle(_ button: UIButton, _ title: String) {
-        guard var config = button.configuration else { return }
-        var attributes = AttributeContainer()
-        attributes.font = UIFont(name: "Figtree-Bold", size: 15) ?? .systemFont(ofSize: 15, weight: .bold)
-        config.attributedTitle = AttributedString(title, attributes: attributes)
-        button.configuration = config
     }
 
     private func observe() {
@@ -136,9 +157,6 @@ class RemovingBackgroundEditorVC: UIViewController {
             let id = note.userInfo?[BackgroundRemovalViewModel.itemIDKey] as? UUID
             MainActor.assumeIsolated { self?.itemDidChange(id) }
         })
-        observers.append(center.addObserver(forName: PremiumManager.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.refreshQuality() }
-        })
     }
 
     // MARK: - State
@@ -147,16 +165,13 @@ class RemovingBackgroundEditorVC: UIViewController {
         currentItemID.flatMap { viewModel.item($0) }
     }
 
-    private func reloadAll() {
+    private var isPanelOpen: Bool { activePanel != nil }
+
+    private func reloadThumbnails() {
         let multiple = viewModel.items.count > 1
-        thumbnailsHeight.constant = multiple ? 76 : 0
+        thumbnailsHeight.constant = multiple ? 64 : 0
         clvThumbnails.isHidden = !multiple
-        btnSelect.isHidden = !multiple
-        lblTitle.text = viewModel.project.name
-        refreshQuality()
-        updateSelectionUI()
         clvThumbnails.reloadData()
-        showCurrentItem(animated: false)
     }
 
     private func itemDidChange(_ id: UUID?) {
@@ -166,104 +181,115 @@ class RemovingBackgroundEditorVC: UIViewController {
         } else {
             clvThumbnails.reloadData()
         }
-        if id == currentItemID { showCurrentItem(animated: true) }
-        updateActionAvailability()
+        guard id == currentItemID, !isPanelOpen else { return }
+        showCurrentItem(animated: true)
+        autoOpenBackgroundIfNeeded()
     }
 
-    private func refreshQuality() {
-        let premium = PremiumManager.shared.isPremium
-        let title = premium ? "Full quality" : "Standard quality · up to \(Int(ExportQuality.standardMaxPixelDimension)) px"
-        let symbol = premium ? "checkmark.seal.fill" : "crown.fill"
-        btnQuality.setTitle("  " + title, for: .normal)
-        btnQuality.setImage(UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)), for: .normal)
-        btnQuality.tintColor = premium ? UIColor(named: "AccentColor") : UIColor(red: 0.96, green: 0.62, blue: 0.04, alpha: 1)
-        btnQuality.accessibilityHint = premium ? nil : "Opens the premium screen to unlock full-quality export"
-    }
+    private func updateChrome() {
+        let item = currentItem
+        let done = item?.isCompleted == true
+        clvTools.reloadData()
+        btnExport.isEnabled = !viewModel.project.completedItems.isEmpty && !isPanelOpen
+        btnExport.alpha = btnExport.isEnabled ? 1 : 0.5
+        btnCompare.isHidden = !done
+        updateUndoButtons()
 
-    private func updateSelectionUI() {
-        btnSelect.setTitle(isSelecting ? "Done" : "Select", for: .normal)
-        if isSelecting {
-            setActionTitle(btnSave, selectedIDs.isEmpty ? "Save" : "Save (\(selectedIDs.count))")
-            setActionTitle(btnExport, selectedIDs.isEmpty ? "Export" : "Export (\(selectedIDs.count))")
-        } else {
-            setActionTitle(btnSave, "Save")
-            setActionTitle(btnExport, "Export")
+        let accent = UIColor(named: "AccentColor") ?? .systemBlue
+        btnStatus.isEnabled = item?.status == .failed
+        switch item?.status {
+        case .completed where done:
+            setChip(symbol: "checkmark.circle.fill", tint: accent, text: "Background removed")
+            spinner.stopAnimating()
+        case .failed:
+            setChip(symbol: "exclamationmark.circle.fill", tint: .systemRed, text: "Couldn't remove · Tap to retry")
+            spinner.stopAnimating()
+        case .processing:
+            setChip(symbol: "wand.and.stars", tint: accent, text: "Removing background…")
+            spinner.startAnimating()
+        default:
+            setChip(symbol: "clock.fill", tint: UIColor(named: "SecondaryText") ?? .gray, text: "Waiting…")
+            spinner.startAnimating()
         }
-        updateActionAvailability()
     }
 
-    private func updateActionAvailability() {
-        let anyDone = !viewModel.project.completedItems.isEmpty
-        let currentDone = currentItem?.isCompleted == true
-        btnBackground.isEnabled = !isSelecting && currentItem != nil
-        if isSelecting {
-            let ready = viewModel.items.contains { selectedIDs.contains($0.id) && $0.isCompleted }
-            btnSave.isEnabled = ready
-            btnExport.isEnabled = ready
-        } else {
-            btnSave.isEnabled = anyDone || currentDone
-            btnExport.isEnabled = anyDone
-        }
+    private func setChip(symbol: String, tint: UIColor, text: String) {
+        imgStatusIcon.image = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold))
+        imgStatusIcon.tintColor = tint
+        lblStatus.text = text
+        vwStatusChip.accessibilityLabel = text
+    }
+
+    private func autoOpenBackgroundIfNeeded() {
+        guard viewModel.project.mode == .changeBackground, !didAutoOpenBackground, !isPanelOpen,
+              currentItem?.isCompleted == true, viewIfLoaded?.window != nil,
+              currentItem?.background == BackgroundSelection.none else { return }
+        didAutoOpenBackground = true
+        openTool(.background)
     }
 
     // MARK: - Preview
 
+    /// Values shown on the canvas: the open sheet's draft, otherwise the saved item.
+    private var shownBackground: BackgroundSelection { draftBackground ?? currentItem?.background ?? BackgroundSelection.none }
+    private var shownEdits: ItemEdits { draftEdits ?? currentItem?.edits ?? ItemEdits.unedited }
+
     private func showCurrentItem(animated: Bool) {
-        previewTask?.cancel()
+        updateChrome()
         guard let item = currentItem else {
             imgPreview.image = nil
-            vwStatusOverlay.isHidden = true
             return
         }
-        updateActionAvailability()
-        vwChecker.isHidden = !(item.isCompleted && item.background.isTransparent)
         imgPreview.accessibilityLabel = "\(item.sourceName ?? "Image"), \(item.status.displayName)"
-
-        switch item.status {
-        case .completed where item.isCompleted:
-            vwStatusOverlay.isHidden = true
-        case .failed:
-            showOverlay(spinning: false, text: item.errorMessage ?? "Background removal failed.", retry: true)
-        case .processing:
-            showOverlay(spinning: true, text: "Removing background…", retry: false)
-        default:
-            showOverlay(spinning: false, text: "Waiting…", retry: false)
-        }
-
-        let id = item.id
-        let viewModel = self.viewModel!
-        previewTask = Task { [weak self] in
-            var image: UIImage?
-            var failure: Error?
-            if item.isCompleted {
-                do {
-                    image = try await viewModel.compositePreview(for: id, background: item.background)
-                } catch {
-                    failure = error
-                    image = await viewModel.foregroundPreview(for: id, maxPixel: 1400)
-                }
-            } else {
-                image = await viewModel.originalPreview(for: id, maxPixel: 1400)
-            }
-            guard let self, !Task.isCancelled, self.currentItemID == id else { return }
-            self.setPreview(image, animated: animated)
-            if failure != nil {
-                self.vwChecker.isHidden = false
-                showToast(message: "Background couldn't be loaded. Check your connection.")
+        if item.isCompleted {
+            renderPreview(animated: animated)
+        } else {
+            previewTask?.cancel()
+            vwChecker.isHidden = true
+            let id = item.id
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            previewTask = Task { [weak self] in
+                let image = await viewModel.originalPreview(for: id, maxPixel: 1400)
+                guard let self, !Task.isCancelled, self.currentItemID == id else { return }
+                self.setPreview(image, animated: animated)
             }
         }
     }
 
-    private func showOverlay(spinning: Bool, text: String, retry: Bool) {
-        vwStatusOverlay.isHidden = false
-        spinning ? spinner.startAnimating() : spinner.stopAnimating()
-        lblStatus.text = text
-        btnRetry.isHidden = !retry
+    /// Renders background + edits with the export compositor. `fast` uses a smaller size while
+    /// a slider is moving.
+    private func renderPreview(animated: Bool = false, fast: Bool = false) {
+        guard let item = currentItem, item.isCompleted else { return }
+        previewTask?.cancel()
+        let id = item.id
+        let background = shownBackground
+        let edits = shownEdits
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        vwChecker.isHidden = !background.isTransparent
+        previewTask = Task { [weak self] in
+            if fast { try? await Task.sleep(nanoseconds: 30_000_000) }   // coalesce slider events
+            guard !Task.isCancelled else { return }
+            do {
+                let image = try await viewModel.compositePreview(for: id, background: background, edits: edits,
+                                                                 maxPixel: fast ? 900 : 1400)
+                guard let self, !Task.isCancelled, self.currentItemID == id else { return }
+                self.lastPreview = image
+                if !self.isComparing { self.setPreview(image, animated: animated) }
+            } catch {
+                guard let self, !Task.isCancelled else { return }
+                showToast(message: "This background couldn't be loaded. Check your connection.")
+                if self.draftBackground != nil, case .remoteImage = background {
+                    self.draftBackground = BackgroundSelection.none
+                    (self.activePanel as? BackgroundToolView)?.configure(viewModel: viewModel, selection: .none)
+                    self.renderPreview()
+                }
+            }
+        }
     }
 
     private func setPreview(_ image: UIImage?, animated: Bool) {
         previewSize = image?.size
-        fitPreview()
+        fitCanvas()
         if animated {
             UIView.transition(with: imgPreview, duration: 0.25, options: .transitionCrossDissolve) {
                 self.imgPreview.image = image
@@ -273,177 +299,300 @@ class RemovingBackgroundEditorVC: UIViewController {
         }
     }
 
-    /// Sizes the preview card to the image aspect ratio inside the available area.
-    private func fitPreview() {
-        let bounds = vwPreviewContainer.bounds.insetBy(dx: 16, dy: 8)
+    /// Sizes the canvas card to the rendered image's aspect ratio inside the available area.
+    private func fitCanvas() {
+        let bounds = vwCanvasContainer.bounds.insetBy(dx: 24, dy: 8)
         guard bounds.width > 0, bounds.height > 0 else { return }
-        let size = previewSize ?? CGSize(width: 1, height: 1)
+        let size = previewSize ?? CGSize(width: 3, height: 4)
         let scale = min(bounds.width / max(size.width, 1), bounds.height / max(size.height, 1))
         let width = floor(size.width * scale)
         let height = floor(size.height * scale)
-        if previewWidth.constant != width || previewHeight.constant != height {
-            previewWidth.constant = width
-            previewHeight.constant = height
+        if canvasWidth.constant != width || canvasHeight.constant != height {
+            canvasWidth.constant = width
+            canvasHeight.constant = height
         }
+    }
+
+    // MARK: - Undo / redo
+
+    private func pushUndo(_ snapshot: ItemSnapshot) {
+        var stack = undoStacks[snapshot.itemID] ?? []
+        stack.append(snapshot)
+        if stack.count > 30 { stack.removeFirst() }
+        undoStacks[snapshot.itemID] = stack
+        redoStacks[snapshot.itemID] = []
+        updateUndoButtons()
+    }
+
+    /// Saves a change of the current item and records it for undo.
+    private func commit(background: BackgroundSelection? = nil, edits: ItemEdits? = nil) {
+        guard let id = currentItemID, let before = viewModel.snapshot(of: id) else { return }
+        let newBackground = background ?? before.background
+        let newEdits = edits ?? before.edits
+        guard newBackground != before.background || newEdits != before.edits else { return }
+        pushUndo(before)
+        viewModel.setBackground(newBackground, for: id)
+        viewModel.setEdits(newEdits, for: id)
+    }
+
+    private func updateUndoButtons() {
+        let id = currentItemID
+        let canUndo = !(id.flatMap { undoStacks[$0] } ?? []).isEmpty && !isPanelOpen
+        let canRedo = !(id.flatMap { redoStacks[$0] } ?? []).isEmpty && !isPanelOpen
+        let disabled = UIColor(red: 0.72, green: 0.79, blue: 0.87, alpha: 1)
+        btnUndo.isEnabled = canUndo
+        btnRedo.isEnabled = canRedo
+        btnUndo.tintColor = canUndo ? UIColor(named: "PrimaryText") : disabled
+        btnRedo.tintColor = canRedo ? UIColor(named: "PrimaryText") : disabled
+    }
+
+    @IBAction func btnUndo(_ sender: UIButton) {
+        guard let id = currentItemID, let previous = undoStacks[id]?.popLast(),
+              let current = viewModel.snapshot(of: id) else { return }
+        redoStacks[id, default: []].append(current)
+        viewModel.restore(previous)
+        updateUndoButtons()
+    }
+
+    @IBAction func btnRedo(_ sender: UIButton) {
+        guard let id = currentItemID, let next = redoStacks[id]?.popLast(),
+              let current = viewModel.snapshot(of: id) else { return }
+        undoStacks[id, default: []].append(current)
+        viewModel.restore(next)
+        updateUndoButtons()
+    }
+
+    // MARK: - Tools
+
+    private func openTool(_ tool: EditorTool) {
+        guard let item = currentItem, item.isCompleted, !isPanelOpen else {
+            if currentItem?.isCompleted != true { showToast(message: "Wait until the background is removed") }
+            return
+        }
+        switch tool {
+        case .refine:
+            openRefine()
+        case .background:
+            let panel = EditorToolPanel.loadFromNib(BackgroundToolView.self)
+            panel.configure(viewModel: viewModel, selection: item.background)
+            panel.onChange = { [weak self] selection in
+                self?.draftBackground = selection
+                self?.renderPreview()
+            }
+            panel.onAddPhoto = { [weak self] in self?.pickBackgroundPhoto() }
+            panel.onPickColor = { [weak self] color in self?.pickCustomColor(color) }
+            present(panel: panel, apply: { [weak self] in
+                guard let self, let selection = self.draftBackground else { return }
+                self.commit(background: selection)
+            })
+        case .shadow:
+            let panel = EditorToolPanel.loadFromNib(ShadowToolView.self)
+            panel.configure(item.edits.shadow)
+            panel.onChange = { [weak self] shadow in
+                guard let self else { return }
+                var edits = self.shownEdits
+                edits.shadow = shadow
+                self.draftEdits = edits
+                self.renderPreview(fast: true)
+            }
+            present(panel: panel, apply: { [weak self] in
+                guard let self, let edits = self.draftEdits else { return }
+                self.commit(edits: edits)
+            })
+        case .resize:
+            let panel = EditorToolPanel.loadFromNib(ResizeToolView.self)
+            panel.configure(aspect: item.edits.aspect, subjectScale: item.edits.subjectScale)
+            panel.onChange = { [weak self] aspect, scale in
+                guard let self else { return }
+                var edits = self.shownEdits
+                edits.aspect = aspect
+                edits.subjectScale = scale
+                self.draftEdits = edits
+                self.renderPreview(fast: true)
+            }
+            present(panel: panel, apply: { [weak self] in
+                guard let self, let edits = self.draftEdits else { return }
+                self.commit(edits: edits)
+            })
+        }
+    }
+
+    /// Shows a tool sheet at the bottom; the canvas shrinks above it.
+    private func present(panel: EditorToolPanel, apply: @escaping () -> Void) {
+        draftBackground = nil
+        draftEdits = nil
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(panel)
+        let bottom = panel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 400)
+        NSLayoutConstraint.activate([
+            panel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            panel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottom
+        ])
+        view.layoutIfNeeded()
+        panelBottom = bottom
+        activePanel = panel
+        containerBottom.isActive = false
+        let toPanel = vwCanvasContainer.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
+        toPanel.isActive = true
+        containerToPanel = toPanel
+
+        panel.onCancel = { [weak self] in self?.closePanel() }
+        panel.onApply = { [weak self] in
+            apply()
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            self?.closePanel()
+        }
+        bottom.constant = 0
+        updateChrome()
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0) {
+            self.vwToolbar.alpha = 0
+            self.clvThumbnails.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+        UIAccessibility.post(notification: .screenChanged, argument: panel)
+    }
+
+    private func closePanel() {
+        guard let panel = activePanel else { return }
+        activePanel = nil
+        draftBackground = nil
+        draftEdits = nil
+        containerToPanel?.isActive = false
+        containerToPanel = nil
+        containerBottom.isActive = true
+        panelBottom?.constant = panel.bounds.height + 40
+        UIView.animate(withDuration: 0.25, animations: {
+            self.vwToolbar.alpha = 1
+            self.clvThumbnails.alpha = 1
+            self.view.layoutIfNeeded()
+        }, completion: { _ in
+            panel.removeFromSuperview()
+        })
+        showCurrentItem(animated: true)
+    }
+
+    private func openRefine() {
+        guard let id = currentItemID else { return }
+        let hud = ProgressHUD.show(in: view, message: "Preparing…")
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        Task { [weak self] in
+            let inputs = await viewModel.refineInputs(for: id)
+            hud.dismiss()
+            guard let self else { return }
+            guard let inputs else {
+                self.presentErrorAlert(title: "Refine unavailable", message: "This image couldn't be opened for refining.")
+                return
+            }
+            let vc = RefineEdgesVC.fatchEditorInstance()
+            vc.original = inputs.original
+            vc.initialMask = inputs.mask
+            vc.onApply = { [weak self] mask in self?.applyRefinedMask(mask, original: inputs.original, itemID: id) }
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    private func applyRefinedMask(_ mask: CGImage, original: UIImage, itemID: UUID) {
+        guard let before = viewModel.snapshot(of: itemID) else { return }
+        let hud = ProgressHUD.show(in: view, message: "Applying…")
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        Task { [weak self] in
+            do {
+                try await viewModel.applyRefinedMask(mask, original: original, for: itemID)
+                hud.dismiss()
+                self?.pushUndo(before)
+            } catch {
+                hud.dismiss()
+                self?.presentErrorAlert(title: "Couldn't apply", message: error.localizedDescription)
+            }
+        }
+    }
+
+    private func pickBackgroundPhoto() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+
+    private func pickCustomColor(_ color: UIColor?) {
+        let picker = UIColorPickerViewController()
+        picker.supportsAlpha = false
+        picker.selectedColor = color ?? .white
+        picker.delegate = self
+        present(picker, animated: true)
     }
 
     // MARK: - Actions
 
     @IBAction func btnBack(_ sender: UIButton) {
-        exportTask?.cancel()
+        if isPanelOpen {
+            closePanel()
+            return
+        }
         // Processing stops when the user leaves; unfinished items stay "Waiting" in the saved project.
         viewModel.cancelProcessing()
+        viewModel.purgeUnusedFiles()
         navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func btnSelect(_ sender: UIButton) {
-        isSelecting.toggle()
-        if isSelecting {
-            selectedIDs = Set(viewModel.project.completedItems.map(\.id))
-        } else {
-            selectedIDs.removeAll()
-        }
-        updateSelectionUI()
-        clvThumbnails.reloadData()
-    }
-
-    @IBAction func btnRetry(_ sender: UIButton) {
-        guard let id = currentItemID else { return }
-        viewModel.retry(id)
-    }
-
-    @IBAction func btnQuality(_ sender: UIButton) {
-        let premium = ProUpgradeVC.fatchInstance()
-        present(premium, animated: true)
-    }
-
-    @IBAction func btnBackground(_ sender: UIButton) {
-        guard let id = currentItemID else { return }
-        let vc = ChangeBackgroundVC.fatchEditorInstance()
+    @IBAction func btnExport(_ sender: UIButton) {
+        guard !isPanelOpen else { return }
+        let vc = ExportVC.fatchEditorInstance()
         vc.viewModel = viewModel
-        vc.itemID = id
+        vc.itemID = currentItem?.isCompleted == true ? currentItemID : viewModel.project.completedItems.first?.id
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    @IBAction func btnSave(_ sender: UIButton) {
-        guard exportTask == nil else { return }
-        if isSelecting {
-            save(viewModel.items.filter { selectedIDs.contains($0.id) })
-            return
-        }
-        let completed = viewModel.project.completedItems
-        guard completed.count > 1 else {
-            save(currentItem?.isCompleted == true ? [currentItem!] : completed)
-            return
-        }
-        let sheet = UIAlertController(title: "Save to Photos", message: nil, preferredStyle: .actionSheet)
-        if let current = currentItem, current.isCompleted {
-            sheet.addAction(UIAlertAction(title: "Save this image", style: .default) { [weak self] _ in self?.save([current]) })
-        }
-        sheet.addAction(UIAlertAction(title: "Save all \(completed.count) images", style: .default) { [weak self] _ in
-            self?.save(completed)
-        })
-        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        sheet.popoverPresentationController?.sourceView = sender
-        present(sheet, animated: true)
-    }
-
-    @IBAction func btnExport(_ sender: UIButton) {
-        guard exportTask == nil else { return }
-        let items = isSelecting ? viewModel.items.filter { selectedIDs.contains($0.id) } : viewModel.project.completedItems
-        export(items.filter(\.isCompleted), sourceView: sender)
-    }
-
-    // MARK: - Save / Export
-
-    private func save(_ items: [BackgroundRemovalItem]) {
-        guard !items.isEmpty, !ImageExportService.shared.isBusy else { return }
-        let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Saving \(items.count) images…" : "Saving…")
-        let viewModel = self.viewModel!
-        exportTask = Task { [weak self] in
-            defer { self?.exportTask = nil }
-            do {
-                let count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel) { value in
-                    hud.update(progress: value)
-                }
-                hud.dismiss()
-                if count > 0 { showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos") }
-            } catch ImageExportError.photosAccessDenied {
-                hud.dismiss()
-                self?.showPhotosSettingsAlert(message: ImageExportError.photosAccessDenied.errorDescription ?? "")
-            } catch is CancellationError {
-                hud.dismiss()
-            } catch {
-                hud.dismiss()
-                self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
-                                        retry: { self?.save(items) })
-            }
+    @IBAction func btnStatus(_ sender: UIButton) {
+        guard let item = currentItem, item.status == .failed else { return }
+        if let message = item.errorMessage {
+            presentErrorAlert(title: "Background removal failed", message: message,
+                              retry: { [weak self] in self?.viewModel.retry(item.id) })
+        } else {
+            viewModel.retry(item.id)
         }
     }
 
-    private func export(_ items: [BackgroundRemovalItem], sourceView: UIView) {
-        guard !items.isEmpty else {
-            presentErrorAlert(title: "Nothing to export", message: ImageExportError.nothingToExport.errorDescription ?? "")
-            return
-        }
-        let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…")
-        let viewModel = self.viewModel!
-        let quality = PremiumManager.shared.exportQuality
-        exportTask = Task { [weak self] in
-            defer { self?.exportTask = nil }
-            do {
-                let outputs = try await ImageExportService.shared.renderOutputs(for: items, in: viewModel, quality: quality) { value in
-                    hud.update(progress: value * 0.9)
-                }
-                let fileURL: URL
-                if outputs.count == 1, let output = outputs.first {
-                    let name = output.fileName
-                    let data = output.data
-                    fileURL = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
-                } else {
-                    // Archive entries are numbered in project order: Image_001.png, Image_002.jpg…
-                    let files = outputs.enumerated().map { index, output in
-                        (name: String(format: "Image_%03d.%@", index + 1, output.isPNG ? "png" : "jpg"), data: output.data)
-                    }
-                    fileURL = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
-                }
-                hud.update(progress: 1)
-                hud.dismiss()
-                viewModel.recordExport(quality: quality)
-                self?.share(fileURL, sourceView: sourceView)
-            } catch is CancellationError {
-                hud.dismiss()
-            } catch {
-                hud.dismiss()
-                self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
-                                        retry: { self?.export(items, sourceView: sourceView) })
-            }
+    @IBAction func btnCompareDown(_ sender: UIButton) {
+        guard let id = currentItemID, currentItem?.isCompleted == true else { return }
+        isComparing = true
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        Task { [weak self] in
+            let original = await viewModel.originalPreview(for: id, maxPixel: 1400)
+            guard let self, self.isComparing, self.currentItemID == id else { return }
+            self.vwChecker.isHidden = true
+            self.imgPreview.image = original
         }
     }
 
-    private func share(_ url: URL, sourceView: UIView) {
-        let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        activity.popoverPresentationController?.sourceView = sourceView
-        activity.completionWithItemsHandler = { _, _, _, _ in
-            ZIPExportService.shared.cleanUp(url)
-        }
-        present(activity, animated: true)
+    @IBAction func btnCompareUp(_ sender: UIButton) {
+        guard isComparing else { return }
+        isComparing = false
+        vwChecker.isHidden = !shownBackground.isTransparent
+        imgPreview.image = lastPreview
     }
 }
 
-// MARK: - Thumbnail strip
+// MARK: - Collections (tools + thumbnails)
 
-extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionViewDelegate {
+extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.items.count
+        collectionView == clvTools ? tools.count : viewModel.items.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == clvTools {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EditorToolClvCell", for: indexPath) as! EditorToolClvCell
+            cell.setData(tool: tools[indexPath.item], enabled: currentItem?.isCompleted == true)
+            return cell
+        }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProcessedImageCell", for: indexPath) as! ProcessedImageCell
         let item = viewModel.items[indexPath.item]
-        cell.configure(item: item, isCurrent: item.id == currentItemID, selectionMode: isSelecting,
-                       isChecked: selectedIDs.contains(item.id))
+        cell.configure(item: item, isCurrent: item.id == currentItemID, selectionMode: false, isChecked: false)
         let id = item.id
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         Task { [weak cell] in
@@ -453,18 +602,27 @@ extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionVi
         return cell
     }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == clvTools {
+            let count = CGFloat(max(tools.count, 1))
+            return CGSize(width: floor(collectionView.bounds.width / count), height: collectionView.bounds.height)
+        }
+        return CGSize(width: 56, height: 56)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        collectionView == clvTools ? 0 : 10
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = viewModel.items[indexPath.item]
-        if isSelecting {
-            guard item.isCompleted else {
-                showToast(message: "Only finished images can be selected")
-                return
-            }
-            if selectedIDs.contains(item.id) { selectedIDs.remove(item.id) } else { selectedIDs.insert(item.id) }
-            updateSelectionUI()
-            collectionView.reloadItems(at: [indexPath])
+        if collectionView == clvTools {
+            openTool(tools[indexPath.item])
             return
         }
+        guard !isPanelOpen else { return }
+        let item = viewModel.items[indexPath.item]
         guard item.id != currentItemID else {
             if item.status == .failed { viewModel.retry(item.id) }
             return
@@ -473,5 +631,51 @@ extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionVi
         collectionView.reloadData()
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         showCurrentItem(animated: true)
+    }
+}
+
+// MARK: - Background photo
+
+extension RemovingBackgroundEditorVC: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        guard !results.isEmpty else { return }
+        let hud = ProgressHUD.show(in: view, message: "Adding background…")
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        Task { [weak self] in
+            let picked = await PhotoPickerLoader.load(results)
+            guard let photo = picked.first else {
+                hud.dismiss()
+                self?.presentErrorAlert(title: "Couldn't add image", message: "The selected photo couldn't be read.")
+                return
+            }
+            let image = await Task.detached(priority: .userInitiated) { () -> UIImage? in
+                defer { photo.discardTemporaryFile() }
+                return photo.loadImage(maxPixel: BackgroundRemovalService.maxProcessingDimension)
+            }.value
+            do {
+                guard let image else { throw BackgroundRemovalError.invalidImage }
+                let selection = try await viewModel.addCustomBackground(image)
+                hud.dismiss()
+                guard let self, let fileName = selection.customFileName else { return }
+                (self.activePanel as? BackgroundToolView)?.addCustomFile(fileName)
+            } catch {
+                hud.dismiss()
+                self?.presentErrorAlert(title: "Couldn't add image", message: error.localizedDescription)
+            }
+        }
+    }
+}
+
+// MARK: - Custom colour
+
+extension RemovingBackgroundEditorVC: UIColorPickerViewControllerDelegate {
+    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        (activePanel as? BackgroundToolView)?.applyCustomColor(viewController.selectedColor)
+    }
+
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        guard !continuously else { return }
+        (activePanel as? BackgroundToolView)?.applyCustomColor(color)
     }
 }

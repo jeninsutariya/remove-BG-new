@@ -6,8 +6,9 @@
 //  on-screen preview (smaller `maxDimension`) and for exports, so they always match.
 //
 //  Rules
-//  • The canvas is the foreground's size (scaled by `maxDimension`, never upscaled), so the
-//    subject is never cropped.
+//  • The canvas is the foreground's size grown to the Resize aspect ratio (scaled by
+//    `maxDimension`, never upscaled), so the subject is never cropped.
+//  • Shadow and subject size come from `ItemEdits`.
 //  • No background → transparent RGBA result.
 //  • Colour → solid fill behind the subject.
 //  • Image → aspect-fill, centre-cropped to the canvas, behind the subject.
@@ -33,19 +34,35 @@ nonisolated final class ImageCompositingService: Sendable {
 
     static let shared = ImageCompositingService()
 
-    /// Pixel size of the composed output for a foreground and an optional size limit.
-    func outputSize(for foreground: CGSize, maxDimension: CGFloat?) -> CGSize {
-        let longest = max(foreground.width, foreground.height)
-        guard let maxDimension, longest > maxDimension else { return foreground }
-        let scale = maxDimension / longest
-        return CGSize(width: max(1, (foreground.width * scale).rounded()), height: max(1, (foreground.height * scale).rounded()))
+    /// Canvas size before any size limit: the foreground grown to the chosen aspect ratio
+    /// (the subject is never cropped).
+    func canvasPixelSize(for foreground: CGSize, aspect: CanvasAspect) -> CGSize {
+        guard let ratio = aspect.ratio.map({ CGFloat($0) }) else { return foreground }
+        let imageRatio = foreground.width / max(foreground.height, 1)
+        if ratio > imageRatio {
+            return CGSize(width: (foreground.height * ratio).rounded(), height: foreground.height)
+        }
+        return CGSize(width: foreground.width, height: (foreground.width / ratio).rounded())
     }
 
-    /// Composes `background` behind `foreground`. Returns a CGImage with alpha when the background
-    /// is `.none`, otherwise an opaque image.
-    func compose(foreground: UIImage, background: ResolvedBackground, maxDimension: CGFloat? = nil) -> CGImage? {
+    /// Pixel size of the composed output for a foreground, its edits and an optional size limit.
+    func outputSize(for foreground: CGSize, edits: ItemEdits = .unedited, maxDimension: CGFloat?) -> CGSize {
+        let canvas = canvasPixelSize(for: foreground, aspect: edits.aspect)
+        let longest = max(canvas.width, canvas.height)
+        guard let maxDimension, longest > maxDimension else { return canvas }
+        let scale = maxDimension / longest
+        return CGSize(width: max(1, (canvas.width * scale).rounded()), height: max(1, (canvas.height * scale).rounded()))
+    }
+
+    /// Composes `background` behind `foreground` with the Shadow / Resize edits.
+    /// Returns a CGImage with alpha when the background is `.none`, otherwise an opaque image.
+    func compose(foreground: UIImage, background: ResolvedBackground, edits: ItemEdits = .unedited,
+                 maxDimension: CGFloat? = nil) -> CGImage? {
         guard let fg = ImageUtilities.uprightCGImage(from: foreground) else { return nil }
-        let size = outputSize(for: CGSize(width: fg.width, height: fg.height), maxDimension: maxDimension)
+        let fgSize = CGSize(width: fg.width, height: fg.height)
+        let fullCanvas = canvasPixelSize(for: fgSize, aspect: edits.aspect)
+        let size = outputSize(for: fgSize, edits: edits, maxDimension: maxDimension)
+        let scale = size.width / max(fullCanvas.width, 1)
         let width = Int(size.width), height = Int(size.height)
         guard let ctx = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
                                   space: ImageUtilities.sRGB,
@@ -63,13 +80,33 @@ nonisolated final class ImageCompositingService: Sendable {
             guard let bg = ImageUtilities.uprightCGImage(from: image) else { return nil }
             ctx.draw(bg, in: aspectFillRect(for: CGSize(width: bg.width, height: bg.height), in: canvas))
         }
-        ctx.draw(fg, in: canvas)
+
+        // Subject: centred horizontally; when shrunk it keeps resting on the photo's bottom edge.
+        let subjectScale = CGFloat(min(1, max(0.5, edits.subjectScale)))
+        let photoHeight = fgSize.height * scale
+        let subject = CGSize(width: fgSize.width * scale * subjectScale, height: photoHeight * subjectScale)
+        let photoBottomFromTop = (size.height + photoHeight) / 2
+        // Core Graphics has a bottom-left origin.
+        let subjectRect = CGRect(x: (size.width - subject.width) / 2, y: size.height - photoBottomFromTop,
+                                 width: subject.width, height: subject.height)
+
+        ctx.saveGState()
+        if edits.shadow.isOn {
+            let unit = max(size.width, size.height) / 400
+            let offset = CGFloat(edits.shadow.distance) * unit * 0.6
+            let blur = CGFloat(edits.shadow.softness) * unit * 0.5
+            ctx.setShadow(offset: CGSize(width: 0, height: -offset), blur: blur,
+                          color: UIColor.black.withAlphaComponent(CGFloat(edits.shadow.opacity) / 100).cgColor)
+        }
+        ctx.draw(fg, in: subjectRect)
+        ctx.restoreGState()
         return ctx.makeImage()
     }
 
     /// Convenience returning a UIImage (orientation .up, scale 1).
-    func composeImage(foreground: UIImage, background: ResolvedBackground, maxDimension: CGFloat? = nil) -> UIImage? {
-        compose(foreground: foreground, background: background, maxDimension: maxDimension).map {
+    func composeImage(foreground: UIImage, background: ResolvedBackground, edits: ItemEdits = .unedited,
+                      maxDimension: CGFloat? = nil) -> UIImage? {
+        compose(foreground: foreground, background: background, edits: edits, maxDimension: maxDimension).map {
             UIImage(cgImage: $0, scale: 1, orientation: .up)
         }
     }
