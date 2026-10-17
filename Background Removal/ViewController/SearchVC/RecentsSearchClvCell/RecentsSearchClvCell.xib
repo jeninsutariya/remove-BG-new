@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Figtree-SemiBold.ttf">
+            <string>Figtree-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="RecentsSearchClvCell" customModule="Background_Removal" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="280" height="40"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="280" height="40"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZTT-SV-Fo4">
+                        <rect key="frame" x="5" y="3" width="270" height="35"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="recents" translatesAutoresizingMaskIntoConstraints="NO" id="8af-B7-0gc">
+                                <rect key="frame" x="8" y="8" width="19" height="19"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="8af-B7-0gc" secondAttribute="height" id="3VN-Gu-rOl"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aeL-TV-GQV">
+                                <rect key="frame" x="32" y="5" width="228" height="25"/>
+                                <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="17"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="Surface Color"/>
+                        <constraints>
+                            <constraint firstItem="8af-B7-0gc" firstAttribute="leading" secondItem="ZTT-SV-Fo4" secondAttribute="leading" constant="8" id="3Wy-JH-v4b"/>
+                            <constraint firstAttribute="height" constant="35" id="5He-kx-gYW"/>
+                            <constraint firstAttribute="bottom" secondItem="8af-B7-0gc" secondAttribute="bottom" constant="8" id="VdM-iE-WEv"/>
+                            <constraint firstItem="aeL-TV-GQV" firstAttribute="leading" secondItem="8af-B7-0gc" secondAttribute="trailing" constant="5" id="fFp-Qq-pUl"/>
+                            <constraint firstItem="aeL-TV-GQV" firstAttribute="top" secondItem="ZTT-SV-Fo4" secondAttribute="top" constant="5" id="hR8-CR-3ib"/>
+                            <constraint firstItem="8af-B7-0gc" firstAttribute="top" secondItem="ZTT-SV-Fo4" secondAttribute="top" constant="8" id="mQY-F5-po5"/>
+                            <constraint firstAttribute="trailing" secondItem="aeL-TV-GQV" secondAttribute="trailing" constant="10" id="nek-dc-Jbn"/>
+                            <constraint firstAttribute="bottom" secondItem="aeL-TV-GQV" secondAttribute="bottom" constant="5" id="z3J-C5-whB"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isCircleOn" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="ZTT-SV-Fo4" secondAttribute="bottom" constant="2" id="HWr-7k-WZv"/>
+                <constraint firstItem="ZTT-SV-Fo4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="3" id="Xee-bm-lCB"/>
+                <constraint firstAttribute="trailing" secondItem="ZTT-SV-Fo4" secondAttribute="trailing" constant="5" id="l1C-py-p5Y"/>
+                <constraint firstItem="ZTT-SV-Fo4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="oG3-kK-X6C"/>
+            </constraints>
+            <size key="customSize" width="280" height="82"/>
+            <connections>
+                <outlet property="lblTitle" destination="aeL-TV-GQV" id="ZdE-2k-X4R"/>
+                <outlet property="vwbackground" destination="ZTT-SV-Fo4" id="wW1-oU-qqp"/>
+            </connections>
+            <point key="canvasLocation" x="314.50381679389312" y="164.78873239436621"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="recents" width="16" height="16"/>
+        <namedColor name="PrimaryText">
+            <color red="0.058823529411764705" green="0.10980392156862745" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Surface Color">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

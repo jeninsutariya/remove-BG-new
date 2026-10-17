@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Figtree-Bold.ttf">
+            <string>Figtree-Bold</string>
+        </array>
+        <array key="Figtree-Regular.ttf">
+            <string>Figtree-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ProjectClvCell" customModule="Background_Removal" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="182"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="300" height="182"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fLl-3k-pk8">
+                        <rect key="frame" x="5" y="5" width="290" height="172"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today · JPG" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wrs-2s-V3s">
+                                <rect key="frame" x="0.0" y="151" width="290" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="Dpf-pY-HtM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="14"/>
+                                <color key="textColor" name="SecondaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Peach backdrop" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tev-S7-8pk">
+                                <rect key="frame" x="0.0" y="128" width="290" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="n5Y-5p-Frp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h3S-71-qD6">
+                                <rect key="frame" x="0.0" y="0.0" width="290" height="123"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Remove BG Image" translatesAutoresizingMaskIntoConstraints="NO" id="mqS-rc-DAW">
+                                        <rect key="frame" x="0.0" y="0.0" width="290" height="123"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" name="Light blue"/>
+                                <constraints>
+                                    <constraint firstItem="mqS-rc-DAW" firstAttribute="top" secondItem="h3S-71-qD6" secondAttribute="top" id="GIa-El-ABs"/>
+                                    <constraint firstAttribute="trailing" secondItem="mqS-rc-DAW" secondAttribute="trailing" id="p6c-Hy-fQk"/>
+                                    <constraint firstItem="mqS-rc-DAW" firstAttribute="leading" secondItem="h3S-71-qD6" secondAttribute="leading" id="pql-6u-3Ra"/>
+                                    <constraint firstAttribute="bottom" secondItem="mqS-rc-DAW" secondAttribute="bottom" id="wrV-Gr-Nj4"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="h3S-71-qD6" firstAttribute="leading" secondItem="fLl-3k-pk8" secondAttribute="leading" id="77c-kL-OY0"/>
+                            <constraint firstItem="Wrs-2s-V3s" firstAttribute="leading" secondItem="fLl-3k-pk8" secondAttribute="leading" id="Brp-ER-lE0"/>
+                            <constraint firstAttribute="trailing" secondItem="h3S-71-qD6" secondAttribute="trailing" id="KdT-mJ-TK3"/>
+                            <constraint firstItem="Wrs-2s-V3s" firstAttribute="top" secondItem="Tev-S7-8pk" secondAttribute="bottom" id="Phn-XS-84P"/>
+                            <constraint firstAttribute="trailing" secondItem="Wrs-2s-V3s" secondAttribute="trailing" id="QXL-92-Omz"/>
+                            <constraint firstAttribute="trailing" secondItem="Tev-S7-8pk" secondAttribute="trailing" id="WAs-jz-5mU"/>
+                            <constraint firstItem="h3S-71-qD6" firstAttribute="top" secondItem="fLl-3k-pk8" secondAttribute="top" id="XrZ-JE-gyy"/>
+                            <constraint firstAttribute="bottom" secondItem="Wrs-2s-V3s" secondAttribute="bottom" constant="3" id="cdv-T7-51h"/>
+                            <constraint firstItem="Tev-S7-8pk" firstAttribute="leading" secondItem="fLl-3k-pk8" secondAttribute="leading" id="eP4-hD-cvx"/>
+                            <constraint firstItem="Tev-S7-8pk" firstAttribute="top" secondItem="h3S-71-qD6" secondAttribute="bottom" constant="5" id="qQs-Yo-A7X"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="fLl-3k-pk8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="cH1-ey-vBY"/>
+                <constraint firstItem="fLl-3k-pk8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="hkU-0D-gcX"/>
+                <constraint firstAttribute="trailing" secondItem="fLl-3k-pk8" secondAttribute="trailing" constant="5" id="n8q-p2-PYH"/>
+                <constraint firstAttribute="bottom" secondItem="fLl-3k-pk8" secondAttribute="bottom" constant="5" id="rEh-rp-QTz"/>
+            </constraints>
+            <size key="customSize" width="300" height="182"/>
+            <connections>
+                <outlet property="lblName" destination="Tev-S7-8pk" id="Z1V-SD-ACb"/>
+                <outlet property="lbltype" destination="Wrs-2s-V3s" id="FNy-ax-TdM"/>
+            </connections>
+            <point key="canvasLocation" x="328.24427480916029" y="200"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Remove BG Image" width="512" height="512"/>
+        <namedColor name="Light blue">
+            <color red="0.81176470588235294" green="0.90980392156862744" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color red="0.058823529411764705" green="0.10980392156862745" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SecondaryText">
+            <color red="0.35294117647058826" green="0.41960784313725491" blue="0.50196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
