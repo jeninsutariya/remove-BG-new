@@ -21,10 +21,11 @@ nonisolated struct MaskBuffer {
         self.bytes = bytes
     }
 
-    /// Draws any image into an 8-bit gray buffer of the image's own size.
-    init?(gray image: CGImage) {
-        let w = image.width
-        let h = image.height
+    /// Draws any image into an 8-bit gray buffer, at the image's own size or resized.
+    init?(gray image: CGImage, width: Int? = nil, height: Int? = nil) {
+        let w = width ?? image.width
+        let h = height ?? image.height
+        guard w > 0, h > 0 else { return nil }
         var data = [UInt8](repeating: 0, count: w * h)
         let ok: Bool = data.withUnsafeMutableBytes { raw in
             guard let ctx = CGContext(data: raw.baseAddress, width: w, height: h, bitsPerComponent: 8,
@@ -67,6 +68,35 @@ nonisolated enum MaskRefineService {
         var alpha = [UInt8](repeating: 0, count: w * h)
         for i in 0..<(w * h) { alpha[i] = rgba[i * 4 + 3] }
         return MaskBuffer(width: w, height: h, bytes: alpha).grayImage()
+    }
+
+    /// `mask` resized to `width` × `height` (8-bit gray).
+    static func resized(_ mask: CGImage, width: Int, height: Int) -> CGImage? {
+        if mask.width == width, mask.height == height, mask.bitsPerPixel == 8 { return mask }
+        return MaskBuffer(gray: mask, width: width, height: height)?.grayImage()
+    }
+
+    /// Puts the Refine edits back into the full-resolution matte. `edited` and `coverage` are
+    /// the smaller working copies; only painted pixels (coverage) take the edited value, so
+    /// untouched edges keep their full-resolution detail.
+    static func mergeEdits(full: CGImage, edited: CGImage, coverage: CGImage) -> CGImage? {
+        let w = full.width, h = full.height
+        guard let base = MaskBuffer(gray: full),
+              let paint = MaskBuffer(gray: edited, width: w, height: h),
+              let cover = MaskBuffer(gray: coverage, width: w, height: h) else { return nil }
+        var out = base.bytes
+        out.withUnsafeMutableBufferPointer { o in
+            paint.bytes.withUnsafeBufferPointer { p in
+                cover.bytes.withUnsafeBufferPointer { c in
+                    for i in 0..<(w * h) {
+                        let k = Int(c[i])
+                        guard k > 0 else { continue }
+                        o[i] = UInt8((Int(o[i]) * (255 - k) + Int(p[i]) * k + 127) / 255)
+                    }
+                }
+            }
+        }
+        return MaskBuffer(width: w, height: h, bytes: out).grayImage()
     }
 
     /// Original photo with `mask` as its alpha channel (RGBA8, sRGB).

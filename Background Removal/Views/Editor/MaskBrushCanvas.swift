@@ -25,10 +25,22 @@ final class MaskBrushCanvas {
         guard load(mask) else { return nil }
     }
 
+    /// Empty (fully transparent) canvas, used to record where the user painted.
+    init?(width: Int, height: Int) {
+        self.width = width
+        self.height = height
+        guard let ctx = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                  space: CGColorSpaceCreateDeviceRGB(),
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+        context = ctx
+        context.interpolationQuality = .high
+        context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+    }
+
     /// Replaces the bitmap with a grayscale matte (initial state, undo, redo).
     @discardableResult
     func load(_ gray: CGImage) -> Bool {
-        guard var buffer = MaskBuffer(gray: gray), buffer.width == width, buffer.height == height,
+        guard var buffer = MaskBuffer(gray: gray, width: width, height: height),
               let data = context.data else { return false }
         let w = vImagePixelCount(width), h = vImagePixelCount(height)
         let rowBytes = width, destRowBytes = context.bytesPerRow

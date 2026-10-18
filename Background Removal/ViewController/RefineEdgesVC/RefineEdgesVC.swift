@@ -3,8 +3,13 @@
 //  Background Removal
 //
 //  10 Refine Edges (Editor.storyboard): erase / restore the cutout with a soft brush,
-//  pinch to zoom, magnifier loupe, own undo/redo. Works on the original photo + matte;
-//  ✓ hands the edited matte back to the editor, which rebuilds and saves the foreground.
+//  pinch to zoom, two-finger pan, magnifier loupe and its own undo/redo.
+//
+//  Painting happens on a working copy (long side ≤ 2048 px) so it stays smooth on large
+//  photos. A second canvas records where the user painted; on ✓ only those pixels are
+//  merged back into the full-resolution matte, so untouched edges keep full detail.
+//  In Restore mode the removed parts of the photo are shown faintly so you can see what
+//  you are bringing back.
 //
 
 import UIKit
@@ -30,37 +35,53 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     @IBOutlet weak var sliderSoftness: UISlider!
     @IBOutlet weak var lblSoftnessValue: UILabel!
 
-    // MARK: - State
+    // MARK: - Input
 
-    /// Upright original photo (same pixel size as `initialMask`).
+    /// Upright original photo (full resolution, same pixel size as `initialMask`).
     var original: UIImage!
-    /// Current matte (8-bit gray) of the foreground.
+    /// Current matte (8-bit gray) of the foreground at full resolution.
     var initialMask: CGImage!
+    /// Receives the refined full-resolution matte.
     var onApply: ((CGImage) -> Void)?
 
-    private var pixelSize: CGSize {
-        CGSize(width: original.size.width * original.scale, height: original.size.height * original.scale)
+    // MARK: - State
+
+    private static let workingMaxDimension: CGFloat = 2048
+    private static let historyLimit = 12
+
+    private struct Step {
+        let mask: CGImage
+        let coverage: CGImage
     }
 
+    private var workPhoto: UIImage?
+    private var workSize = CGSize(width: 1, height: 1)
     private var mask: MaskBrushCanvas?
+    private var coverage: MaskBrushCanvas?
     private var stamp: CGImage?
+
     private let canvas = UIView()
     private let checker = CheckerboardView(frame: .zero)
+    private let ghostView = UIImageView()
     private let photoView = UIImageView()
     private let maskLayer = CALayer()
     private let brushRing = UIView()
     private let brushFill = UIView()
     private let loupe = RefineLoupeView()
+    private let loading = UIActivityIndicatorView(style: .large)
 
     private var lastPoint: CGPoint?
-    private var history: [CGImage] = []
+    private var history: [Step] = []
     private var historyIndex = 0
-    /// True once a stroke was made (history may have dropped the initial matte).
     private var didEdit = false
+    private var isApplying = false
+    /// Set when a stroke turned into a pinch; the partial stroke is thrown away.
+    private var strokeAborted = false
     private var needsMaskRefresh = false
     private var displayLink: CADisplayLink?
     private var canvasSize: CGSize = .zero
 
+    private var isReady: Bool { mask != nil }
     private var isErasing: Bool { segMode.selectedSegmentIndex == 0 }
 
     // MARK: - Lifecycle
@@ -69,16 +90,13 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         super.viewDidLoad()
         setupUI()
         setupCanvas()
-
-        mask = MaskBrushCanvas(mask: initialMask)
-        history = [initialMask]
-        stamp = MaskBrushCanvas.makeStamp(softness: CGFloat(sliderSoftness.value) / 100)
-        refreshMask()
-        updateUndoButtons()
+        setControlsEnabled(false)
+        prepareWorkingCopies()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        // One finger paints here, so the edge-swipe back gesture would fight with strokes.
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         if displayLink == nil {
             let link = CADisplayLink(target: self, selector: #selector(flushMask))
@@ -99,6 +117,8 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         layoutCanvasIfNeeded()
     }
 
+    // MARK: - Setup
+
     private func setupUI() {
         btnBack.setSymbol("chevron.left", size: 17, weight: .bold)
         btnBack.tintColor = UIColor(named: "PrimaryText")
@@ -113,12 +133,15 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         btnPanelCancel.setSymbol("xmark", size: 16, weight: .bold)
         btnPanelCancel.tintColor = UIColor(named: "PrimaryText")
         btnPanelCancel.layer.cornerRadius = 22
+        btnPanelCancel.accessibilityLabel = "Cancel"
         btnPanelApply.setSymbol("checkmark", size: 16, weight: .bold)
         btnPanelApply.tintColor = .white
         btnPanelApply.layer.cornerRadius = 22
+        btnPanelApply.accessibilityLabel = "Apply"
         vwGrabber.layer.cornerRadius = 2.5
         vwHint.layer.cornerRadius = 17
         segMode.applyEditorStyle()
+        segMode.selectedSegmentIndex = 0
 
         vwPanel.layer.cornerRadius = 36
         vwPanel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -135,7 +158,9 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         sliderSoftness.value = 22
         lblBrushValue.text = "34"
         lblSoftnessValue.text = "22"
+        lblHint.text = "Drag to erase · Pinch to zoom"
         sliderBrush.addTarget(self, action: #selector(hideBrush), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        stamp = MaskBrushCanvas.makeStamp(softness: CGFloat(sliderSoftness.value) / 100)
     }
 
     private func setupCanvas() {
@@ -145,14 +170,17 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentInsetAdjustmentBehavior = .never
-        scrollView.panGestureRecognizer.minimumNumberOfTouches = 2   // one finger draws, two fingers pan
+        scrollView.delaysContentTouches = false
+        scrollView.panGestureRecognizer.minimumNumberOfTouches = 2   // one finger paints, two fingers pan
 
         checker.cellSize = 14
-        photoView.image = original
+        ghostView.contentMode = .scaleToFill
+        ghostView.alpha = 0
         photoView.contentMode = .scaleToFill
         maskLayer.contentsGravity = .resize
         photoView.layer.mask = maskLayer
         canvas.addSubview(checker)
+        canvas.addSubview(ghostView)
         canvas.addSubview(photoView)
         scrollView.addSubview(canvas)
 
@@ -160,34 +188,115 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         brushRing.layer.borderWidth = 2
         brushRing.isUserInteractionEnabled = false
         brushRing.isHidden = true
-        brushFill.backgroundColor = (UIColor(named: "AccentColor") ?? .systemBlue).withAlphaComponent(0.22)
-        brushFill.layer.borderColor = (UIColor(named: "AccentColor") ?? .systemBlue).cgColor
+        let accent = UIColor(named: "AccentColor") ?? .systemBlue
+        brushFill.backgroundColor = accent.withAlphaComponent(0.22)
+        brushFill.layer.borderColor = accent.cgColor
         brushFill.layer.borderWidth = 2
         brushRing.addSubview(brushFill)
         view.addSubview(brushRing)
         loupe.isHidden = true
         view.addSubview(loupe)
 
+        loading.color = accent
+        loading.hidesWhenStopped = true
+        loading.translatesAutoresizingMaskIntoConstraints = false
+        vwCanvasArea.addSubview(loading)
+        NSLayoutConstraint.activate([
+            loading.centerXAnchor.constraint(equalTo: vwCanvasArea.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: vwCanvasArea.centerYAnchor)
+        ])
+
         let draw = UIPanGestureRecognizer(target: self, action: #selector(drawn(_:)))
         draw.maximumNumberOfTouches = 1
         draw.delegate = self
         scrollView.addGestureRecognizer(draw)
-        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(_:))))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
+        tap.delegate = self
+        scrollView.addGestureRecognizer(tap)
+    }
+
+    /// Builds the smaller working photo and matte off the main thread.
+    private func prepareWorkingCopies() {
+        guard let original, let initialMask else {
+            showLoadError()
+            return
+        }
+        loading.startAnimating()
+        let maxDimension = Self.workingMaxDimension
+        Task { [weak self] in
+            let result = await Task.detached(priority: .userInitiated) { () -> (photo: UIImage, mask: CGImage)? in
+                let pixel = max(original.size.width * original.scale, original.size.height * original.scale)
+                let photoCG: CGImage?
+                if pixel > maxDimension {
+                    photoCG = ImageUtilities.uprightCGImage(from: original, maxDimension: maxDimension)
+                } else {
+                    photoCG = original.cgImage ?? ImageUtilities.uprightCGImage(from: original)
+                }
+                guard let photoCG,
+                      let workMask = MaskRefineService.resized(initialMask, width: photoCG.width, height: photoCG.height)
+                else { return nil }
+                return (UIImage(cgImage: photoCG, scale: 1, orientation: .up), workMask)
+            }.value
+            guard let self else { return }
+            self.loading.stopAnimating()
+            guard let result,
+                  let mask = MaskBrushCanvas(mask: result.mask),
+                  let coverage = MaskBrushCanvas(width: mask.width, height: mask.height),
+                  let coverageImage = coverage.grayImage() else {
+                self.showLoadError()
+                return
+            }
+            self.workPhoto = result.photo
+            self.workSize = CGSize(width: mask.width, height: mask.height)
+            self.mask = mask
+            self.coverage = coverage
+            self.history = [Step(mask: result.mask, coverage: coverageImage)]
+            self.historyIndex = 0
+            self.photoView.image = result.photo
+            self.ghostView.image = result.photo
+            self.canvasSize = .zero
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+            self.refreshMask()
+            self.setControlsEnabled(true)
+            self.updateUndoButtons()
+        }
+    }
+
+    private func showLoadError() {
+        loading.stopAnimating()
+        let alert = UIAlertController(title: "Refine unavailable",
+                                      message: "This image couldn't be prepared for refining. Please try again.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
+    }
+
+    private func setControlsEnabled(_ enabled: Bool) {
+        for control in [btnPanelApply!, segMode!, sliderBrush!, sliderSoftness!] as [UIControl] {
+            control.isEnabled = enabled
+        }
+        vwPanel.alpha = enabled ? 1 : 0.6
+        if !enabled {
+            btnUndo.isEnabled = false
+            btnRedo.isEnabled = false
+        }
     }
 
     private func layoutCanvasIfNeeded() {
         let bounds = scrollView.bounds
-        guard bounds.width > 0, scrollView.zoomScale == 1 else { return }
-        let image = pixelSize
-        // Fill the width like the design; very tall photos are fitted.
-        var size = CGSize(width: bounds.width, height: bounds.width * image.height / image.width)
-        if size.height > bounds.height * 1.6 {
-            size = CGSize(width: bounds.height * 1.6 * image.width / image.height, height: bounds.height * 1.6)
-        }
+        guard bounds.width > 0, bounds.height > 0, scrollView.zoomScale == 1, isReady else { return }
+        // Fit the whole photo in the area (the panel overlaps its bottom a little).
+        let visibleHeight = max(bounds.height - 36, 100)
+        let scale = min(bounds.width / workSize.width, visibleHeight / workSize.height)
+        let size = CGSize(width: floor(workSize.width * scale), height: floor(workSize.height * scale))
         guard size != canvasSize else { return }
         canvasSize = size
         canvas.frame = CGRect(origin: .zero, size: size)
         checker.frame = canvas.bounds
+        ghostView.frame = canvas.bounds
         photoView.frame = canvas.bounds
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -195,8 +304,6 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         CATransaction.commit()
         scrollView.contentSize = size
         centerCanvas()
-        scrollView.contentOffset = CGPoint(x: -scrollView.contentInset.left,
-                                           y: -scrollView.contentInset.top + max(0, min(size.height - bounds.height, size.height * 0.08)))
     }
 
     // MARK: - Zoom
@@ -209,22 +316,32 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         let bounds = scrollView.bounds.size
         let content = scrollView.contentSize
         let x = max(0, (bounds.width - content.width) / 2)
-        let y = max(0, (bounds.height - content.height) / 2)
-        scrollView.contentInset = UIEdgeInsets(top: y, left: x, bottom: y + 40, right: x)
+        let y = max(0, (bounds.height - 36 - content.height) / 2)
+        scrollView.contentInset = UIEdgeInsets(top: y, left: x, bottom: y + 36, right: x)
+    }
+
+    // MARK: - Gestures
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Painting only starts on the photo, once it is ready.
+        guard isReady, !isApplying else { return false }
+        let point = gestureRecognizer.location(in: canvas)
+        return canvas.bounds.insetBy(dx: -30, dy: -30).contains(point)
     }
 
     // MARK: - Brush
 
     private var brushRadius: CGFloat { CGFloat(sliderBrush.value) }
 
+    /// Canvas point → working-image pixel (top-left origin).
     private func imagePoint(_ location: CGPoint) -> CGPoint {
-        let scale = pixelSize.width / max(canvas.bounds.width, 1)
+        let scale = workSize.width / max(canvas.bounds.width, 1)
         return CGPoint(x: location.x * scale, y: location.y * scale)
     }
 
-    /// Brush size is on screen, so zooming in gives finer control.
+    /// Brush size is in screen points, so zooming in gives finer control.
     private var radiusInPixels: CGFloat {
-        brushRadius / scrollView.zoomScale * pixelSize.width / max(canvas.bounds.width, 1)
+        brushRadius / max(scrollView.zoomScale, 0.01) * workSize.width / max(canvas.bounds.width, 1)
     }
 
     @objc private func drawn(_ gesture: UIPanGestureRecognizer) {
@@ -232,17 +349,28 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         let inView = gesture.location(in: view)
         switch gesture.state {
         case .began:
+            strokeAborted = false
             lastPoint = imagePoint(inCanvas)
             paint(to: inCanvas)
             showBrush(at: inView)
             vwHint.isHidden = true
         case .changed:
+            guard !strokeAborted else { return }
+            if gesture.numberOfTouches > 1 {
+                // A second finger means zoom/pan, not paint: drop this stroke.
+                strokeAborted = true
+                lastPoint = nil
+                hideBrush()
+                restore(history[historyIndex])
+                return
+            }
             paint(to: inCanvas)
             showBrush(at: inView)
         case .ended, .cancelled, .failed:
             lastPoint = nil
             hideBrush()
-            pushHistory()
+            if !strokeAborted { pushHistory() }
+            strokeAborted = false
         default:
             break
         }
@@ -257,9 +385,11 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     }
 
     private func paint(to location: CGPoint) {
-        guard let mask, let stamp else { return }
+        guard let mask, let coverage, let stamp else { return }
         let point = imagePoint(location)
-        mask.stroke(from: lastPoint ?? point, to: point, radius: radiusInPixels, stamp: stamp, erase: isErasing)
+        let from = lastPoint ?? point
+        mask.stroke(from: from, to: point, radius: radiusInPixels, stamp: stamp, erase: isErasing)
+        coverage.stroke(from: from, to: point, radius: radiusInPixels, stamp: stamp, erase: false)
         lastPoint = point
         needsMaskRefresh = true
     }
@@ -287,12 +417,13 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         brushFill.layer.cornerRadius = brushFill.bounds.width / 2
 
         // Magnifier in the top-left corner (top-right when the finger is there).
+        guard let workPhoto else { return }
         let size: CGFloat = 108
         let top = vwCanvasArea.frame.minY + 16
         let useLeft = point.x > view.bounds.width / 2 || point.y > top + size + 40
         loupe.frame = CGRect(x: useLeft ? 16 : view.bounds.width - size - 16, y: top, width: size, height: size)
         if loupe.isHidden {
-            loupe.configure(photo: original, mask: maskLayer.contents)
+            loupe.configure(photo: workPhoto, mask: maskLayer.contents)
             loupe.isHidden = false
         }
         let p = view.convert(point, to: canvas)
@@ -308,58 +439,103 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     // MARK: - History
 
     private func pushHistory() {
-        guard let snapshot = mask?.grayImage() else { return }
+        guard let maskImage = mask?.grayImage(), let coverageImage = coverage?.grayImage() else { return }
         history.removeSubrange(min(historyIndex + 1, history.count)...)
-        history.append(snapshot)
-        if history.count > 8 { history.removeFirst() }   // full-size mattes are large
+        history.append(Step(mask: maskImage, coverage: coverageImage))
+        if history.count > Self.historyLimit { history.removeFirst() }
         historyIndex = history.count - 1
         didEdit = true
         updateUndoButtons()
     }
 
+    private func restore(_ step: Step) {
+        mask?.load(step.mask)
+        coverage?.load(step.coverage)
+        refreshMask()
+        updateUndoButtons()
+    }
+
     private func updateUndoButtons() {
-        let canUndo = historyIndex > 0
-        let canRedo = historyIndex < history.count - 1
+        let canUndo = isReady && historyIndex > 0
+        let canRedo = isReady && historyIndex < history.count - 1
+        let disabled = UIColor(red: 0.72, green: 0.79, blue: 0.87, alpha: 1)
         btnUndo.isEnabled = canUndo
         btnRedo.isEnabled = canRedo
-        let disabled = UIColor(red: 0.72, green: 0.79, blue: 0.87, alpha: 1)
         btnUndo.tintColor = canUndo ? UIColor(named: "PrimaryText") : disabled
         btnRedo.tintColor = canRedo ? UIColor(named: "PrimaryText") : disabled
     }
 
-    private func close(apply: Bool) {
-        if apply, didEdit {
-            onApply?(history[historyIndex])
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+    // MARK: - Apply
+
+    private func apply() {
+        guard !isApplying else { return }
+        guard didEdit, let initialMask, let editedImage = mask?.grayImage(),
+              let coverageImage = coverage?.grayImage() else {
+            navigationController?.popViewController(animated: true)
+            return
         }
-        navigationController?.popViewController(animated: true)
+        isApplying = true
+        setControlsEnabled(false)
+        loading.startAnimating()
+        let sameSize = editedImage.width == initialMask.width && editedImage.height == initialMask.height
+        Task { [weak self] in
+            let merged = await Task.detached(priority: .userInitiated) { () -> CGImage? in
+                if sameSize { return editedImage }
+                return MaskRefineService.mergeEdits(full: initialMask, edited: editedImage, coverage: coverageImage)
+            }.value
+            guard let self else { return }
+            self.loading.stopAnimating()
+            guard let merged else {
+                self.isApplying = false
+                self.setControlsEnabled(true)
+                self.updateUndoButtons()
+                self.presentErrorAlert(title: "Couldn't apply", message: "The refined edges couldn't be saved. Please try again.")
+                return
+            }
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            self.onApply?(merged)
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    private func close() {
+        guard !isApplying else { return }
+        guard didEdit else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+        let alert = UIAlertController(title: "Discard changes?", message: "Your refine edits will be lost.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Keep editing", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Discard", style: .destructive) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
     }
 
     // MARK: - Actions
 
-    @IBAction func btnBack(_ sender: UIButton) { close(apply: false) }
-    @IBAction func btnCancel(_ sender: UIButton) { close(apply: false) }
-    @IBAction func btnApply(_ sender: UIButton) { close(apply: true) }
+    @IBAction func btnBack(_ sender: UIButton) { close() }
+    @IBAction func btnCancel(_ sender: UIButton) { close() }
+    @IBAction func btnApply(_ sender: UIButton) { apply() }
 
     @IBAction func btnUndo(_ sender: UIButton) {
         guard historyIndex > 0 else { return }
         historyIndex -= 1
-        mask?.load(history[historyIndex])
-        refreshMask()
-        updateUndoButtons()
+        restore(history[historyIndex])
     }
 
     @IBAction func btnRedo(_ sender: UIButton) {
         guard historyIndex < history.count - 1 else { return }
         historyIndex += 1
-        mask?.load(history[historyIndex])
-        refreshMask()
-        updateUndoButtons()
+        restore(history[historyIndex])
     }
 
     @IBAction func segModeChanged(_ sender: UISegmentedControl) {
         lblHint.text = isErasing ? "Drag to erase · Pinch to zoom" : "Drag to restore · Pinch to zoom"
         vwHint.isHidden = false
+        // Show the removed parts faintly while restoring.
+        UIView.animate(withDuration: 0.2) { self.ghostView.alpha = self.isErasing ? 0 : 0.3 }
     }
 
     @IBAction func sliderBrushChanged(_ sender: UISlider) {
