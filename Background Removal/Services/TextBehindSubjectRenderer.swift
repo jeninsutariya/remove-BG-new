@@ -32,8 +32,8 @@ nonisolated enum TextBehindGeometry {
         case .original:
             return photo
         case .custom:
-            return CGSize(width: CGFloat(min(max(canvas.customWidth, 64), 8000)),
-                          height: CGFloat(min(max(canvas.customHeight, 64), 8000)))
+            return CGSize(width: CGFloat(min(max(canvas.customWidth, 64), 6000)),
+                          height: CGFloat(min(max(canvas.customHeight, 64), 6000)))
         default:
             guard let ratio = canvas.preset.ratio.map({ CGFloat($0) }) else { return photo }
             // Grow the photo's canvas to the ratio (never crops the subject at zoom 1, Fit).

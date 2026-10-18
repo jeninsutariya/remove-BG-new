@@ -96,14 +96,14 @@ nonisolated enum TextRenderingService {
     /// UIGraphicsImageRenderer. The context must be the current UIKit context.
     static func draw(_ layer: TextLayerModel, in ctx: CGContext, canvasSize: CGSize) {
         guard !layer.isHidden, !layer.displayText.isEmpty, layer.opacity > 0 else { return }
-        let layout = layout(for: layer, canvasSize: canvasSize)
+        let textLayout = self.layout(for: layer, canvasSize: canvasSize)
         let k = canvasSize.width / 1000
-        let rect = CGRect(x: -layout.size.width / 2, y: -layout.size.height / 2,
-                          width: layout.size.width, height: layout.size.height)
+        let rect = CGRect(x: -textLayout.size.width / 2, y: -textLayout.size.height / 2,
+                          width: textLayout.size.width, height: textLayout.size.height)
 
         ctx.saveGState()
-        ctx.translateBy(x: layout.center.x, y: layout.center.y)
-        ctx.rotate(by: layout.rotation)
+        ctx.translateBy(x: textLayout.center.x, y: textLayout.center.y)
+        ctx.rotate(by: textLayout.rotation)
         // Opacity, blend mode and shadow apply once to the whole text layer.
         ctx.setAlpha(CGFloat(layer.opacity))
         ctx.setBlendMode(layer.blendMode.cgBlendMode)
@@ -115,7 +115,7 @@ nonisolated enum TextRenderingService {
         ctx.beginTransparencyLayer(auxiliaryInfo: nil)
 
         if layer.highlight.isOn {
-            let pad = layout.pointSize * 0.15
+            let pad = textLayout.pointSize * 0.15
             let color = (UIColor(hexRGB: layer.highlight.hex) ?? .yellow).withAlphaComponent(CGFloat(layer.highlight.opacity))
             ctx.setFillColor(color.cgColor)
             ctx.addPath(UIBezierPath(roundedRect: rect.insetBy(dx: -pad, dy: -pad * 0.6), cornerRadius: pad).cgPath)
@@ -124,23 +124,23 @@ nonisolated enum TextRenderingService {
 
         switch layer.fill {
         case .solid(let hex):
-            let string = attributedString(for: layer, pointSize: layout.pointSize, color: UIColor(hexRGB: hex) ?? .white)
+            let string = attributedString(for: layer, pointSize: textLayout.pointSize, color: UIColor(hexRGB: hex) ?? .white)
             string.draw(with: rect, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
         case .gradient(let gradient):
             // Glyphs as an alpha mask, then the gradient composited "source in": the gradient
             // only exists inside the letters and the gaps stay transparent.
             ctx.saveGState()
             ctx.beginTransparencyLayer(auxiliaryInfo: nil)
-            let string = attributedString(for: layer, pointSize: layout.pointSize, color: .white)
+            let string = attributedString(for: layer, pointSize: textLayout.pointSize, color: .white)
             string.draw(with: rect, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
             ctx.setBlendMode(.sourceIn)
-            BackgroundRenderingService.drawLinearGradient(gradient, in: rect.insetBy(dx: -2, dy: -2), context: ctx)
+            BackgroundRenderingService.drawLinearGradient(gradient, in: rect.insetBy(dx: -textLayout.pointSize * 0.4, dy: -textLayout.pointSize * 0.4), context: ctx)
             ctx.endTransparencyLayer()
             ctx.restoreGState()
         }
 
         if layer.stroke.isOn, layer.stroke.width > 0 {
-            let outline = attributedString(for: layer, pointSize: layout.pointSize, color: .clear,
+            let outline = attributedString(for: layer, pointSize: textLayout.pointSize, color: .clear,
                                            strokeColor: UIColor(hexRGB: layer.stroke.hex) ?? .black,
                                            strokeWidth: CGFloat(layer.stroke.width) * k)
             outline.draw(with: rect, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)

@@ -75,14 +75,19 @@ final class TextBehindExportVC: UIViewController {
         NSLayoutConstraint.activate([
             previewBox.heightAnchor.constraint(equalToConstant: 220),
             previewView.centerXAnchor.constraint(equalTo: previewBox.centerXAnchor),
-            previewView.topAnchor.constraint(equalTo: previewBox.topAnchor),
-            previewView.bottomAnchor.constraint(equalTo: previewBox.bottomAnchor),
+            previewView.centerYAnchor.constraint(equalTo: previewBox.centerYAnchor),
+            previewView.heightAnchor.constraint(lessThanOrEqualTo: previewBox.heightAnchor),
+            previewView.widthAnchor.constraint(lessThanOrEqualTo: previewBox.widthAnchor),
             previewView.widthAnchor.constraint(equalTo: previewView.heightAnchor, multiplier: aspect),
             checker.topAnchor.constraint(equalTo: previewView.topAnchor),
             checker.bottomAnchor.constraint(equalTo: previewView.bottomAnchor),
             checker.leadingAnchor.constraint(equalTo: previewView.leadingAnchor),
             checker.trailingAnchor.constraint(equalTo: previewView.trailingAnchor)
         ])
+        // As large as fits: full height for tall images, full width for wide ones.
+        let fillHeight = previewView.heightAnchor.constraint(equalTo: previewBox.heightAnchor)
+        fillHeight.priority = .defaultHigh
+        fillHeight.isActive = true
         sizeLabel.textAlignment = .center
         noteLabel.numberOfLines = 0
         formatControl.addTarget(self, action: #selector(formatChanged), for: .valueChanged)

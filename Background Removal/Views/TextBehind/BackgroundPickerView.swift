@@ -227,6 +227,8 @@ final class BackgroundPickerView: TBPanelView, UICollectionViewDataSource, UICol
     }
 
     private func select(_ selection: BackgroundSelection) {
+        // Picking an image again retries it if its download failed before.
+        (host as? TextBehindSubjectVC)?.retryBackground(selection)
         let placement = currentPlacement ?? ImagePlacement()
         session?.change { $0.background = .image(selection, placement) }
         refresh()

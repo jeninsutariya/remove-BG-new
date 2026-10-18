@@ -499,9 +499,8 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "layer", for: indexPath) as! TBLayerCell
         guard let session else { return cell }
-        // Front-most first, like a layers list.
-        let texts = session.document.texts
-        let layer = texts[texts.count - 1 - indexPath.row]
+        // Front-most first, in the order they are drawn.
+        let layer = session.textsFrontToBack[indexPath.row]
         cell.configure(layer, selected: layer.id == session.selectedTextID)
         cell.onAction = { [weak self] action in self?.layerAction(action, layer: layer) }
         return cell
@@ -513,8 +512,8 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
             setFont(filteredFamilies[indexPath.row].defaultFace.postScriptName)
             return
         }
-        guard let texts = session?.document.texts else { return }
-        session?.selectedTextID = texts[texts.count - 1 - indexPath.row].id
+        guard let session else { return }
+        session.selectedTextID = session.textsFrontToBack[indexPath.row].id
         refresh()
     }
 

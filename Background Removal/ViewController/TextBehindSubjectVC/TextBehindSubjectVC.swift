@@ -86,6 +86,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private var previewCutout: UIImage?
     private var cutoutKey: String?
     private var backgroundImages: [String: UIImage] = [:]
+    /// Background images that failed to load (not retried on every render).
+    private var failedBackgroundKeys = Set<String>()
     private var sourcesReady = false
 
     // MARK: - State
@@ -315,17 +317,24 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         }
     }
 
+    /// Picking a background again retries it after a failed download.
+    func retryBackground(_ selection: BackgroundSelection) {
+        failedBackgroundKeys.remove(backgroundKey(selection))
+    }
+
     private func ensureBackgroundImage(for background: TBBackground) async -> UIImage? {
         guard case .image(let selection, _) = background else { return nil }
         let key = backgroundKey(selection)
         if let cached = backgroundImages[key] { return cached }
+        guard !failedBackgroundKeys.contains(key) else { return nil }
         do {
             if case .image(let image) = try await viewModel.resolveBackground(selection, maxPixel: 1800) {
                 backgroundImages[key] = image
                 return image
             }
         } catch {
-            showToast(message: "This background image couldn't be loaded. Check your connection.")
+            failedBackgroundKeys.insert(key)
+            showToast(message: "This background image couldn't be loaded. Check your connection and pick it again.")
         }
         return nil
     }
@@ -350,7 +359,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             let background = await self.ensureBackgroundImage(for: document.background)
             var mask: UIImage?
             if maskPreview, let maskImage = await self.ensureMask(for: document.mask) {
-                mask = UIImage(cgImage: maskImage)
+                // Show the mask exactly as it is used: with feather and edge refinement.
+                let scale = CGFloat(maskImage.width) / 1000
+                let settings = document.mask
+                let processed = await Task.detached(priority: .userInitiated) {
+                    MaskRefineService.processedMask(maskImage, feather: CGFloat(settings.feather) * scale,
+                                                    smoothing: CGFloat(settings.edgeSmoothing) * scale)
+                }.value
+                mask = UIImage(cgImage: processed ?? maskImage)
             }
             guard !Task.isCancelled, generation == self.renderGeneration else { return }
             let size = TextBehindGeometry.outputSize(photo: original.size, canvas: document.canvas,
@@ -436,9 +452,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
 
     /// Front-most visible text layer under `point` (canvas coordinates).
     private func textLayer(at point: CGPoint) -> TextLayerModel? {
-        let texts = session.document.texts.filter { !$0.isHidden }
-        let ordered = texts.filter { !$0.isBehindSubject }.reversed() + texts.filter(\.isBehindSubject).reversed()
-        return ordered.first {
+        return session.textsFrontToBack.filter { !$0.isHidden }.first {
             TextRenderingService.layout(for: $0, canvasSize: canvasView.bounds.size).contains(point)
         }
     }
@@ -532,6 +546,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             session.commit()
             closePanel(revert: false)
         }
+        // Snapshot first: ✕ also undoes anything opening the tool created (e.g. a new text).
+        panelSnapshot = (session.document, session.undoStack.count)
         let panel: TBPanelView
         switch tool {
         case .background:
@@ -547,7 +563,6 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         case .resize:
             panel = CanvasResizeView(host: self, photoSize: fullPhotoSize)
         }
-        panelSnapshot = (session.document, session.undoStack.count)
         panel.onApply = { [weak self] in
             self?.session.commit()
             self?.closePanel(revert: false)

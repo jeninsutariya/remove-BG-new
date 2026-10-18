@@ -77,6 +77,7 @@ final class TBEditorSession {
         pendingBase = nil
         document = snapshot
         if undoStack.count > undoCount { undoStack.removeSubrange(undoCount...) }
+        redoStack.removeAll()   // cancelled edits must not come back with Redo
         if document.text(selectedTextID) == nil { selectedTextID = document.texts.last?.id }
         onCommit?(document)
         onChange?(true)
@@ -133,13 +134,23 @@ final class TBEditorSession {
         if selectedTextID == id { selectedTextID = document.texts.last?.id }
     }
 
-    /// Moves a text layer forward (+1) or backward (-1) among the text layers. The subject
-    /// always stays between "behind" and "in front" texts.
+    /// Moves a text layer forward (+1) or backward (-1) among the texts on the same side of
+    /// the subject. The subject always stays between "behind" and "in front" texts.
     func moveText(_ id: UUID, by delta: Int) {
         guard let index = document.texts.firstIndex(where: { $0.id == id }) else { return }
-        let target = index + delta
+        let behind = document.texts[index].isBehindSubject
+        var target = index + delta
+        while document.texts.indices.contains(target), document.texts[target].isBehindSubject != behind {
+            target += delta
+        }
         guard document.texts.indices.contains(target) else { return }
         change { $0.texts.swapAt(index, target) }
+    }
+
+    /// Text layers in drawing order, front-most first (front texts, then behind texts).
+    var textsFrontToBack: [TextLayerModel] {
+        let texts = document.texts
+        return texts.filter { !$0.isBehindSubject }.reversed() + texts.filter(\.isBehindSubject).reversed()
     }
 }
 

@@ -140,7 +140,7 @@ final class CanvasResizeView: TBPanelView, UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let canvas = session?.document.canvas else { return }
-        let value = min(max(Int(textField.text ?? "") ?? 0, 64), 8000)
+        let value = min(max(Int(textField.text ?? "") ?? 0, 64), 6000)
         var width = canvas.customWidth
         var height = canvas.customHeight
         let ratio = Double(width) / Double(max(height, 1))
@@ -152,8 +152,8 @@ final class CanvasResizeView: TBPanelView, UITextFieldDelegate {
             if aspectLocked { width = Int((Double(value) * ratio).rounded()) }
         }
         session?.change {
-            $0.canvas.customWidth = min(max(width, 64), 8000)
-            $0.canvas.customHeight = min(max(height, 64), 8000)
+            $0.canvas.customWidth = min(max(width, 64), 6000)
+            $0.canvas.customHeight = min(max(height, 64), 6000)
         }
         refresh()
     }
