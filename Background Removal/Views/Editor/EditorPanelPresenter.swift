@@ -78,6 +78,9 @@ final class EditorPanelPresenter {
         panel.backgroundColor = .clear
         panel.layer.cornerRadius = 0
         panel.layer.shadowOpacity = 0
+        // The container must be in the screen's hierarchy before the panel is constrained to
+        // the screen's safe area / keyboard guide (otherwise: "no common ancestor" crash).
+        if container.superview == nil { rootView.addSubview(container) }
         container.addSubview(panel)
         self.panel = panel
 
@@ -120,7 +123,6 @@ final class EditorPanelPresenter {
             return
         }
 
-        rootView.addSubview(container)
         containerConstraints = [
             container.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
             container.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
