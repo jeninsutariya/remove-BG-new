@@ -28,6 +28,8 @@ class RecentsClvCell: UICollectionViewCell {
 
     /// Shows the project's edited result (its saved thumbnail).
     func setData(project: BackgroundRemovalProject) {
+        // Keep the current image while the same project reloads (no flicker after saves).
+        if representedProjectID != project.id { imgRecent.image = nil }
         representedProjectID = project.id
         isAccessibilityElement = true
         accessibilityLabel = "\(project.name), \(project.subtitle)"
@@ -37,16 +39,20 @@ class RecentsClvCell: UICollectionViewCell {
         // The edited result (thumbnail) first; older projects fall back to the cutout / original
         // until their editor is opened once and the thumbnail is generated.
         let thumbnail = project.thumbnailFileName
-        let fileName = thumbnail ?? item.foregroundFileName ?? item.originalFileName
-        let fill = thumbnail == nil && item.foregroundFileName == nil
-        imgRecent.image = nil
+        let fallback = item.foregroundFileName ?? item.originalFileName
+        let fallbackFills = item.foregroundFileName == nil
         Task { [weak self] in
-            let image = await Task.detached(priority: .utility) {
-                ProjectStorageService.shared.loadImage(fileName, projectID: projectID, maxPixel: 600)
+            // Edited thumbnail first; if it is missing, the cutout / original.
+            let result = await Task.detached(priority: .utility) { () -> (UIImage?, Bool) in
+                let storage = ProjectStorageService.shared
+                if let thumbnail, let image = storage.loadImage(thumbnail, projectID: projectID, maxPixel: 600) {
+                    return (image, false)
+                }
+                return (storage.loadImage(fallback, projectID: projectID, maxPixel: 600), fallbackFills)
             }.value
             guard let self, self.representedProjectID == projectID else { return }
-            self.imgRecent.contentMode = fill ? .scaleAspectFill : .scaleAspectFit
-            self.imgRecent.image = image ?? UIImage(named: "Remove BG Image")
+            self.imgRecent.contentMode = result.1 ? .scaleAspectFill : .scaleAspectFit
+            self.imgRecent.image = result.0 ?? UIImage(named: "Remove BG Image")
         }
     }
 }

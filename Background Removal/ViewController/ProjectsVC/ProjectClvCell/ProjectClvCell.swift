@@ -29,6 +29,8 @@ class ProjectClvCell: UICollectionViewCell {
     }
 
     func setData(project: BackgroundRemovalProject) {
+        // Keep the current image while the same project reloads (no flicker after saves).
+        if representedProjectID != project.id { imgThumb.image = nil }
         representedProjectID = project.id
         lblName.text = project.name
         lbltype.text = project.subtitle
@@ -40,16 +42,20 @@ class ProjectClvCell: UICollectionViewCell {
         // The edited result (thumbnail) first; older projects fall back to the cutout / original
         // until their editor is opened once and the thumbnail is generated.
         let thumbnail = project.thumbnailFileName
-        let fileName = thumbnail ?? item.foregroundFileName ?? item.originalFileName
-        let fill = thumbnail == nil && item.foregroundFileName == nil
-        imgThumb.image = nil
+        let fallback = item.foregroundFileName ?? item.originalFileName
+        let fallbackFills = item.foregroundFileName == nil
         Task { [weak self] in
-            let image = await Task.detached(priority: .utility) {
-                ProjectStorageService.shared.loadImage(fileName, projectID: projectID, maxPixel: 500)
+            // Edited thumbnail first; if it is missing, the cutout / original.
+            let result = await Task.detached(priority: .utility) { () -> (UIImage?, Bool) in
+                let storage = ProjectStorageService.shared
+                if let thumbnail, let image = storage.loadImage(thumbnail, projectID: projectID, maxPixel: 500) {
+                    return (image, false)
+                }
+                return (storage.loadImage(fallback, projectID: projectID, maxPixel: 500), fallbackFills)
             }.value
             guard let self, self.representedProjectID == projectID else { return }
-            self.imgThumb.contentMode = fill ? .scaleAspectFill : .scaleAspectFit
-            self.imgThumb.image = image ?? UIImage(named: "Remove BG Image")
+            self.imgThumb.contentMode = result.1 ? .scaleAspectFill : .scaleAspectFit
+            self.imgThumb.image = result.0 ?? UIImage(named: "Remove BG Image")
         }
     }
 }

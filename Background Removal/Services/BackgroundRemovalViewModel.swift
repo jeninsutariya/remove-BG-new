@@ -365,6 +365,8 @@ final class BackgroundRemovalViewModel {
         guard let cover = project.completedItems.first,
               let image = try? await compositePreview(for: cover.id, background: cover.background,
                                                       edits: cover.edits, maxPixel: 600) else { return }
+        // A newer request replaced this one while rendering: don't overwrite it with older content.
+        guard !Task.isCancelled else { return }
         await saveThumbnail(image)
     }
 

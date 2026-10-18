@@ -331,7 +331,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         failedBackgroundKeys.remove(backgroundKey(selection))
     }
 
-    private func ensureBackgroundImage(for background: TBBackground) async -> UIImage? {
+    /// `quiet`: background work (thumbnails) never shows an error the user didn't trigger.
+    private func ensureBackgroundImage(for background: TBBackground, quiet: Bool = false) async -> UIImage? {
         guard case .image(let selection, _) = background else { return nil }
         let key = backgroundKey(selection)
         if let cached = backgroundImages[key] { return cached }
@@ -343,7 +344,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
         } catch {
             failedBackgroundKeys.insert(key)
-            showToast(message: "This background image couldn't be loaded. Check your connection and pick it again.")
+            if !quiet { showToast(message: "This background image couldn't be loaded. Check your connection and pick it again.") }
         }
         return nil
     }
@@ -782,10 +783,11 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         thumbnailTask = Task { [weak self] in
             if delay > 0 { try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
             guard !Task.isCancelled, let self else { return }
-            _ = await self.ensureBackgroundImage(for: self.session.document.background)
+            _ = await self.ensureBackgroundImage(for: self.session.document.background, quiet: true)
             guard !Task.isCancelled, let render = self.thumbnailRender() else { return }
             let viewModel: BackgroundRemovalViewModel = self.viewModel
-            if let image = await render() { await viewModel.saveThumbnail(image) }
+            guard let image = await render(), !Task.isCancelled else { return }
+            await viewModel.saveThumbnail(image)
         }
     }
 

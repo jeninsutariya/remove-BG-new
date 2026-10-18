@@ -462,11 +462,14 @@ class RemovingBackgroundEditorVC: UIViewController {
         panel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         panel.layer.cornerRadius = 28
         view.insertSubview(panel, belowSubview: vwToolbar)
+        // Half the screen at most, but never breaking the panel's own content on short phones.
+        let maxHeight = panel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5)
+        maxHeight.priority = UILayoutPriority(999)
         panelConstraints = [
             panel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
             panel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             panel.bottomAnchor.constraint(equalTo: vwToolbar.topAnchor, constant: -8),
-            panel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5),
+            maxHeight,
             vwCanvasContainer.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
         ]
         containerBottom.isActive = false
