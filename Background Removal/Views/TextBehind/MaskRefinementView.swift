@@ -18,6 +18,7 @@ final class MaskRefinementView: TBPanelView {
     override var preferredHeight: CGFloat { 330 }
 
     private let showMaskRow = TBSwitchRow("Show subject mask")
+    private let subjectRow = TBSwitchRow("Show subject layer")
     private let featherRow = TBSliderRow("Mask feather", min: 0, max: 20) { String(format: "%.1f", $0) }
     private let smoothingRow = TBSliderRow("Edge refinement", min: 0, max: 6) { String(format: "%.1f", $0) }
     private let statusLabel = TBStyle.label("", size: 12, weight: .regular, color: TBStyle.secondary)
@@ -37,6 +38,7 @@ final class MaskRefinementView: TBPanelView {
         let brush = TBStyle.button("Paint mask with brush", symbol: "paintbrush.pointed", filled: true)
         brush.addAction(UIAction { [weak self] _ in self?.host?.openMaskBrush() }, for: .touchUpInside)
         showMaskRow.onChange = { [weak self] on in self?.host?.setMaskPreview(on) }
+        subjectRow.onChange = { [weak self] on in self?.session?.change { $0.subjectVisible = on } }
         featherRow.onChange = { [weak self] value, finished in
             self?.session?.change(commit: finished) { $0.mask.feather = Double(value) }
         }
@@ -54,19 +56,17 @@ final class MaskRefinementView: TBPanelView {
             self?.refresh()
         }, for: .touchUpInside)
         statusLabel.numberOfLines = 0
-        [explanation, brush, showMaskRow, featherRow, smoothingRow, TBStyle.hStack([restore, reset, UIView()]), statusLabel]
+        [explanation, brush, showMaskRow, subjectRow, featherRow, smoothingRow, TBStyle.hStack([restore, reset, UIView()]), statusLabel]
             .forEach { content.addArrangedSubview($0) }
     }
 
     override func refresh() {
         guard let mask = session?.document.mask else { return }
+        subjectRow.toggle.isOn = session?.document.subjectVisible ?? true
         featherRow.value = Float(mask.feather)
         smoothingRow.value = Float(mask.edgeSmoothing)
         statusLabel.text = mask.refinedMaskFileName == nil ? "Using the mask detected by Apple Vision."
                                                            : "Using your painted mask. The Vision mask is kept unchanged."
     }
 
-    func setMaskPreviewSwitch(_ on: Bool) {
-        showMaskRow.toggle.isOn = on
-    }
 }
