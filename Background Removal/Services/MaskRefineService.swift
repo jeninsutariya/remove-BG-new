@@ -50,6 +50,11 @@ nonisolated struct MaskBuffer {
 
 nonisolated enum MaskRefineService {
 
+    /// Core Image context without colour management, for mask processing.
+    nonisolated(unsafe) static let maskContext = CIContext(options: [.workingColorSpace: NSNull(),
+                                                                     .outputColorSpace: NSNull(),
+                                                                     .cacheIntermediates: false])
+
     /// The alpha channel of `foreground` as a gray matte, resized to `size` when given.
     static func alphaMask(of foreground: CGImage, size: CGSize? = nil) -> CGImage? {
         let w = Int(size?.width ?? CGFloat(foreground.width))
@@ -97,6 +102,35 @@ nonisolated enum MaskRefineService {
             }
         }
         return MaskBuffer(width: w, height: h, bytes: out).grayImage()
+    }
+
+    /// Mask after the non-destructive Refine settings: `smoothing` shrinks the edge (removes
+    /// light halos), `feather` softens it. Both in pixels at the mask's resolution.
+    static func processedMask(_ mask: CGImage, feather: CGFloat, smoothing: CGFloat) -> CGImage? {
+        guard feather > 0.01 || smoothing > 0.01 else { return mask }
+        let extent = CGRect(x: 0, y: 0, width: mask.width, height: mask.height)
+        var matte = CIImage(cgImage: mask, options: [.colorSpace: NSNull()])
+        if smoothing > 0.01, let filter = CIFilter(name: "CIMorphologyMinimum") {
+            filter.setValue(matte.clampedToExtent(), forKey: kCIInputImageKey)
+            filter.setValue(smoothing, forKey: kCIInputRadiusKey)
+            if let output = filter.outputImage { matte = output.cropped(to: extent) }
+        }
+        if feather > 0.01 {
+            matte = matte.clampedToExtent().applyingGaussianBlur(sigma: Double(feather)).cropped(to: extent)
+        }
+        // No colour management anywhere: mask values are alpha, not gamma-encoded colours.
+        guard let rendered = maskContext.createCGImage(matte, from: extent, format: .RGBA8,
+                                                       colorSpace: CGColorSpaceCreateDeviceRGB()) else { return nil }
+        // Back to an 8-bit gray matte (the red channel holds the value).
+        return MaskBuffer(gray: rendered)?.grayImage()
+    }
+
+    /// The subject of `original` as a transparent cutout, using `mask` with the Refine settings.
+    /// The original image is not changed.
+    static func subjectCutout(original: CGImage, mask: CGImage, feather: CGFloat, smoothing: CGFloat) -> CGImage? {
+        let sized = resized(mask, width: original.width, height: original.height) ?? mask
+        guard let processed = processedMask(sized, feather: feather, smoothing: smoothing) else { return nil }
+        return cutout(original: original, mask: processed)
     }
 
     /// Original photo with `mask` as its alpha channel (RGBA8, sRGB).

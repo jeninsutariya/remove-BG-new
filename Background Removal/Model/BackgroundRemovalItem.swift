@@ -56,6 +56,8 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
     var background: BackgroundSelection
     /// Shadow / Resize edits (non-destructive).
     var edits: ItemEdits
+    /// Text Behind Subject composition (only for Text Behind projects).
+    var textBehind: TextBehindDocument?
     var createdAt: Date
     var modifiedAt: Date
 
@@ -68,12 +70,13 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         self.errorMessage = nil
         self.background = .none
         self.edits = .unedited
+        self.textBehind = nil
         self.createdAt = Date()
         self.modifiedAt = Date()
     }
 
     nonisolated private enum CodingKeys: String, CodingKey {
-        case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, createdAt, modifiedAt
+        case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, textBehind, createdAt, modifiedAt
     }
 
     /// Tolerant decoding so projects saved by older versions still open.
@@ -87,6 +90,7 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         errorMessage = try c.decodeIfPresent(String.self, forKey: .errorMessage)
         background = (try? c.decode(BackgroundSelection.self, forKey: .background)) ?? BackgroundSelection.none
         edits = (try? c.decode(ItemEdits.self, forKey: .edits)) ?? ItemEdits.unedited
+        textBehind = try? c.decodeIfPresent(TextBehindDocument.self, forKey: .textBehind)
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
         modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()
     }

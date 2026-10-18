@@ -45,8 +45,7 @@ class ProjectsVC: UIViewController {
             reloadProjects()
             return
         }
-        let vc = RemovingBackgroundEditorVC.fatchEditorInstance()
-        vc.viewModel = BackgroundRemovalViewModel(project: latest)
+        let vc = UIViewController.editorScreen(for: BackgroundRemovalViewModel(project: latest))
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmDelete(_ project: BackgroundRemovalProject) {

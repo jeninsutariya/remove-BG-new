@@ -80,6 +80,27 @@ final class ImageExportService {
         return outputs
     }
 
+    /// Saves already-encoded image data to the photo library ("Add Photos Only" access).
+    /// Returns only after Photos confirms the save.
+    func savePhotoData(_ data: Data, fileName: String) async throws {
+        // Never report success for a save that didn't happen.
+        guard !isBusy else { throw ImageExportError.saveFailed("Another save is still in progress.") }
+        isBusy = true
+        defer { isBusy = false }
+        let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        guard status == .authorized || status == .limited else { throw ImageExportError.photosAccessDenied }
+        do {
+            try await PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                let options = PHAssetResourceCreationOptions()
+                options.originalFilename = fileName
+                request.addResource(with: .photo, data: data, options: options)
+            }
+        } catch {
+            throw ImageExportError.saveFailed(error.localizedDescription)
+        }
+    }
+
     /// Renders and saves the items to the photo library. Completes only after Photos confirms.
     func saveToPhotos(items: [BackgroundRemovalItem], in viewModel: BackgroundRemovalViewModel,
                       options: ExportOptions = ExportOptions(),

@@ -43,6 +43,9 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     var initialMask: CGImage!
     /// Receives the refined full-resolution matte.
     var onApply: ((CGImage) -> Void)?
+    /// Segment titles and hints (Text Behind uses its own wording for the same brushes).
+    var modeTitles = (erase: "Erase", restore: "Restore")
+    var modeHints = (erase: "Drag to erase · Pinch to zoom", restore: "Drag to restore · Pinch to zoom")
 
     // MARK: - State
 
@@ -160,7 +163,9 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         sliderSoftness.value = 22
         lblBrushValue.text = "34"
         lblSoftnessValue.text = "22"
-        lblHint.text = "Drag to erase · Pinch to zoom"
+        segMode.setTitle(modeTitles.erase, forSegmentAt: 0)
+        segMode.setTitle(modeTitles.restore, forSegmentAt: 1)
+        lblHint.text = modeHints.erase
         sliderBrush.addTarget(self, action: #selector(hideBrush), for: [.touchUpInside, .touchUpOutside, .touchCancel])
         stamp = MaskBrushCanvas.makeStamp(softness: CGFloat(sliderSoftness.value) / 100)
     }
@@ -542,7 +547,7 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     }
 
     @IBAction func segModeChanged(_ sender: UISegmentedControl) {
-        lblHint.text = isErasing ? "Drag to erase · Pinch to zoom" : "Drag to restore · Pinch to zoom"
+        lblHint.text = isErasing ? modeHints.erase : modeHints.restore
         vwHint.isHidden = false
         // Show the removed parts faintly while restoring.
         UIView.animate(withDuration: 0.2) { self.ghostView.alpha = self.isErasing ? 0 : 0.3 }

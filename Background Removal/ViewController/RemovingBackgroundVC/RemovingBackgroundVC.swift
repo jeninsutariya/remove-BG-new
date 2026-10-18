@@ -31,6 +31,7 @@ class RemovingBackgroundVC: UIViewController {
     enum Destination {
         case editor
         case changeBackground
+        case textBehind
     }
     /// What opens after processing.
     var destination: Destination = .editor
@@ -182,7 +183,12 @@ class RemovingBackgroundVC: UIViewController {
         }
         Task { [weak self] in
             do {
-                let mode: EditorMode = self?.destination == .changeBackground ? .changeBackground : .removeBackground
+                let mode: EditorMode
+                switch self?.destination {
+                case .changeBackground?: mode = .changeBackground
+                case .textBehind?: mode = .textBehind
+                default: mode = .removeBackground
+                }
                 let model = try await BackgroundRemovalViewModel.create(from: photos, mode: mode)
                 guard let self else { return }
                 self.viewModel = model
@@ -419,13 +425,13 @@ class RemovingBackgroundVC: UIViewController {
 
     private func openEditor() {
         guard let viewModel, let nav = navigationController else { return }
-        let editor = RemovingBackgroundEditorVC.fatchEditorInstance()
-        editor.viewModel = viewModel
+        let editor = UIViewController.editorScreen(for: viewModel)
         var stack = nav.viewControllers
         let index = stack.firstIndex(of: self) ?? stack.count
         stack.removeSubrange(index...)
         stack.append(editor)
-        // Change Background projects open the editor with the Background sheet already showing.
+        // Change Background projects open the editor with the Background sheet already showing;
+        // Text Behind projects open TextBehindSubjectVC.
         nav.setViewControllers(stack, animated: true)
     }
 

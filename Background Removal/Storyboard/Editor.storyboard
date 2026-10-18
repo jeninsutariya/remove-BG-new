@@ -283,9 +283,9 @@
             </objects>
             <point key="canvasLocation" x="0" y="0.0"/>
         </scene>
-        <scene sceneID="rbe-be-229">
+        <scene sceneID="rbe-Fd-201">
             <objects>
-                <viewController storyboardIdentifier="RefineEdgesVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-hc-121" customClass="RefineEdgesVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TextBehindSubjectVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-hc-121" customClass="TextBehindSubjectVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rbe-ic-122">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -336,133 +336,88 @@
                                     <action selector="btnRedo:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-yc-137"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Dc-142">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
-                                <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ec-143">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
-                                    </scrollView>
-                                </subviews>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Cd-198">
-                                <rect key="frame" x="0.0" y="0.0" width="205" height="34"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag to erase · Pinch to zoom" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ed-200">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.07" green="0.07" blue="0.07" alpha="0.82" colorSpace="custom" customColorSpace="sRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Dc-142">
+                                <rect key="frame" x="0.0" y="0.0" width="88" height="44"/>
+                                <color key="backgroundColor" name="AccentColor"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <state key="normal" title="Export">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="rbe-Dd-199"/>
+                                    <constraint firstAttribute="width" constant="88" id="rbe-Ec-143"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Fc-144"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="btnExport:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-Gc-145"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Hc-146">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="tintColor" name="PrimaryText"/>
+                                <state key="normal" title="">
+                                    <color key="titleColor" name="PrimaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-Jc-147"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Kc-148"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnPreview:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-Lc-149"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Rc-154">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="600"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Kc-148">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="300"/>
+                            <view contentMode="scaleToFill" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Zc-162">
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="150"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Lc-149">
-                                        <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
-                                        <color key="backgroundColor" name="BrandPrimary"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="36" id="rbe-Mc-150"/>
-                                            <constraint firstAttribute="height" constant="5" id="rbe-Nc-151"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Pc-152">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                        <color key="backgroundColor" name="Ultra Light Blue"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                        <color key="tintColor" name="PrimaryText"/>
-                                        <state key="normal" title="">
-                                            <color key="titleColor" name="PrimaryText"/>
-                                        </state>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="rbe-Qc-153"/>
-                                            <constraint firstAttribute="height" constant="44" id="rbe-Rc-154"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="btnCancel:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-Sc-155"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine edges" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Tc-156">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-2c-163">
+                                        <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
+                                        <color key="color" name="AccentColor"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Preparing…" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-3c-164">
+                                        <rect key="frame" x="0.0" y="0.0" width="260" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Uc-157">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-4c-165">
+                                        <rect key="frame" x="0.0" y="0.0" width="110" height="36"/>
                                         <color key="backgroundColor" name="AccentColor"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="">
-                                            <color key="titleColor" name="PrimaryText"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <state key="normal" title="Retry">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="rbe-Vc-158"/>
-                                            <constraint firstAttribute="height" constant="44" id="rbe-Wc-159"/>
+                                            <constraint firstAttribute="width" constant="110" id="rbe-5c-166"/>
+                                            <constraint firstAttribute="height" constant="36" id="rbe-6c-167"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="btnApply:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-Xc-160"/>
+                                            <action selector="btnRetry:" destination="rbe-hc-121" eventType="touchUpInside" id="rbe-7c-168"/>
                                         </connections>
                                     </button>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Yc-161">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="46"/>
-                                        <segments>
-                                            <segment title="Erase"/>
-                                            <segment title="Restore"/>
-                                        </segments>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="46" id="rbe-Zc-162"/>
-                                        </constraints>
-                                        <connections>
-                                            <action selector="segModeChanged:" destination="rbe-hc-121" eventType="valueChanged" id="rbe-2c-163"/>
-                                        </connections>
-                                    </segmentedControl>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brush size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-3c-164">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="34" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-4c-165">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="SecondaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="34" minValue="5" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-5c-166">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
-                                        <color key="minimumTrackTintColor" name="AccentColor"/>
-                                        <color key="maximumTrackTintColor" name="Border Color"/>
-                                        <connections>
-                                            <action selector="sliderBrushChanged:" destination="rbe-hc-121" eventType="valueChanged" id="rbe-6c-167"/>
-                                        </connections>
-                                    </slider>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Softness" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-7c-168">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="PrimaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8c-169">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
-                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
-                                        <color key="textColor" name="SecondaryText"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="22" minValue="0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-9c-170">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
-                                        <color key="minimumTrackTintColor" name="AccentColor"/>
-                                        <color key="maximumTrackTintColor" name="Border Color"/>
-                                        <connections>
-                                            <action selector="sliderSoftnessChanged:" destination="rbe-hc-121" eventType="valueChanged" id="rbe-ad-171"/>
-                                        </connections>
-                                    </slider>
                                 </subviews>
                                 <color key="backgroundColor" name="Surface Color"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Sc-155">
+                                <rect key="frame" x="0.0" y="0.0" width="361" height="88"/>
+                                <subviews>
+                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Uc-157">
+                                        <rect key="frame" x="0.0" y="0.0" width="345" height="72"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0" minimumInteritemSpacing="0" id="rbe-Gd-202">
+                                            <size key="itemSize" width="72" height="72"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                    </collectionView>
+                                </subviews>
+                                <color key="backgroundColor" name="Surface Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="rbe-Tc-156"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rbe-jc-123"/>
@@ -474,81 +429,63 @@
                             <constraint firstItem="rbe-uc-133" firstAttribute="centerY" secondItem="rbe-kc-124" secondAttribute="centerY" id="rbe-Ac-139"/>
                             <constraint firstItem="rbe-rc-130" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" constant="-24" id="rbe-Bc-140"/>
                             <constraint firstItem="rbe-uc-133" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" constant="24" id="rbe-Cc-141"/>
-                            <constraint firstItem="rbe-Ec-143" firstAttribute="top" secondItem="rbe-Dc-142" secondAttribute="top" id="rbe-Fc-144"/>
-                            <constraint firstItem="rbe-Ec-143" firstAttribute="leading" secondItem="rbe-Dc-142" secondAttribute="leading" id="rbe-Gc-145"/>
-                            <constraint firstItem="rbe-Dc-142" firstAttribute="trailing" secondItem="rbe-Ec-143" secondAttribute="trailing" id="rbe-Hc-146"/>
-                            <constraint firstItem="rbe-Dc-142" firstAttribute="bottom" secondItem="rbe-Ec-143" secondAttribute="bottom" id="rbe-Jc-147"/>
-                            <constraint firstItem="rbe-Lc-149" firstAttribute="top" secondItem="rbe-Kc-148" secondAttribute="top" constant="8" id="rbe-bd-172"/>
-                            <constraint firstItem="rbe-Lc-149" firstAttribute="centerX" secondItem="rbe-Kc-148" secondAttribute="centerX" id="rbe-cd-173"/>
-                            <constraint firstItem="rbe-Pc-152" firstAttribute="top" secondItem="rbe-Kc-148" secondAttribute="top" constant="25" id="rbe-dd-174"/>
-                            <constraint firstItem="rbe-Pc-152" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-ed-175"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-Uc-157" secondAttribute="trailing" constant="20" id="rbe-fd-176"/>
-                            <constraint firstItem="rbe-Uc-157" firstAttribute="centerY" secondItem="rbe-Pc-152" secondAttribute="centerY" id="rbe-gd-177"/>
-                            <constraint firstItem="rbe-Tc-156" firstAttribute="centerY" secondItem="rbe-Pc-152" secondAttribute="centerY" id="rbe-hd-178"/>
-                            <constraint firstItem="rbe-Tc-156" firstAttribute="centerX" secondItem="rbe-Kc-148" secondAttribute="centerX" id="rbe-id-179"/>
-                            <constraint firstItem="rbe-Yc-161" firstAttribute="top" secondItem="rbe-Pc-152" secondAttribute="bottom" constant="12" id="rbe-jd-180"/>
-                            <constraint firstItem="rbe-Yc-161" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-kd-181"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-Yc-161" secondAttribute="trailing" constant="20" id="rbe-md-182"/>
-                            <constraint firstItem="rbe-3c-164" firstAttribute="top" secondItem="rbe-Yc-161" secondAttribute="bottom" constant="16" id="rbe-nd-183"/>
-                            <constraint firstItem="rbe-3c-164" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-od-184"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-4c-165" secondAttribute="trailing" constant="20" id="rbe-pd-185"/>
-                            <constraint firstItem="rbe-4c-165" firstAttribute="centerY" secondItem="rbe-3c-164" secondAttribute="centerY" id="rbe-qd-186"/>
-                            <constraint firstItem="rbe-5c-166" firstAttribute="top" secondItem="rbe-3c-164" secondAttribute="bottom" constant="6" id="rbe-rd-187"/>
-                            <constraint firstItem="rbe-5c-166" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-sd-188"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-5c-166" secondAttribute="trailing" constant="20" id="rbe-td-189"/>
-                            <constraint firstItem="rbe-7c-168" firstAttribute="top" secondItem="rbe-5c-166" secondAttribute="bottom" constant="8" id="rbe-ud-190"/>
-                            <constraint firstItem="rbe-7c-168" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-vd-191"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-8c-169" secondAttribute="trailing" constant="20" id="rbe-wd-192"/>
-                            <constraint firstItem="rbe-8c-169" firstAttribute="centerY" secondItem="rbe-7c-168" secondAttribute="centerY" id="rbe-xd-193"/>
-                            <constraint firstItem="rbe-9c-170" firstAttribute="top" secondItem="rbe-7c-168" secondAttribute="bottom" constant="6" id="rbe-yd-194"/>
-                            <constraint firstItem="rbe-9c-170" firstAttribute="leading" secondItem="rbe-Kc-148" secondAttribute="leading" constant="20" id="rbe-zd-195"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="trailing" secondItem="rbe-9c-170" secondAttribute="trailing" constant="20" id="rbe-Ad-196"/>
-                            <constraint firstItem="rbe-jc-123" firstAttribute="bottom" secondItem="rbe-9c-170" secondAttribute="bottom" constant="14" id="rbe-Bd-197"/>
-                            <constraint firstItem="rbe-Ed-200" firstAttribute="leading" secondItem="rbe-Cd-198" secondAttribute="leading" constant="16" id="rbe-Fd-201"/>
-                            <constraint firstItem="rbe-Cd-198" firstAttribute="trailing" secondItem="rbe-Ed-200" secondAttribute="trailing" constant="16" id="rbe-Gd-202"/>
-                            <constraint firstItem="rbe-Ed-200" firstAttribute="centerY" secondItem="rbe-Cd-198" secondAttribute="centerY" id="rbe-Hd-203"/>
-                            <constraint firstItem="rbe-Dc-142" firstAttribute="top" secondItem="rbe-kc-124" secondAttribute="bottom" constant="8" id="rbe-Jd-204"/>
-                            <constraint firstItem="rbe-Dc-142" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" id="rbe-Kd-205"/>
-                            <constraint firstItem="rbe-ic-122" firstAttribute="trailing" secondItem="rbe-Dc-142" secondAttribute="trailing" id="rbe-Ld-206"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="top" secondItem="rbe-Dc-142" secondAttribute="bottom" constant="-36" id="rbe-Md-207"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" id="rbe-Nd-208"/>
-                            <constraint firstItem="rbe-ic-122" firstAttribute="trailing" secondItem="rbe-Kc-148" secondAttribute="trailing" id="rbe-Pd-209"/>
-                            <constraint firstItem="rbe-ic-122" firstAttribute="bottom" secondItem="rbe-Kc-148" secondAttribute="bottom" id="rbe-Qd-210"/>
-                            <constraint firstItem="rbe-Cd-198" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" id="rbe-Rd-211"/>
-                            <constraint firstItem="rbe-Kc-148" firstAttribute="top" secondItem="rbe-Cd-198" secondAttribute="bottom" constant="22" id="rbe-Sd-212"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="trailing" secondItem="rbe-Dc-142" secondAttribute="trailing" constant="16" id="rbe-Mc-150"/>
+                            <constraint firstItem="rbe-Dc-142" firstAttribute="centerY" secondItem="rbe-kc-124" secondAttribute="centerY" id="rbe-Nc-151"/>
+                            <constraint firstItem="rbe-Dc-142" firstAttribute="leading" secondItem="rbe-Hc-146" secondAttribute="trailing" constant="4" id="rbe-Pc-152"/>
+                            <constraint firstItem="rbe-Hc-146" firstAttribute="centerY" secondItem="rbe-kc-124" secondAttribute="centerY" id="rbe-Qc-153"/>
+                            <constraint firstItem="rbe-Uc-157" firstAttribute="top" secondItem="rbe-Sc-155" secondAttribute="top" constant="8" id="rbe-Vc-158"/>
+                            <constraint firstItem="rbe-Uc-157" firstAttribute="leading" secondItem="rbe-Sc-155" secondAttribute="leading" constant="8" id="rbe-Wc-159"/>
+                            <constraint firstItem="rbe-Sc-155" firstAttribute="trailing" secondItem="rbe-Uc-157" secondAttribute="trailing" constant="8" id="rbe-Xc-160"/>
+                            <constraint firstItem="rbe-Sc-155" firstAttribute="bottom" secondItem="rbe-Uc-157" secondAttribute="bottom" constant="8" id="rbe-Yc-161"/>
+                            <constraint firstItem="rbe-2c-163" firstAttribute="top" secondItem="rbe-Zc-162" secondAttribute="top" constant="20" id="rbe-8c-169"/>
+                            <constraint firstItem="rbe-2c-163" firstAttribute="centerX" secondItem="rbe-Zc-162" secondAttribute="centerX" id="rbe-9c-170"/>
+                            <constraint firstItem="rbe-3c-164" firstAttribute="top" secondItem="rbe-2c-163" secondAttribute="bottom" constant="12" id="rbe-ad-171"/>
+                            <constraint firstItem="rbe-3c-164" firstAttribute="leading" secondItem="rbe-Zc-162" secondAttribute="leading" constant="20" id="rbe-bd-172"/>
+                            <constraint firstItem="rbe-Zc-162" firstAttribute="trailing" secondItem="rbe-3c-164" secondAttribute="trailing" constant="20" id="rbe-cd-173"/>
+                            <constraint firstItem="rbe-4c-165" firstAttribute="top" secondItem="rbe-3c-164" secondAttribute="bottom" constant="14" id="rbe-dd-174"/>
+                            <constraint firstItem="rbe-4c-165" firstAttribute="centerX" secondItem="rbe-Zc-162" secondAttribute="centerX" id="rbe-ed-175"/>
+                            <constraint firstItem="rbe-Zc-162" firstAttribute="bottom" secondItem="rbe-4c-165" secondAttribute="bottom" constant="20" id="rbe-fd-176"/>
+                            <constraint firstItem="rbe-Rc-154" firstAttribute="top" secondItem="rbe-kc-124" secondAttribute="bottom" constant="10" id="rbe-gd-177"/>
+                            <constraint firstItem="rbe-Rc-154" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" id="rbe-hd-178"/>
+                            <constraint firstItem="rbe-ic-122" firstAttribute="trailing" secondItem="rbe-Rc-154" secondAttribute="trailing" id="rbe-id-179"/>
+                            <constraint firstItem="rbe-Sc-155" firstAttribute="top" secondItem="rbe-Rc-154" secondAttribute="bottom" constant="8" id="rbe-jd-180"/>
+                            <constraint firstItem="rbe-Sc-155" firstAttribute="leading" secondItem="rbe-jc-123" secondAttribute="leading" constant="16" id="rbe-kd-181"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="trailing" secondItem="rbe-Sc-155" secondAttribute="trailing" constant="16" id="rbe-md-182"/>
+                            <constraint firstItem="rbe-jc-123" firstAttribute="bottom" secondItem="rbe-Sc-155" secondAttribute="bottom" constant="8" id="rbe-nd-183"/>
+                            <constraint firstItem="rbe-Zc-162" firstAttribute="centerX" secondItem="rbe-Rc-154" secondAttribute="centerX" id="rbe-od-184"/>
+                            <constraint firstItem="rbe-Zc-162" firstAttribute="centerY" secondItem="rbe-Rc-154" secondAttribute="centerY" id="rbe-pd-185"/>
+                            <constraint firstItem="rbe-Zc-162" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" constant="32" id="rbe-qd-186"/>
+                            <constraint firstItem="rbe-ic-122" firstAttribute="trailing" secondItem="rbe-Zc-162" secondAttribute="trailing" constant="32" id="rbe-rd-187"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnBack" destination="rbe-kc-124" id="rbe-Td-213"/>
-                        <outlet property="btnUndo" destination="rbe-rc-130" id="rbe-Ud-214"/>
-                        <outlet property="btnRedo" destination="rbe-uc-133" id="rbe-Vd-215"/>
-                        <outlet property="vwCanvasArea" destination="rbe-Dc-142" id="rbe-Wd-216"/>
-                        <outlet property="scrollView" destination="rbe-Ec-143" id="rbe-Xd-217"/>
-                        <outlet property="vwHint" destination="rbe-Cd-198" id="rbe-Yd-218"/>
-                        <outlet property="lblHint" destination="rbe-Ed-200" id="rbe-Zd-219"/>
-                        <outlet property="vwPanel" destination="rbe-Kc-148" id="rbe-2d-220"/>
-                        <outlet property="vwGrabber" destination="rbe-Lc-149" id="rbe-3d-221"/>
-                        <outlet property="btnPanelCancel" destination="rbe-Pc-152" id="rbe-4d-222"/>
-                        <outlet property="btnPanelApply" destination="rbe-Uc-157" id="rbe-5d-223"/>
-                        <outlet property="segMode" destination="rbe-Yc-161" id="rbe-6d-224"/>
-                        <outlet property="sliderBrush" destination="rbe-5c-166" id="rbe-7d-225"/>
-                        <outlet property="lblBrushValue" destination="rbe-4c-165" id="rbe-8d-226"/>
-                        <outlet property="sliderSoftness" destination="rbe-9c-170" id="rbe-9d-227"/>
-                        <outlet property="lblSoftnessValue" destination="rbe-8c-169" id="rbe-ae-228"/>
+                        <outlet property="btnBack" destination="rbe-kc-124" id="rbe-sd-188"/>
+                        <outlet property="btnUndo" destination="rbe-rc-130" id="rbe-td-189"/>
+                        <outlet property="btnRedo" destination="rbe-uc-133" id="rbe-ud-190"/>
+                        <outlet property="btnPreview" destination="rbe-Hc-146" id="rbe-vd-191"/>
+                        <outlet property="btnExport" destination="rbe-Dc-142" id="rbe-wd-192"/>
+                        <outlet property="vwCanvasArea" destination="rbe-Rc-154" id="rbe-xd-193"/>
+                        <outlet property="vwStatus" destination="rbe-Zc-162" id="rbe-yd-194"/>
+                        <outlet property="spinner" destination="rbe-2c-163" id="rbe-zd-195"/>
+                        <outlet property="lblStatus" destination="rbe-3c-164" id="rbe-Ad-196"/>
+                        <outlet property="btnRetry" destination="rbe-4c-165" id="rbe-Bd-197"/>
+                        <outlet property="vwToolbar" destination="rbe-Sc-155" id="rbe-Cd-198"/>
+                        <outlet property="clvTools" destination="rbe-Uc-157" id="rbe-Dd-199"/>
+                        <outlet property="canvasBottom" destination="rbe-jd-180" id="rbe-Ed-200"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-ce-230" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-Hd-203" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="500" y="0.0"/>
+            <point key="canvasLocation" x="1500" y="0.0"/>
         </scene>
-        <scene sceneID="rbe-Fg-372">
+        <scene sceneID="rbe-Cf-312">
             <objects>
-                <viewController storyboardIdentifier="ExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-de-231" customClass="ExportVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="rbe-ee-232">
+                <viewController storyboardIdentifier="RefineEdgesVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-Jd-204" customClass="RefineEdgesVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rbe-Kd-205">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ge-234">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Md-207">
                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
@@ -557,148 +494,406 @@
                                     <color key="titleColor" name="PrimaryText"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="rbe-he-235"/>
-                                    <constraint firstAttribute="height" constant="44" id="rbe-ie-236"/>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-Nd-208"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Pd-209"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnBack:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-je-237"/>
+                                    <action selector="btnBack:" destination="rbe-Jd-204" eventType="touchUpInside" id="rbe-Qd-210"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ne-240">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Td-213">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="tintColor" name="PrimaryText"/>
+                                <state key="normal" title="">
+                                    <color key="titleColor" name="PrimaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-Ud-214"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Vd-215"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnUndo:" destination="rbe-Jd-204" eventType="touchUpInside" id="rbe-Zd-219"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Wd-216">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="tintColor" name="PrimaryText"/>
+                                <state key="normal" title="">
+                                    <color key="titleColor" name="PrimaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-Xd-217"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Yd-218"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnRedo:" destination="rbe-Jd-204" eventType="touchUpInside" id="rbe-2d-220"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-7d-225">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8d-226">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="520"/>
+                                    </scrollView>
+                                </subviews>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-6e-281">
+                                <rect key="frame" x="0.0" y="0.0" width="205" height="34"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag to erase · Pinch to zoom" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8e-283">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.07" green="0.07" blue="0.07" alpha="0.82" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="rbe-7e-282"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-de-231">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="300"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ee-232">
+                                        <rect key="frame" x="0.0" y="0.0" width="36" height="5"/>
+                                        <color key="backgroundColor" name="BrandPrimary"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="36" id="rbe-fe-233"/>
+                                            <constraint firstAttribute="height" constant="5" id="rbe-ge-234"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-he-235">
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" name="Ultra Light Blue"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                        <color key="tintColor" name="PrimaryText"/>
+                                        <state key="normal" title="">
+                                            <color key="titleColor" name="PrimaryText"/>
+                                        </state>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="44" id="rbe-ie-236"/>
+                                            <constraint firstAttribute="height" constant="44" id="rbe-je-237"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="btnCancel:" destination="rbe-Jd-204" eventType="touchUpInside" id="rbe-ke-238"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine edges" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-me-239">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ne-240">
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" name="AccentColor"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="">
+                                            <color key="titleColor" name="PrimaryText"/>
+                                        </state>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="44" id="rbe-oe-241"/>
+                                            <constraint firstAttribute="height" constant="44" id="rbe-pe-242"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="btnApply:" destination="rbe-Jd-204" eventType="touchUpInside" id="rbe-qe-243"/>
+                                        </connections>
+                                    </button>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-re-244">
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="46"/>
+                                        <segments>
+                                            <segment title="Erase"/>
+                                            <segment title="Restore"/>
+                                        </segments>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="46" id="rbe-se-245"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="segModeChanged:" destination="rbe-Jd-204" eventType="valueChanged" id="rbe-te-246"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brush size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ue-247">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="34" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ve-248">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="SecondaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="34" minValue="5" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-we-249">
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
+                                        <color key="minimumTrackTintColor" name="AccentColor"/>
+                                        <color key="maximumTrackTintColor" name="Border Color"/>
+                                        <connections>
+                                            <action selector="sliderBrushChanged:" destination="rbe-Jd-204" eventType="valueChanged" id="rbe-xe-250"/>
+                                        </connections>
+                                    </slider>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Softness" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ye-251">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ze-252">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="SecondaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="22" minValue="0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ae-253">
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="30"/>
+                                        <color key="minimumTrackTintColor" name="AccentColor"/>
+                                        <color key="maximumTrackTintColor" name="Border Color"/>
+                                        <connections>
+                                            <action selector="sliderSoftnessChanged:" destination="rbe-Jd-204" eventType="valueChanged" id="rbe-Be-254"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <color key="backgroundColor" name="Surface Color"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="rbe-Ld-206"/>
+                        <color key="backgroundColor" name="Background"/>
+                        <constraints>
+                            <constraint firstItem="rbe-Md-207" firstAttribute="top" secondItem="rbe-Ld-206" secondAttribute="top" constant="8" id="rbe-Rd-211"/>
+                            <constraint firstItem="rbe-Md-207" firstAttribute="leading" secondItem="rbe-Ld-206" secondAttribute="leading" constant="16" id="rbe-Sd-212"/>
+                            <constraint firstItem="rbe-Td-213" firstAttribute="centerY" secondItem="rbe-Md-207" secondAttribute="centerY" id="rbe-3d-221"/>
+                            <constraint firstItem="rbe-Wd-216" firstAttribute="centerY" secondItem="rbe-Md-207" secondAttribute="centerY" id="rbe-4d-222"/>
+                            <constraint firstItem="rbe-Td-213" firstAttribute="centerX" secondItem="rbe-Kd-205" secondAttribute="centerX" constant="-24" id="rbe-5d-223"/>
+                            <constraint firstItem="rbe-Wd-216" firstAttribute="centerX" secondItem="rbe-Kd-205" secondAttribute="centerX" constant="24" id="rbe-6d-224"/>
+                            <constraint firstItem="rbe-8d-226" firstAttribute="top" secondItem="rbe-7d-225" secondAttribute="top" id="rbe-9d-227"/>
+                            <constraint firstItem="rbe-8d-226" firstAttribute="leading" secondItem="rbe-7d-225" secondAttribute="leading" id="rbe-ae-228"/>
+                            <constraint firstItem="rbe-7d-225" firstAttribute="trailing" secondItem="rbe-8d-226" secondAttribute="trailing" id="rbe-be-229"/>
+                            <constraint firstItem="rbe-7d-225" firstAttribute="bottom" secondItem="rbe-8d-226" secondAttribute="bottom" id="rbe-ce-230"/>
+                            <constraint firstItem="rbe-ee-232" firstAttribute="top" secondItem="rbe-de-231" secondAttribute="top" constant="8" id="rbe-Ce-255"/>
+                            <constraint firstItem="rbe-ee-232" firstAttribute="centerX" secondItem="rbe-de-231" secondAttribute="centerX" id="rbe-De-256"/>
+                            <constraint firstItem="rbe-he-235" firstAttribute="top" secondItem="rbe-de-231" secondAttribute="top" constant="25" id="rbe-Ee-257"/>
+                            <constraint firstItem="rbe-he-235" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Fe-258"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-ne-240" secondAttribute="trailing" constant="20" id="rbe-Ge-259"/>
+                            <constraint firstItem="rbe-ne-240" firstAttribute="centerY" secondItem="rbe-he-235" secondAttribute="centerY" id="rbe-He-260"/>
+                            <constraint firstItem="rbe-me-239" firstAttribute="centerY" secondItem="rbe-he-235" secondAttribute="centerY" id="rbe-Je-261"/>
+                            <constraint firstItem="rbe-me-239" firstAttribute="centerX" secondItem="rbe-de-231" secondAttribute="centerX" id="rbe-Ke-262"/>
+                            <constraint firstItem="rbe-re-244" firstAttribute="top" secondItem="rbe-he-235" secondAttribute="bottom" constant="12" id="rbe-Le-263"/>
+                            <constraint firstItem="rbe-re-244" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Me-264"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-re-244" secondAttribute="trailing" constant="20" id="rbe-Ne-265"/>
+                            <constraint firstItem="rbe-ue-247" firstAttribute="top" secondItem="rbe-re-244" secondAttribute="bottom" constant="16" id="rbe-Pe-266"/>
+                            <constraint firstItem="rbe-ue-247" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Qe-267"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-ve-248" secondAttribute="trailing" constant="20" id="rbe-Re-268"/>
+                            <constraint firstItem="rbe-ve-248" firstAttribute="centerY" secondItem="rbe-ue-247" secondAttribute="centerY" id="rbe-Se-269"/>
+                            <constraint firstItem="rbe-we-249" firstAttribute="top" secondItem="rbe-ue-247" secondAttribute="bottom" constant="6" id="rbe-Te-270"/>
+                            <constraint firstItem="rbe-we-249" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Ue-271"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-we-249" secondAttribute="trailing" constant="20" id="rbe-Ve-272"/>
+                            <constraint firstItem="rbe-ye-251" firstAttribute="top" secondItem="rbe-we-249" secondAttribute="bottom" constant="8" id="rbe-We-273"/>
+                            <constraint firstItem="rbe-ye-251" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Xe-274"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-ze-252" secondAttribute="trailing" constant="20" id="rbe-Ye-275"/>
+                            <constraint firstItem="rbe-ze-252" firstAttribute="centerY" secondItem="rbe-ye-251" secondAttribute="centerY" id="rbe-Ze-276"/>
+                            <constraint firstItem="rbe-Ae-253" firstAttribute="top" secondItem="rbe-ye-251" secondAttribute="bottom" constant="6" id="rbe-2e-277"/>
+                            <constraint firstItem="rbe-Ae-253" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-3e-278"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="trailing" secondItem="rbe-Ae-253" secondAttribute="trailing" constant="20" id="rbe-4e-279"/>
+                            <constraint firstItem="rbe-Ld-206" firstAttribute="bottom" secondItem="rbe-Ae-253" secondAttribute="bottom" constant="14" id="rbe-5e-280"/>
+                            <constraint firstItem="rbe-8e-283" firstAttribute="leading" secondItem="rbe-6e-281" secondAttribute="leading" constant="16" id="rbe-9e-284"/>
+                            <constraint firstItem="rbe-6e-281" firstAttribute="trailing" secondItem="rbe-8e-283" secondAttribute="trailing" constant="16" id="rbe-af-285"/>
+                            <constraint firstItem="rbe-8e-283" firstAttribute="centerY" secondItem="rbe-6e-281" secondAttribute="centerY" id="rbe-bf-286"/>
+                            <constraint firstItem="rbe-7d-225" firstAttribute="top" secondItem="rbe-Md-207" secondAttribute="bottom" constant="8" id="rbe-cf-287"/>
+                            <constraint firstItem="rbe-7d-225" firstAttribute="leading" secondItem="rbe-Kd-205" secondAttribute="leading" id="rbe-df-288"/>
+                            <constraint firstItem="rbe-Kd-205" firstAttribute="trailing" secondItem="rbe-7d-225" secondAttribute="trailing" id="rbe-ef-289"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="top" secondItem="rbe-7d-225" secondAttribute="bottom" constant="-36" id="rbe-ff-290"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="leading" secondItem="rbe-Kd-205" secondAttribute="leading" id="rbe-gf-291"/>
+                            <constraint firstItem="rbe-Kd-205" firstAttribute="trailing" secondItem="rbe-de-231" secondAttribute="trailing" id="rbe-hf-292"/>
+                            <constraint firstItem="rbe-Kd-205" firstAttribute="bottom" secondItem="rbe-de-231" secondAttribute="bottom" id="rbe-if-293"/>
+                            <constraint firstItem="rbe-6e-281" firstAttribute="centerX" secondItem="rbe-Kd-205" secondAttribute="centerX" id="rbe-jf-294"/>
+                            <constraint firstItem="rbe-de-231" firstAttribute="top" secondItem="rbe-6e-281" secondAttribute="bottom" constant="22" id="rbe-kf-295"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnBack" destination="rbe-Md-207" id="rbe-mf-296"/>
+                        <outlet property="btnUndo" destination="rbe-Td-213" id="rbe-nf-297"/>
+                        <outlet property="btnRedo" destination="rbe-Wd-216" id="rbe-of-298"/>
+                        <outlet property="vwCanvasArea" destination="rbe-7d-225" id="rbe-pf-299"/>
+                        <outlet property="scrollView" destination="rbe-8d-226" id="rbe-qf-300"/>
+                        <outlet property="vwHint" destination="rbe-6e-281" id="rbe-rf-301"/>
+                        <outlet property="lblHint" destination="rbe-8e-283" id="rbe-sf-302"/>
+                        <outlet property="vwPanel" destination="rbe-de-231" id="rbe-tf-303"/>
+                        <outlet property="vwGrabber" destination="rbe-ee-232" id="rbe-uf-304"/>
+                        <outlet property="btnPanelCancel" destination="rbe-he-235" id="rbe-vf-305"/>
+                        <outlet property="btnPanelApply" destination="rbe-ne-240" id="rbe-wf-306"/>
+                        <outlet property="segMode" destination="rbe-re-244" id="rbe-xf-307"/>
+                        <outlet property="sliderBrush" destination="rbe-we-249" id="rbe-yf-308"/>
+                        <outlet property="lblBrushValue" destination="rbe-ve-248" id="rbe-zf-309"/>
+                        <outlet property="sliderSoftness" destination="rbe-Ae-253" id="rbe-Af-310"/>
+                        <outlet property="lblSoftnessValue" destination="rbe-ze-252" id="rbe-Bf-311"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-Df-313" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="500" y="0.0"/>
+        </scene>
+        <scene sceneID="rbe-9h-455">
+            <objects>
+                <viewController storyboardIdentifier="ExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rbe-Ef-314" customClass="ExportVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rbe-Ff-315">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Hf-317">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <color key="backgroundColor" name="Surface Color"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="tintColor" name="PrimaryText"/>
+                                <state key="normal" title="">
+                                    <color key="titleColor" name="PrimaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="rbe-Jf-318"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-Kf-319"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="btnBack:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-Lf-320"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Pf-323">
                                 <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
                                 <color key="textColor" name="PrimaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-qe-243">
+                            <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Sf-326">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="180"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="180" priority="750" id="rbe-se-245"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="rbe-te-246"/>
-                                    <constraint firstAttribute="width" constant="150" id="rbe-ue-247"/>
+                                    <constraint firstAttribute="height" constant="180" priority="750" id="rbe-Uf-328"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="rbe-Vf-329"/>
+                                    <constraint firstAttribute="width" constant="150" id="rbe-Wf-330"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-re-244">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Tf-327">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="180"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cutout.png" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ve-248">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cutout.png" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Xf-331">
                                 <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
                                 <color key="textColor" name="PrimaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200 × 1440 px" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-we-249">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200 × 1440 px" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Yf-332">
                                 <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                 <color key="textColor" name="SecondaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-xe-250">
+                            <view contentMode="scaleToFill" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Zf-333">
                                 <rect key="frame" x="0.0" y="0.0" width="358" height="168"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ze-252">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-3f-335">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ae-253">
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-4f-336">
                                         <rect key="frame" x="0.0" y="0.0" width="132" height="44"/>
                                         <segments>
                                             <segment title="PNG"/>
                                             <segment title="JPG"/>
                                         </segments>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="132" id="rbe-Be-254"/>
-                                            <constraint firstAttribute="height" constant="44" id="rbe-Ce-255"/>
+                                            <constraint firstAttribute="width" constant="132" id="rbe-5f-337"/>
+                                            <constraint firstAttribute="height" constant="44" id="rbe-6f-338"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="segFormatChanged:" destination="rbe-de-231" eventType="valueChanged" id="rbe-De-256"/>
+                                            <action selector="segFormatChanged:" destination="rbe-Ef-314" eventType="valueChanged" id="rbe-7f-339"/>
                                         </connections>
                                     </segmentedControl>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ee-257">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8f-340">
                                         <rect key="frame" x="0.0" y="0.0" width="340" height="1"/>
                                         <color key="backgroundColor" name="Border Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="rbe-Fe-258"/>
+                                            <constraint firstAttribute="height" constant="1" id="rbe-9f-341"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ge-259">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ag-342">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-He-260">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-bg-343">
                                         <rect key="frame" x="0.0" y="0.0" width="140" height="44"/>
                                         <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="16"/>
                                         <state key="normal" title="Original  ›">
                                             <color key="titleColor" name="SecondaryText"/>
                                         </state>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="rbe-Je-261"/>
+                                            <constraint firstAttribute="height" constant="44" id="rbe-cg-344"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="btnSize:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-Ke-262"/>
+                                            <action selector="btnSize:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-dg-345"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Le-263">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-eg-346">
                                         <rect key="frame" x="0.0" y="0.0" width="340" height="1"/>
                                         <color key="backgroundColor" name="Border Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="rbe-Me-264"/>
+                                            <constraint firstAttribute="height" constant="1" id="rbe-fg-347"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ne-265">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-gg-348">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Pe-266">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-hg-349">
                                         <rect key="frame" x="0.0" y="0.0" width="160" height="44"/>
                                         <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="16"/>
                                         <state key="normal" title="Transparent  ›">
                                             <color key="titleColor" name="SecondaryText"/>
                                         </state>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="rbe-Qe-267"/>
+                                            <constraint firstAttribute="height" constant="44" id="rbe-ig-350"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="btnBackground:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-Re-268"/>
+                                            <action selector="btnBackground:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-jg-351"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="168" id="rbe-ye-251"/>
+                                    <constraint firstAttribute="height" constant="168" id="rbe-2f-334"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PNG keeps the transparent background." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-cf-287">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PNG keeps the transparent background." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Dg-370">
                                 <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                 <color key="textColor" name="SecondaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-df-288">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Eg-371">
                                 <rect key="frame" x="0.0" y="0.0" width="358" height="64"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ff-290">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Gg-373">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full resolution, no watermark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-gf-291">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full resolution, no watermark" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Hg-374">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                         <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                         <color key="textColor" name="SecondaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-hf-292">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Jg-375">
                                         <rect key="frame" x="0.0" y="0.0" width="46" height="24"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-jf-294">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Lg-377">
                                                 <rect key="frame" x="0.0" y="0.0" width="120" height="20"/>
                                                 <fontDescription key="fontDescription" name="Figtree-ExtraBold" family="Figtree" pointSize="12"/>
                                                 <color key="textColor" name="Link Color"/>
@@ -707,34 +902,34 @@
                                         </subviews>
                                         <color key="backgroundColor" name="Badge Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="24" id="rbe-if-293"/>
+                                            <constraint firstAttribute="height" constant="24" id="rbe-Kg-376"/>
                                         </constraints>
                                     </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-of-298">
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Qg-381">
                                         <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
                                         <color key="tintColor" name="PrimaryText"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="18" id="rbe-pf-299"/>
-                                            <constraint firstAttribute="height" constant="18" id="rbe-qf-300"/>
+                                            <constraint firstAttribute="width" constant="18" id="rbe-Rg-382"/>
+                                            <constraint firstAttribute="height" constant="18" id="rbe-Sg-383"/>
                                         </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-rf-301">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Tg-384">
                                         <rect key="frame" x="0.0" y="0.0" width="358" height="64"/>
                                         <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
                                         <state key="normal" title="">
                                             <color key="titleColor" name="PrimaryText"/>
                                         </state>
                                         <connections>
-                                            <action selector="btnHD:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-sf-302"/>
+                                            <action selector="btnHD:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-Ug-385"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="rbe-ef-289"/>
+                                    <constraint firstAttribute="height" constant="64" id="rbe-Fg-372"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ff-315">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-9g-398">
                                 <rect key="frame" x="0.0" y="0.0" width="358" height="58"/>
                                 <color key="backgroundColor" name="AccentColor"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
@@ -742,13 +937,13 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="rbe-Gf-316"/>
+                                    <constraint firstAttribute="height" constant="58" id="rbe-ah-399"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnSave:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-Hf-317"/>
+                                    <action selector="btnSave:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-bh-400"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Jf-318">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ch-401">
                                 <rect key="frame" x="0.0" y="0.0" width="358" height="54"/>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="17"/>
@@ -756,120 +951,120 @@
                                     <color key="titleColor" name="AccentColor"/>
                                 </state>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="rbe-Kf-319"/>
+                                    <constraint firstAttribute="height" constant="54" id="rbe-dh-402"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="btnShare:" destination="rbe-de-231" eventType="touchUpInside" id="rbe-Lf-320"/>
+                                    <action selector="btnShare:" destination="rbe-Ef-314" eventType="touchUpInside" id="rbe-eh-403"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Xf-331">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-qh-414">
                                 <rect key="frame" x="0.0" y="0.0" width="358" height="44"/>
                                 <segments>
                                     <segment title="This image"/>
                                     <segment title="All images"/>
                                 </segments>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="rbe-Yf-332"/>
+                                    <constraint firstAttribute="height" constant="44" id="rbe-rh-415"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="segScopeChanged:" destination="rbe-de-231" eventType="valueChanged" id="rbe-Zf-333"/>
+                                    <action selector="segScopeChanged:" destination="rbe-Ef-314" eventType="valueChanged" id="rbe-sh-416"/>
                                 </connections>
                             </segmentedControl>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="rbe-fe-233"/>
+                        <viewLayoutGuide key="safeArea" id="rbe-Gf-316"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
-                            <constraint firstItem="rbe-ge-234" firstAttribute="top" secondItem="rbe-fe-233" secondAttribute="top" constant="8" id="rbe-ke-238"/>
-                            <constraint firstItem="rbe-ge-234" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-me-239"/>
-                            <constraint firstItem="rbe-ne-240" firstAttribute="centerX" secondItem="rbe-ee-232" secondAttribute="centerX" id="rbe-oe-241"/>
-                            <constraint firstItem="rbe-ne-240" firstAttribute="centerY" secondItem="rbe-ge-234" secondAttribute="centerY" id="rbe-pe-242"/>
-                            <constraint firstItem="rbe-ze-252" firstAttribute="leading" secondItem="rbe-xe-250" secondAttribute="leading" constant="18" id="rbe-Se-269"/>
-                            <constraint firstItem="rbe-ze-252" firstAttribute="centerY" secondItem="rbe-xe-250" secondAttribute="top" constant="30" id="rbe-Te-270"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="trailing" secondItem="rbe-Ae-253" secondAttribute="trailing" constant="8" id="rbe-Ue-271"/>
-                            <constraint firstItem="rbe-Ae-253" firstAttribute="centerY" secondItem="rbe-ze-252" secondAttribute="centerY" id="rbe-Ve-272"/>
-                            <constraint firstItem="rbe-Ee-257" firstAttribute="top" secondItem="rbe-xe-250" secondAttribute="top" constant="60" id="rbe-We-273"/>
-                            <constraint firstItem="rbe-Ee-257" firstAttribute="leading" secondItem="rbe-xe-250" secondAttribute="leading" constant="18" id="rbe-Xe-274"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="trailing" secondItem="rbe-Ee-257" secondAttribute="trailing" id="rbe-Ye-275"/>
-                            <constraint firstItem="rbe-Ge-259" firstAttribute="leading" secondItem="rbe-xe-250" secondAttribute="leading" constant="18" id="rbe-Ze-276"/>
-                            <constraint firstItem="rbe-Ge-259" firstAttribute="centerY" secondItem="rbe-xe-250" secondAttribute="top" constant="87" id="rbe-2e-277"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="trailing" secondItem="rbe-He-260" secondAttribute="trailing" constant="14" id="rbe-3e-278"/>
-                            <constraint firstItem="rbe-He-260" firstAttribute="centerY" secondItem="rbe-Ge-259" secondAttribute="centerY" id="rbe-4e-279"/>
-                            <constraint firstItem="rbe-Le-263" firstAttribute="top" secondItem="rbe-xe-250" secondAttribute="top" constant="113" id="rbe-5e-280"/>
-                            <constraint firstItem="rbe-Le-263" firstAttribute="leading" secondItem="rbe-xe-250" secondAttribute="leading" constant="18" id="rbe-6e-281"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="trailing" secondItem="rbe-Le-263" secondAttribute="trailing" id="rbe-7e-282"/>
-                            <constraint firstItem="rbe-Ne-265" firstAttribute="leading" secondItem="rbe-xe-250" secondAttribute="leading" constant="18" id="rbe-8e-283"/>
-                            <constraint firstItem="rbe-Ne-265" firstAttribute="centerY" secondItem="rbe-xe-250" secondAttribute="top" constant="140" id="rbe-9e-284"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="trailing" secondItem="rbe-Pe-266" secondAttribute="trailing" constant="14" id="rbe-af-285"/>
-                            <constraint firstItem="rbe-Pe-266" firstAttribute="centerY" secondItem="rbe-Ne-265" secondAttribute="centerY" id="rbe-bf-286"/>
-                            <constraint firstItem="rbe-jf-294" firstAttribute="leading" secondItem="rbe-hf-292" secondAttribute="leading" constant="10" id="rbe-kf-295"/>
-                            <constraint firstItem="rbe-hf-292" firstAttribute="trailing" secondItem="rbe-jf-294" secondAttribute="trailing" constant="10" id="rbe-mf-296"/>
-                            <constraint firstItem="rbe-jf-294" firstAttribute="centerY" secondItem="rbe-hf-292" secondAttribute="centerY" id="rbe-nf-297"/>
-                            <constraint firstItem="rbe-ff-290" firstAttribute="leading" secondItem="rbe-df-288" secondAttribute="leading" constant="18" id="rbe-tf-303"/>
-                            <constraint firstItem="rbe-ff-290" firstAttribute="top" secondItem="rbe-df-288" secondAttribute="top" constant="11" id="rbe-uf-304"/>
-                            <constraint firstItem="rbe-gf-291" firstAttribute="leading" secondItem="rbe-ff-290" secondAttribute="leading" id="rbe-vf-305"/>
-                            <constraint firstItem="rbe-gf-291" firstAttribute="top" secondItem="rbe-ff-290" secondAttribute="bottom" constant="2" id="rbe-wf-306"/>
-                            <constraint firstItem="rbe-df-288" firstAttribute="trailing" secondItem="rbe-of-298" secondAttribute="trailing" constant="14" id="rbe-xf-307"/>
-                            <constraint firstItem="rbe-of-298" firstAttribute="centerY" secondItem="rbe-df-288" secondAttribute="centerY" id="rbe-yf-308"/>
-                            <constraint firstItem="rbe-of-298" firstAttribute="leading" secondItem="rbe-hf-292" secondAttribute="trailing" constant="6" id="rbe-zf-309"/>
-                            <constraint firstItem="rbe-hf-292" firstAttribute="centerY" secondItem="rbe-df-288" secondAttribute="centerY" id="rbe-Af-310"/>
-                            <constraint firstItem="rbe-rf-301" firstAttribute="top" secondItem="rbe-df-288" secondAttribute="top" id="rbe-Bf-311"/>
-                            <constraint firstItem="rbe-rf-301" firstAttribute="leading" secondItem="rbe-df-288" secondAttribute="leading" id="rbe-Cf-312"/>
-                            <constraint firstItem="rbe-df-288" firstAttribute="trailing" secondItem="rbe-rf-301" secondAttribute="trailing" id="rbe-Df-313"/>
-                            <constraint firstItem="rbe-df-288" firstAttribute="bottom" secondItem="rbe-rf-301" secondAttribute="bottom" id="rbe-Ef-314"/>
-                            <constraint firstItem="rbe-qe-243" firstAttribute="top" secondItem="rbe-ge-234" secondAttribute="bottom" constant="16" id="rbe-Mf-321"/>
-                            <constraint firstItem="rbe-qe-243" firstAttribute="centerX" secondItem="rbe-ee-232" secondAttribute="centerX" id="rbe-Nf-322"/>
-                            <constraint firstItem="rbe-re-244" firstAttribute="top" secondItem="rbe-qe-243" secondAttribute="top" id="rbe-Pf-323"/>
-                            <constraint firstItem="rbe-re-244" firstAttribute="leading" secondItem="rbe-qe-243" secondAttribute="leading" id="rbe-Qf-324"/>
-                            <constraint firstItem="rbe-qe-243" firstAttribute="trailing" secondItem="rbe-re-244" secondAttribute="trailing" id="rbe-Rf-325"/>
-                            <constraint firstItem="rbe-qe-243" firstAttribute="bottom" secondItem="rbe-re-244" secondAttribute="bottom" id="rbe-Sf-326"/>
-                            <constraint firstItem="rbe-ve-248" firstAttribute="top" secondItem="rbe-qe-243" secondAttribute="bottom" constant="12" id="rbe-Tf-327"/>
-                            <constraint firstItem="rbe-ve-248" firstAttribute="centerX" secondItem="rbe-ee-232" secondAttribute="centerX" id="rbe-Uf-328"/>
-                            <constraint firstItem="rbe-we-249" firstAttribute="top" secondItem="rbe-ve-248" secondAttribute="bottom" constant="2" id="rbe-Vf-329"/>
-                            <constraint firstItem="rbe-we-249" firstAttribute="centerX" secondItem="rbe-ee-232" secondAttribute="centerX" id="rbe-Wf-330"/>
-                            <constraint firstItem="rbe-Xf-331" firstAttribute="top" secondItem="rbe-we-249" secondAttribute="bottom" constant="14" id="rbe-2f-334"/>
-                            <constraint firstItem="rbe-Xf-331" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-3f-335"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-Xf-331" secondAttribute="trailing" constant="16" id="rbe-4f-336"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="top" secondItem="rbe-Xf-331" secondAttribute="bottom" constant="12" id="rbe-5f-337"/>
-                            <constraint firstItem="rbe-xe-250" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-6f-338"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-xe-250" secondAttribute="trailing" constant="16" id="rbe-7f-339"/>
-                            <constraint firstItem="rbe-cf-287" firstAttribute="top" secondItem="rbe-xe-250" secondAttribute="bottom" constant="8" id="rbe-8f-340"/>
-                            <constraint firstItem="rbe-cf-287" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="34" id="rbe-9f-341"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-cf-287" secondAttribute="trailing" constant="20" id="rbe-ag-342"/>
-                            <constraint firstItem="rbe-df-288" firstAttribute="top" secondItem="rbe-cf-287" secondAttribute="bottom" constant="20" id="rbe-bg-343"/>
-                            <constraint firstItem="rbe-df-288" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-cg-344"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-df-288" secondAttribute="trailing" constant="16" id="rbe-dg-345"/>
-                            <constraint firstItem="rbe-Ff-315" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rbe-df-288" secondAttribute="bottom" constant="20" id="rbe-eg-346"/>
-                            <constraint firstItem="rbe-Ff-315" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-fg-347"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-Ff-315" secondAttribute="trailing" constant="16" id="rbe-gg-348"/>
-                            <constraint firstItem="rbe-Jf-318" firstAttribute="top" secondItem="rbe-Ff-315" secondAttribute="bottom" constant="10" id="rbe-hg-349"/>
-                            <constraint firstItem="rbe-Jf-318" firstAttribute="leading" secondItem="rbe-fe-233" secondAttribute="leading" constant="16" id="rbe-ig-350"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="trailing" secondItem="rbe-Jf-318" secondAttribute="trailing" constant="16" id="rbe-jg-351"/>
-                            <constraint firstItem="rbe-fe-233" firstAttribute="bottom" secondItem="rbe-Jf-318" secondAttribute="bottom" constant="8" id="rbe-kg-352"/>
+                            <constraint firstItem="rbe-Hf-317" firstAttribute="top" secondItem="rbe-Gf-316" secondAttribute="top" constant="8" id="rbe-Mf-321"/>
+                            <constraint firstItem="rbe-Hf-317" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-Nf-322"/>
+                            <constraint firstItem="rbe-Pf-323" firstAttribute="centerX" secondItem="rbe-Ff-315" secondAttribute="centerX" id="rbe-Qf-324"/>
+                            <constraint firstItem="rbe-Pf-323" firstAttribute="centerY" secondItem="rbe-Hf-317" secondAttribute="centerY" id="rbe-Rf-325"/>
+                            <constraint firstItem="rbe-3f-335" firstAttribute="leading" secondItem="rbe-Zf-333" secondAttribute="leading" constant="18" id="rbe-kg-352"/>
+                            <constraint firstItem="rbe-3f-335" firstAttribute="centerY" secondItem="rbe-Zf-333" secondAttribute="top" constant="30" id="rbe-mg-353"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="trailing" secondItem="rbe-4f-336" secondAttribute="trailing" constant="8" id="rbe-ng-354"/>
+                            <constraint firstItem="rbe-4f-336" firstAttribute="centerY" secondItem="rbe-3f-335" secondAttribute="centerY" id="rbe-og-355"/>
+                            <constraint firstItem="rbe-8f-340" firstAttribute="top" secondItem="rbe-Zf-333" secondAttribute="top" constant="60" id="rbe-pg-356"/>
+                            <constraint firstItem="rbe-8f-340" firstAttribute="leading" secondItem="rbe-Zf-333" secondAttribute="leading" constant="18" id="rbe-qg-357"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="trailing" secondItem="rbe-8f-340" secondAttribute="trailing" id="rbe-rg-358"/>
+                            <constraint firstItem="rbe-ag-342" firstAttribute="leading" secondItem="rbe-Zf-333" secondAttribute="leading" constant="18" id="rbe-sg-359"/>
+                            <constraint firstItem="rbe-ag-342" firstAttribute="centerY" secondItem="rbe-Zf-333" secondAttribute="top" constant="87" id="rbe-tg-360"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="trailing" secondItem="rbe-bg-343" secondAttribute="trailing" constant="14" id="rbe-ug-361"/>
+                            <constraint firstItem="rbe-bg-343" firstAttribute="centerY" secondItem="rbe-ag-342" secondAttribute="centerY" id="rbe-vg-362"/>
+                            <constraint firstItem="rbe-eg-346" firstAttribute="top" secondItem="rbe-Zf-333" secondAttribute="top" constant="113" id="rbe-wg-363"/>
+                            <constraint firstItem="rbe-eg-346" firstAttribute="leading" secondItem="rbe-Zf-333" secondAttribute="leading" constant="18" id="rbe-xg-364"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="trailing" secondItem="rbe-eg-346" secondAttribute="trailing" id="rbe-yg-365"/>
+                            <constraint firstItem="rbe-gg-348" firstAttribute="leading" secondItem="rbe-Zf-333" secondAttribute="leading" constant="18" id="rbe-zg-366"/>
+                            <constraint firstItem="rbe-gg-348" firstAttribute="centerY" secondItem="rbe-Zf-333" secondAttribute="top" constant="140" id="rbe-Ag-367"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="trailing" secondItem="rbe-hg-349" secondAttribute="trailing" constant="14" id="rbe-Bg-368"/>
+                            <constraint firstItem="rbe-hg-349" firstAttribute="centerY" secondItem="rbe-gg-348" secondAttribute="centerY" id="rbe-Cg-369"/>
+                            <constraint firstItem="rbe-Lg-377" firstAttribute="leading" secondItem="rbe-Jg-375" secondAttribute="leading" constant="10" id="rbe-Mg-378"/>
+                            <constraint firstItem="rbe-Jg-375" firstAttribute="trailing" secondItem="rbe-Lg-377" secondAttribute="trailing" constant="10" id="rbe-Ng-379"/>
+                            <constraint firstItem="rbe-Lg-377" firstAttribute="centerY" secondItem="rbe-Jg-375" secondAttribute="centerY" id="rbe-Pg-380"/>
+                            <constraint firstItem="rbe-Gg-373" firstAttribute="leading" secondItem="rbe-Eg-371" secondAttribute="leading" constant="18" id="rbe-Vg-386"/>
+                            <constraint firstItem="rbe-Gg-373" firstAttribute="top" secondItem="rbe-Eg-371" secondAttribute="top" constant="11" id="rbe-Wg-387"/>
+                            <constraint firstItem="rbe-Hg-374" firstAttribute="leading" secondItem="rbe-Gg-373" secondAttribute="leading" id="rbe-Xg-388"/>
+                            <constraint firstItem="rbe-Hg-374" firstAttribute="top" secondItem="rbe-Gg-373" secondAttribute="bottom" constant="2" id="rbe-Yg-389"/>
+                            <constraint firstItem="rbe-Eg-371" firstAttribute="trailing" secondItem="rbe-Qg-381" secondAttribute="trailing" constant="14" id="rbe-Zg-390"/>
+                            <constraint firstItem="rbe-Qg-381" firstAttribute="centerY" secondItem="rbe-Eg-371" secondAttribute="centerY" id="rbe-2g-391"/>
+                            <constraint firstItem="rbe-Qg-381" firstAttribute="leading" secondItem="rbe-Jg-375" secondAttribute="trailing" constant="6" id="rbe-3g-392"/>
+                            <constraint firstItem="rbe-Jg-375" firstAttribute="centerY" secondItem="rbe-Eg-371" secondAttribute="centerY" id="rbe-4g-393"/>
+                            <constraint firstItem="rbe-Tg-384" firstAttribute="top" secondItem="rbe-Eg-371" secondAttribute="top" id="rbe-5g-394"/>
+                            <constraint firstItem="rbe-Tg-384" firstAttribute="leading" secondItem="rbe-Eg-371" secondAttribute="leading" id="rbe-6g-395"/>
+                            <constraint firstItem="rbe-Eg-371" firstAttribute="trailing" secondItem="rbe-Tg-384" secondAttribute="trailing" id="rbe-7g-396"/>
+                            <constraint firstItem="rbe-Eg-371" firstAttribute="bottom" secondItem="rbe-Tg-384" secondAttribute="bottom" id="rbe-8g-397"/>
+                            <constraint firstItem="rbe-Sf-326" firstAttribute="top" secondItem="rbe-Hf-317" secondAttribute="bottom" constant="16" id="rbe-fh-404"/>
+                            <constraint firstItem="rbe-Sf-326" firstAttribute="centerX" secondItem="rbe-Ff-315" secondAttribute="centerX" id="rbe-gh-405"/>
+                            <constraint firstItem="rbe-Tf-327" firstAttribute="top" secondItem="rbe-Sf-326" secondAttribute="top" id="rbe-hh-406"/>
+                            <constraint firstItem="rbe-Tf-327" firstAttribute="leading" secondItem="rbe-Sf-326" secondAttribute="leading" id="rbe-ih-407"/>
+                            <constraint firstItem="rbe-Sf-326" firstAttribute="trailing" secondItem="rbe-Tf-327" secondAttribute="trailing" id="rbe-jh-408"/>
+                            <constraint firstItem="rbe-Sf-326" firstAttribute="bottom" secondItem="rbe-Tf-327" secondAttribute="bottom" id="rbe-kh-409"/>
+                            <constraint firstItem="rbe-Xf-331" firstAttribute="top" secondItem="rbe-Sf-326" secondAttribute="bottom" constant="12" id="rbe-mh-410"/>
+                            <constraint firstItem="rbe-Xf-331" firstAttribute="centerX" secondItem="rbe-Ff-315" secondAttribute="centerX" id="rbe-nh-411"/>
+                            <constraint firstItem="rbe-Yf-332" firstAttribute="top" secondItem="rbe-Xf-331" secondAttribute="bottom" constant="2" id="rbe-oh-412"/>
+                            <constraint firstItem="rbe-Yf-332" firstAttribute="centerX" secondItem="rbe-Ff-315" secondAttribute="centerX" id="rbe-ph-413"/>
+                            <constraint firstItem="rbe-qh-414" firstAttribute="top" secondItem="rbe-Yf-332" secondAttribute="bottom" constant="14" id="rbe-th-417"/>
+                            <constraint firstItem="rbe-qh-414" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-uh-418"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-qh-414" secondAttribute="trailing" constant="16" id="rbe-vh-419"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="top" secondItem="rbe-qh-414" secondAttribute="bottom" constant="12" id="rbe-wh-420"/>
+                            <constraint firstItem="rbe-Zf-333" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-xh-421"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-Zf-333" secondAttribute="trailing" constant="16" id="rbe-yh-422"/>
+                            <constraint firstItem="rbe-Dg-370" firstAttribute="top" secondItem="rbe-Zf-333" secondAttribute="bottom" constant="8" id="rbe-zh-423"/>
+                            <constraint firstItem="rbe-Dg-370" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="34" id="rbe-Ah-424"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-Dg-370" secondAttribute="trailing" constant="20" id="rbe-Bh-425"/>
+                            <constraint firstItem="rbe-Eg-371" firstAttribute="top" secondItem="rbe-Dg-370" secondAttribute="bottom" constant="20" id="rbe-Ch-426"/>
+                            <constraint firstItem="rbe-Eg-371" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-Dh-427"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-Eg-371" secondAttribute="trailing" constant="16" id="rbe-Eh-428"/>
+                            <constraint firstItem="rbe-9g-398" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rbe-Eg-371" secondAttribute="bottom" constant="20" id="rbe-Fh-429"/>
+                            <constraint firstItem="rbe-9g-398" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-Gh-430"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-9g-398" secondAttribute="trailing" constant="16" id="rbe-Hh-431"/>
+                            <constraint firstItem="rbe-ch-401" firstAttribute="top" secondItem="rbe-9g-398" secondAttribute="bottom" constant="10" id="rbe-Jh-432"/>
+                            <constraint firstItem="rbe-ch-401" firstAttribute="leading" secondItem="rbe-Gf-316" secondAttribute="leading" constant="16" id="rbe-Kh-433"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="trailing" secondItem="rbe-ch-401" secondAttribute="trailing" constant="16" id="rbe-Lh-434"/>
+                            <constraint firstItem="rbe-Gf-316" firstAttribute="bottom" secondItem="rbe-ch-401" secondAttribute="bottom" constant="8" id="rbe-Mh-435"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnBack" destination="rbe-ge-234" id="rbe-mg-353"/>
-                        <outlet property="vwPreviewChecker" destination="rbe-qe-243" id="rbe-ng-354"/>
-                        <outlet property="imgPreview" destination="rbe-re-244" id="rbe-og-355"/>
-                        <outlet property="lblFileName" destination="rbe-ve-248" id="rbe-pg-356"/>
-                        <outlet property="lblDimensions" destination="rbe-we-249" id="rbe-qg-357"/>
-                        <outlet property="vwOptions" destination="rbe-xe-250" id="rbe-rg-358"/>
-                        <outlet property="segFormat" destination="rbe-Ae-253" id="rbe-sg-359"/>
-                        <outlet property="btnSize" destination="rbe-He-260" id="rbe-tg-360"/>
-                        <outlet property="btnBackground" destination="rbe-Pe-266" id="rbe-ug-361"/>
-                        <outlet property="lblNote" destination="rbe-cf-287" id="rbe-vg-362"/>
-                        <outlet property="vwHD" destination="rbe-df-288" id="rbe-wg-363"/>
-                        <outlet property="lblHDSubtitle" destination="rbe-gf-291" id="rbe-xg-364"/>
-                        <outlet property="vwProBadge" destination="rbe-hf-292" id="rbe-yg-365"/>
-                        <outlet property="imgHDChevron" destination="rbe-of-298" id="rbe-zg-366"/>
-                        <outlet property="btnSave" destination="rbe-Ff-315" id="rbe-Ag-367"/>
-                        <outlet property="btnShare" destination="rbe-Jf-318" id="rbe-Bg-368"/>
-                        <outlet property="segScope" destination="rbe-Xf-331" id="rbe-Cg-369"/>
-                        <outlet property="scopeHeight" destination="rbe-Yf-332" id="rbe-Dg-370"/>
-                        <outlet property="previewWidth" destination="rbe-ue-247" id="rbe-Eg-371"/>
+                        <outlet property="btnBack" destination="rbe-Hf-317" id="rbe-Nh-436"/>
+                        <outlet property="vwPreviewChecker" destination="rbe-Sf-326" id="rbe-Ph-437"/>
+                        <outlet property="imgPreview" destination="rbe-Tf-327" id="rbe-Qh-438"/>
+                        <outlet property="lblFileName" destination="rbe-Xf-331" id="rbe-Rh-439"/>
+                        <outlet property="lblDimensions" destination="rbe-Yf-332" id="rbe-Sh-440"/>
+                        <outlet property="vwOptions" destination="rbe-Zf-333" id="rbe-Th-441"/>
+                        <outlet property="segFormat" destination="rbe-4f-336" id="rbe-Uh-442"/>
+                        <outlet property="btnSize" destination="rbe-bg-343" id="rbe-Vh-443"/>
+                        <outlet property="btnBackground" destination="rbe-hg-349" id="rbe-Wh-444"/>
+                        <outlet property="lblNote" destination="rbe-Dg-370" id="rbe-Xh-445"/>
+                        <outlet property="vwHD" destination="rbe-Eg-371" id="rbe-Yh-446"/>
+                        <outlet property="lblHDSubtitle" destination="rbe-Hg-374" id="rbe-Zh-447"/>
+                        <outlet property="vwProBadge" destination="rbe-Jg-375" id="rbe-2h-448"/>
+                        <outlet property="imgHDChevron" destination="rbe-Qg-381" id="rbe-3h-449"/>
+                        <outlet property="btnSave" destination="rbe-9g-398" id="rbe-4h-450"/>
+                        <outlet property="btnShare" destination="rbe-ch-401" id="rbe-5h-451"/>
+                        <outlet property="segScope" destination="rbe-qh-414" id="rbe-6h-452"/>
+                        <outlet property="scopeHeight" destination="rbe-rh-415" id="rbe-7h-453"/>
+                        <outlet property="previewWidth" destination="rbe-Wf-330" id="rbe-8h-454"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-Gg-373" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-ai-456" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1000" y="0.0"/>
         </scene>

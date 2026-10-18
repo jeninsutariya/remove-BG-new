@@ -131,6 +131,7 @@ nonisolated final class ProjectStorageService: Sendable {
     func deleteFileIfUnreferenced(_ fileName: String, in project: BackgroundRemovalProject) {
         let referenced = project.items.contains {
             $0.originalFileName == fileName || $0.foregroundFileName == fileName || $0.background.customFileName == fileName
+                || ($0.textBehind?.referencedFiles.contains(fileName) ?? false)
         }
         guard !referenced else { return }
         try? fileManager.removeItem(at: fileURL(fileName, projectID: project.id))
@@ -144,6 +145,7 @@ nonisolated final class ProjectStorageService: Sendable {
             keep.insert(item.originalFileName)
             if let name = item.foregroundFileName { keep.insert(name) }
             if let name = item.background.customFileName { keep.insert(name) }
+            item.textBehind?.referencedFiles.forEach { keep.insert($0) }
         }
         let directory = folder(for: project.id)
         let files = (try? fileManager.contentsOfDirectory(atPath: directory.path)) ?? []
@@ -168,6 +170,15 @@ nonisolated final class ProjectStorageService: Sendable {
         guard let cg = image.cgImage, let data = ImageUtilities.pngData(cg) else { throw ProjectStorageError.encodingFailed }
         // Unique per version so undo can return to an earlier (e.g. pre-refine) foreground.
         let name = "foreground_\(itemID.uuidString)_\(UUID().uuidString.prefix(8)).png"
+        try write(data, name: name, projectID: projectID)
+        return name
+    }
+
+    /// Stores a refined subject mask (8-bit gray PNG; white = subject). Unique name per version
+    /// so undo can return to an earlier mask.
+    func saveMask(_ mask: CGImage, itemID: UUID, projectID: UUID) throws -> String {
+        guard let data = ImageUtilities.pngData(mask) else { throw ProjectStorageError.encodingFailed }
+        let name = "mask_\(itemID.uuidString)_\(UUID().uuidString.prefix(8)).png"
         try write(data, name: name, projectID: projectID)
         return name
     }

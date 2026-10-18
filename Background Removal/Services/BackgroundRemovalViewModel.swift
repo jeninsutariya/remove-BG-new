@@ -36,11 +36,13 @@ final class BackgroundRemovalViewModel {
     private(set) var currentItemID: UUID?
 
     private let foregroundCache = NSCache<NSUUID, UIImage>()
+    private let maskCache = NSCache<NSUUID, CGImage>()
     private let imageCache = NSCache<NSString, UIImage>()
 
     init(project: BackgroundRemovalProject) {
         self.project = project
         foregroundCache.countLimit = 2
+        maskCache.countLimit = 1
         imageCache.countLimit = 60
     }
 
@@ -228,6 +230,63 @@ final class BackgroundRemovalViewModel {
     func purgeUnusedFiles() {
         guard !isProcessing else { return }
         storage.purgeUnreferencedFiles(in: project)
+    }
+
+    // MARK: - Text Behind
+
+    /// Saves the Text Behind composition of one item.
+    func setTextBehind(_ document: TextBehindDocument, for id: UUID) {
+        guard item(id) != nil, item(id)?.textBehind != document else { return }
+        update(id) { $0.textBehind = document }
+    }
+
+    /// Full-resolution original photo (upright, long side ≤ 4096 px). Never modified.
+    func fullOriginal(for id: UUID) async -> UIImage? {
+        guard let name = item(id)?.originalFileName else { return nil }
+        let projectID = project.id
+        let storage = self.storage
+        return await Task.detached(priority: .userInitiated) {
+            storage.loadImage(name, projectID: projectID, maxPixel: BackgroundRemovalService.maxProcessingDimension)
+        }.value
+    }
+
+    /// Vision's subject mask (alpha of the saved foreground; white = subject) at the original's
+    /// pixel size. Cached, so text and style changes never re-run segmentation.
+    func visionMask(for id: UUID) async -> CGImage? {
+        if let cached = maskCache.object(forKey: id as NSUUID) { return cached }
+        guard item(id)?.isCompleted == true,
+              let foreground = await fullForeground(for: id),
+              let original = await fullOriginal(for: id) else { return nil }
+        let mask = await Task.detached(priority: .userInitiated) { () -> CGImage? in
+            guard let originalCG = original.cgImage ?? ImageUtilities.uprightCGImage(from: original),
+                  let foregroundCG = ImageUtilities.uprightCGImage(from: foreground) else { return nil }
+            return MaskRefineService.alphaMask(of: foregroundCG,
+                                               size: CGSize(width: originalCG.width, height: originalCG.height))
+        }.value
+        if let mask { maskCache.setObject(mask, forKey: id as NSUUID) }
+        return mask
+    }
+
+    /// Mask used by the composition: the refined one when present, otherwise Vision's.
+    func subjectMask(for id: UUID, settings: MaskSettings) async -> CGImage? {
+        if let name = settings.refinedMaskFileName {
+            let projectID = project.id
+            let storage = self.storage
+            let refined = await Task.detached(priority: .userInitiated) { () -> CGImage? in
+                storage.loadImage(name, projectID: projectID)?.cgImage
+            }.value
+            if let refined { return refined }
+        }
+        return await visionMask(for: id)
+    }
+
+    /// Stores a mask painted with the Refine brush; returns its file name.
+    func saveRefinedMask(_ mask: CGImage, for id: UUID) async throws -> String {
+        let projectID = project.id
+        let storage = self.storage
+        return try await Task.detached(priority: .userInitiated) {
+            try storage.saveMask(mask, itemID: id, projectID: projectID)
+        }.value
     }
 
     // MARK: - Refine

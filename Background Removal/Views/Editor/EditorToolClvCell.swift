@@ -20,12 +20,18 @@ class EditorToolClvCell: UICollectionViewCell {
     }
 
     func setData(tool: EditorTool, enabled: Bool) {
-        lblTitle.text = tool.title
-        imgIcon.image = UIImage(systemName: tool.symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 19, weight: .semibold))
+        setData(title: tool.title, symbol: tool.symbol, enabled: enabled)
+    }
+
+    func setData(title: String, symbol: String, enabled: Bool, selected: Bool = false) {
+        lblTitle.text = title
+        imgIcon.image = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 19, weight: .semibold))
+        vwCircle.backgroundColor = selected ? UIColor(named: "AccentColor") : UIColor(named: "Ultra Light Blue")
+        imgIcon.tintColor = selected ? .white : UIColor(named: "PrimaryText")
         contentView.alpha = enabled ? 1 : 0.4
         isAccessibilityElement = true
-        accessibilityLabel = tool.title
-        accessibilityTraits = enabled ? .button : [.button, .notEnabled]
+        accessibilityLabel = title
+        accessibilityTraits = selected ? [.button, .selected] : (enabled ? .button : [.button, .notEnabled])
     }
 
     override var isHighlighted: Bool {

@@ -206,6 +206,7 @@ class HomeVC: UIViewController {
         openImagePicker(mode: .single, destination: .changeBackground)
     }
     @IBAction func btnTextBehind(_ sender: UIButton) {
+        openImagePicker(mode: .single, destination: .textBehind)
     }
     @IBAction func btnBatchRemove(_ sender: UIButton) {
         openImagePicker(mode: .multiple, destination: .editor)
@@ -218,8 +219,7 @@ class HomeVC: UIViewController {
             reloadRecents()
             return
         }
-        let vc = RemovingBackgroundEditorVC.fatchEditorInstance()
-        vc.viewModel = BackgroundRemovalViewModel(project: latest)
+        let vc = UIViewController.editorScreen(for: BackgroundRemovalViewModel(project: latest))
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -273,6 +273,8 @@ extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollect
             openImagePicker(mode: .multiple, destination: .editor)
         case 2:
             openImagePicker(mode: .single, destination: .changeBackground)
+        case 3:
+            openImagePicker(mode: .single, destination: .textBehind)
         default:
             break
         }

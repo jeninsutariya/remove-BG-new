@@ -21,6 +21,19 @@ extension UIViewController {
         return controller
     }
 
+    /// The editor that matches how the project was created.
+    static func editorScreen(for viewModel: BackgroundRemovalViewModel) -> UIViewController {
+        if viewModel.project.mode == .textBehind {
+            let editor = TextBehindSubjectVC.fatchEditorInstance()
+            editor.viewModel = viewModel
+            editor.itemID = viewModel.items.first?.id
+            return editor
+        }
+        let editor = RemovingBackgroundEditorVC.fatchEditorInstance()
+        editor.viewModel = viewModel
+        return editor
+    }
+
     func presentErrorAlert(title: String, message: String, retryTitle: String? = nil, retry: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if let retry {

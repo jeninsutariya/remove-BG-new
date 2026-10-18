@@ -60,11 +60,13 @@ nonisolated enum EditorMode: String, Codable {
     case removeBackground
     /// Change Background → Background, Refine, Shadow, Resize.
     case changeBackground
+    /// Text Behind Subject → TextBehindSubjectVC (Background, Text, Refine, Shadow, Resize).
+    case textBehind
 
     var tools: [EditorTool] {
         switch self {
         case .removeBackground: return [.refine, .shadow, .resize]
-        case .changeBackground: return [.background, .refine, .shadow, .resize]
+        case .changeBackground, .textBehind: return [.background, .refine, .shadow, .resize]
         }
     }
 }
