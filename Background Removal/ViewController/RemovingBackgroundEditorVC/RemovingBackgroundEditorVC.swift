@@ -51,8 +51,10 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     // Tool sheet in progress (preview only until ✓)
     private var activePanel: EditorToolPanel?
-    /// Constraints of the open tool panel (removed together when it closes).
-    private var panelConstraints: [NSLayoutConstraint] = []
+    /// Shared tool-panel presentation (hides the tool bar while a panel is open).
+    private lazy var panelPresenter = EditorPanelPresenter(rootView: view, toolbar: vwToolbar, canvas: vwCanvasContainer,
+                                                           normalCanvasBottom: containerBottom,
+                                                           alsoHidden: [clvThumbnails], followsKeyboard: false)
     private var activeTool: EditorTool?
     /// Applies the open panel's draft (used by ✓ and when switching tools).
     private var activeApply: (() -> Void)?
@@ -400,9 +402,16 @@ class RemovingBackgroundEditorVC: UIViewController {
         }
         if isPanelOpen {
             guard tool != activeTool else { return }
-            // Switching tools keeps the current edit, then replaces the panel.
+            // Switching tools keeps the current edit; the new panel replaces this one and the
+            // tool bar stays hidden.
             activeApply?()
-            closePanel(animated: false)
+            if tool == .refine {
+                closePanel(animated: false)
+            } else {
+                activePanel = nil
+                draftBackground = nil
+                draftEdits = nil
+            }
         }
         switch tool {
         case .refine:
@@ -458,62 +467,29 @@ class RemovingBackgroundEditorVC: UIViewController {
     private func present(panel: EditorToolPanel, apply: @escaping () -> Void, tool: EditorTool) {
         draftBackground = nil
         draftEdits = nil
-        panel.translatesAutoresizingMaskIntoConstraints = false
-        panel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        panel.layer.cornerRadius = 28
-        view.insertSubview(panel, belowSubview: vwToolbar)
-        // Half the screen at most, but never breaking the panel's own content on short phones.
-        let maxHeight = panel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5)
-        maxHeight.priority = UILayoutPriority(999)
-        panelConstraints = [
-            panel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
-            panel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
-            panel.bottomAnchor.constraint(equalTo: vwToolbar.topAnchor, constant: -8),
-            maxHeight,
-            vwCanvasContainer.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
-        ]
-        containerBottom.isActive = false
-        NSLayoutConstraint.activate(panelConstraints)
         activePanel = panel
         activeTool = tool
         activeApply = apply
-
         panel.onCancel = { [weak self] in self?.closePanel(animated: true) }
         panel.onApply = { [weak self] in
             apply()
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             self?.closePanel(animated: true)
         }
+        // Hides the tool bar and slides the panel up from the bottom (or replaces the open one).
+        panelPresenter.show(panel, preferredHeight: nil)
         updateChrome()
-        panel.alpha = 0
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut]) {
-            panel.alpha = 1
-            self.clvThumbnails.alpha = 0
-            self.view.layoutIfNeeded()
-        }
-        UIAccessibility.post(notification: .screenChanged, argument: panel)
     }
 
     private func closePanel(animated: Bool = true) {
-        guard let panel = activePanel else { return }
+        guard activePanel != nil else { return }
         activePanel = nil
         activeTool = nil
         activeApply = nil
         draftBackground = nil
         draftEdits = nil
-        NSLayoutConstraint.deactivate(panelConstraints)
-        panelConstraints = []
-        containerBottom.isActive = true
-        if animated {
-            UIView.animate(withDuration: 0.2, animations: {
-                panel.alpha = 0
-                self.clvThumbnails.alpha = 1
-                self.view.layoutIfNeeded()
-            }, completion: { _ in panel.removeFromSuperview() })
-        } else {
-            panel.removeFromSuperview()
-            clvThumbnails.alpha = 1
-        }
+        // Restores the tool bar and the normal canvas layout.
+        panelPresenter.dismiss(animated: animated)
         showCurrentItem(animated: true)
     }
 

@@ -131,7 +131,7 @@
                 <constraint firstItem="res-La-035" firstAttribute="top" secondItem="res-Ea-029" secondAttribute="bottom" constant="6" id="res-Na-037"/>
                 <constraint firstItem="res-La-035" firstAttribute="leading" secondItem="res-ba-001" secondAttribute="leading" constant="20" id="res-Pa-038"/>
                 <constraint firstItem="res-ba-001" firstAttribute="trailing" secondItem="res-La-035" secondAttribute="trailing" constant="20" id="res-Qa-039"/>
-                <constraint firstItem="res-ca-002" firstAttribute="bottom" secondItem="res-La-035" secondAttribute="bottom" constant="18" id="res-Ra-040"/>
+                <constraint firstItem="res-ba-001" firstAttribute="bottom" secondItem="res-La-035" secondAttribute="bottom" constant="18" id="res-Ra-040"/>
             </constraints>
             <connections>
                 <outlet property="btnCancelPanel" destination="res-ga-006" id="res-Sa-041"/>

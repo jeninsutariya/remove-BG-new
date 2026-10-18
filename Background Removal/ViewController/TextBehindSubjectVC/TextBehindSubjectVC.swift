@@ -98,7 +98,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private var isPreviewing = false
     private var activeTool: Tool?
     private var activePanel: TBPanelView?
-    private var panelConstraints: [NSLayoutConstraint] = []
+    /// Shared tool-panel presentation (hides the tool bar while a panel is open).
+    private lazy var panelPresenter = EditorPanelPresenter(rootView: view, toolbar: vwToolbar, canvas: vwCanvasArea,
+                                                           normalCanvasBottom: canvasBottom, followsKeyboard: true)
     private var panelSnapshot: (document: TextBehindDocument, undoCount: Int)?
     private var gestureStart: TextLayerModel?
     private var observers: [NSObjectProtocol] = []
@@ -559,7 +561,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         if activePanel != nil {
             // Switching tools keeps the current edit and replaces the panel.
             session.commit()
-            closePanel(revert: false, animated: false)
+            closePanel(revert: false, keepPresenter: true)
         }
         // Snapshot first: ✕ also undoes anything opening the tool created (e.g. a new text).
         panelSnapshot = (session.document, session.undoStack.count)
@@ -589,39 +591,15 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     }
 
     private func present(panel: TBPanelView) {
-        panel.translatesAutoresizingMaskIntoConstraints = false
-        // Below the tool bar in z-order: even while animating it never draws over the tool bar.
-        view.insertSubview(panel, belowSubview: vwToolbar)
-        let preferred = panel.heightAnchor.constraint(equalToConstant: panel.preferredHeight)
-        preferred.priority = .defaultHigh
-        let onToolbar = panel.bottomAnchor.constraint(equalTo: vwToolbar.topAnchor, constant: -8)
-        onToolbar.priority = UILayoutPriority(740)
-        panelConstraints = [
-            panel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
-            panel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
-            preferred,
-            panel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5),
-            panel.heightAnchor.constraint(greaterThanOrEqualToConstant: 160),
-            // Stays above the tool bar, and above the keyboard while typing.
-            panel.bottomAnchor.constraint(lessThanOrEqualTo: vwToolbar.topAnchor, constant: -8),
-            panel.bottomAnchor.constraint(lessThanOrEqualTo: view.keyboardLayoutGuide.topAnchor, constant: -8),
-            onToolbar,
-            vwCanvasArea.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
-        ]
-        canvasBottom.isActive = false
-        NSLayoutConstraint.activate(panelConstraints)
+        // Hides the tool bar and slides the panel up from the bottom (or replaces the open one).
+        panelPresenter.show(panel, preferredHeight: panel.preferredHeight)
         activePanel = panel
-        // Lay the panel out in its final place first, then fade it in (no sliding over the tool bar).
-        view.layoutIfNeeded()
-        panel.alpha = 0
-        UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut]) {
-            panel.alpha = 1
-        }
-        UIAccessibility.post(notification: .screenChanged, argument: panel)
     }
 
-    private func closePanel(revert: Bool, animated: Bool = true) {
-        guard let panel = activePanel else { return }
+    /// - Parameter keepPresenter: switching tools – the next panel replaces this one, so the
+    ///   tool bar stays hidden and nothing slides.
+    private func closePanel(revert: Bool, keepPresenter: Bool = false, animated: Bool = true) {
+        guard activePanel != nil else { return }
         view.endEditing(true)
         if revert, let snapshot = panelSnapshot {
             session.revert(to: snapshot.document, undoCount: snapshot.undoCount)
@@ -633,18 +611,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             isMaskPreview = false
             requestRender(final: true)
         }
-        NSLayoutConstraint.deactivate(panelConstraints)
-        panelConstraints = []
-        canvasBottom.isActive = true
-        if animated {
-            UIView.animate(withDuration: 0.2, animations: {
-                panel.alpha = 0
-                self.view.layoutIfNeeded()
-            }, completion: { _ in panel.removeFromSuperview() })
-        } else {
-            // Switching tools: the next panel takes its place in the same layout pass, so there
-            // is never a second panel on screen and the canvas doesn't resize twice.
-            panel.removeFromSuperview()
+        if !keepPresenter {
+            // Restores the tool bar and the normal canvas layout.
+            panelPresenter.dismiss(animated: animated)
         }
         clvTools.reloadData()
         updateOverlay()
@@ -807,7 +776,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         btnPreview.tintColor = isPreviewing ? UIColor(named: "AccentColor") : UIColor(named: "PrimaryText")
         if isPreviewing, activePanel != nil {
             session.commit()
-            closePanel(revert: false)
+            // Immediately, so the tool bar's hidden state below isn't overridden by an animation.
+            closePanel(revert: false, animated: false)
         }
         UIView.animate(withDuration: 0.2) {
             self.vwToolbar.alpha = self.isPreviewing ? 0 : 1

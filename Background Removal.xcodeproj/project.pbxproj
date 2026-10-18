@@ -120,6 +120,7 @@
 		C0DE00000000000000000077 /* TextSelectionOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000076 /* TextSelectionOverlayView.swift */; };
 		C0DE0000000000000000007A /* TextBehindSubjectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000079 /* TextBehindSubjectVC.swift */; };
 		C0DE0000000000000000007C /* TextBehindExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000007B /* TextBehindExportVC.swift */; };
+		C0DE0000000000000000007F /* EditorPanelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000007E /* EditorPanelPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -236,6 +237,7 @@
 		C0DE00000000000000000076 /* TextSelectionOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSelectionOverlayView.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000079 /* TextBehindSubjectVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBehindSubjectVC.swift; sourceTree = "<group>"; };
 		C0DE0000000000000000007B /* TextBehindExportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBehindExportVC.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000007E /* EditorPanelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorPanelPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -674,6 +676,7 @@
 		C0DE00000000000000000057 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				C0DE0000000000000000007E /* EditorPanelPresenter.swift */,
 				C0DE00000000000000000043 /* EditorToolPanel.swift */,
 				C0DE00000000000000000045 /* EditorToolClvCell.swift */,
 				C0DE00000000000000000047 /* EditorToolClvCell.xib */,
@@ -834,6 +837,7 @@
 		DE1D49393072B28300E35E44 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				C0DE0000000000000000007F /* EditorPanelPresenter.swift in Sources */,
 				C0DE0000000000000000005F /* TextBehindModels.swift in Sources */,
 				C0DE00000000000000000061 /* TextRenderingService.swift in Sources */,
 				C0DE00000000000000000063 /* BackgroundRenderingService.swift in Sources */,

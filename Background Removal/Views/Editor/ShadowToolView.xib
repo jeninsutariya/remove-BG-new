@@ -182,7 +182,7 @@
                 <constraint firstItem="sha-bb-058" firstAttribute="top" secondItem="sha-5a-052" secondAttribute="bottom" constant="6" id="sha-db-060"/>
                 <constraint firstItem="sha-bb-058" firstAttribute="leading" secondItem="sha-ba-001" secondAttribute="leading" constant="20" id="sha-eb-061"/>
                 <constraint firstItem="sha-ba-001" firstAttribute="trailing" secondItem="sha-bb-058" secondAttribute="trailing" constant="20" id="sha-fb-062"/>
-                <constraint firstItem="sha-ca-002" firstAttribute="bottom" secondItem="sha-bb-058" secondAttribute="bottom" constant="14" id="sha-gb-063"/>
+                <constraint firstItem="sha-ba-001" firstAttribute="bottom" secondItem="sha-bb-058" secondAttribute="bottom" constant="14" id="sha-gb-063"/>
             </constraints>
             <connections>
                 <outlet property="btnCancelPanel" destination="sha-ga-006" id="sha-hb-064"/>
