@@ -71,6 +71,8 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     private let loading = UIActivityIndicatorView(style: .large)
 
     private var lastPoint: CGPoint?
+    /// Hides the brush-size preview shortly after the slider stops moving.
+    private var hidePreviewWork: DispatchWorkItem?
     private var history: [Step] = []
     private var historyIndex = 0
     private var didEdit = false
@@ -164,6 +166,13 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     }
 
     private func setupCanvas() {
+        // The canvas area is a CheckerboardView, which turns user interaction off by default
+        // (it is normally decoration). Here it hosts the scroll view, so touches must pass
+        // through it – otherwise drawing and pinch-to-zoom never receive any touch.
+        vwCanvasArea.isUserInteractionEnabled = true
+        scrollView.isUserInteractionEnabled = true
+        scrollView.isMultipleTouchEnabled = true
+        vwHint.isUserInteractionEnabled = false   // the hint pill must not block strokes
         scrollView.delegate = self
         scrollView.minimumZoomScale = 1
         scrollView.maximumZoomScale = 8
@@ -349,6 +358,7 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         let inView = gesture.location(in: view)
         switch gesture.state {
         case .began:
+            hidePreviewWork?.cancel()
             strokeAborted = false
             lastPoint = imagePoint(inCanvas)
             paint(to: inCanvas)
@@ -542,6 +552,12 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
         lblBrushValue.text = "\(Int(sender.value.rounded()))"
         showBrush(at: CGPoint(x: view.bounds.midX, y: vwCanvasArea.frame.midY))
         loupe.isHidden = true
+        // Touch-up events from UISlider aren't reliable on every iOS version, so the preview
+        // also hides itself once the value stops changing.
+        hidePreviewWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.hideBrush() }
+        hidePreviewWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: work)
     }
 
     @IBAction func sliderSoftnessChanged(_ sender: UISlider) {
