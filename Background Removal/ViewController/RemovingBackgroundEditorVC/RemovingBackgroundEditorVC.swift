@@ -51,8 +51,11 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     // Tool sheet in progress (preview only until ✓)
     private var activePanel: EditorToolPanel?
-    private var panelBottom: NSLayoutConstraint?
-    private var containerToPanel: NSLayoutConstraint?
+    /// Constraints of the open tool panel (removed together when it closes).
+    private var panelConstraints: [NSLayoutConstraint] = []
+    private var activeTool: EditorTool?
+    /// Applies the open panel's draft (used by ✓ and when switching tools).
+    private var activeApply: (() -> Void)?
     private var draftBackground: BackgroundSelection?
     private var draftEdits: ItemEdits?
     private var didAutoOpenBackground = false
@@ -62,6 +65,9 @@ class RemovingBackgroundEditorVC: UIViewController {
     private var redoStacks: [UUID: [ItemSnapshot]] = [:]
 
     private var observers: [NSObjectProtocol] = []
+    /// Debounced Recents thumbnail update after edits.
+    private var thumbnailTask: Task<Void, Never>?
+    private var didRefreshThumbnailOnOpen = false
 
     // MARK: - Lifecycle
 
@@ -85,6 +91,23 @@ class RemovingBackgroundEditorVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         autoOpenBackgroundIfNeeded()
+        if !didRefreshThumbnailOnOpen {
+            // Also repairs projects saved before thumbnails showed the edited result.
+            didRefreshThumbnailOnOpen = true
+            scheduleThumbnail(delay: 0)
+        }
+    }
+
+    /// Keeps the Recents thumbnail in sync with the edited result (not after every UI event:
+    /// after saved changes, debounced).
+    private func scheduleThumbnail(delay: Double = 1.2) {
+        thumbnailTask?.cancel()
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        thumbnailTask = Task {
+            if delay > 0 { try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
+            guard !Task.isCancelled else { return }
+            await viewModel.refreshThumbnail()
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -156,7 +179,10 @@ class RemovingBackgroundEditorVC: UIViewController {
         observers.append(center.addObserver(forName: BackgroundRemovalViewModel.itemDidChangeNotification,
                                             object: viewModel, queue: .main) { [weak self] note in
             let id = note.userInfo?[BackgroundRemovalViewModel.itemIDKey] as? UUID
-            MainActor.assumeIsolated { self?.itemDidChange(id) }
+            MainActor.assumeIsolated {
+                self?.scheduleThumbnail()
+                self?.itemDidChange(id)
+            }
         })
     }
 
@@ -368,9 +394,15 @@ class RemovingBackgroundEditorVC: UIViewController {
     // MARK: - Tools
 
     private func openTool(_ tool: EditorTool) {
-        guard let item = currentItem, item.isCompleted, !isPanelOpen else {
-            if currentItem?.isCompleted != true { showToast(message: "Wait until the background is removed") }
+        guard let item = currentItem, item.isCompleted else {
+            showToast(message: "Wait until the background is removed")
             return
+        }
+        if isPanelOpen {
+            guard tool != activeTool else { return }
+            // Switching tools keeps the current edit, then replaces the panel.
+            activeApply?()
+            closePanel(animated: false)
         }
         switch tool {
         case .refine:
@@ -387,7 +419,7 @@ class RemovingBackgroundEditorVC: UIViewController {
             present(panel: panel, apply: { [weak self] in
                 guard let self, let selection = self.draftBackground else { return }
                 self.commit(background: selection)
-            })
+            }, tool: .background)
         case .shadow:
             let panel = EditorToolPanel.loadFromNib(ShadowToolView.self)
             panel.configure(item.edits.shadow)
@@ -401,7 +433,7 @@ class RemovingBackgroundEditorVC: UIViewController {
             present(panel: panel, apply: { [weak self] in
                 guard let self, let edits = self.draftEdits else { return }
                 self.commit(edits: edits)
-            })
+            }, tool: .shadow)
         case .resize:
             let panel = EditorToolPanel.loadFromNib(ResizeToolView.self)
             panel.configure(aspect: item.edits.aspect, subjectScale: item.edits.subjectScale)
@@ -416,62 +448,69 @@ class RemovingBackgroundEditorVC: UIViewController {
             present(panel: panel, apply: { [weak self] in
                 guard let self, let edits = self.draftEdits else { return }
                 self.commit(edits: edits)
-            })
+            }, tool: .resize)
         }
     }
 
-    /// Shows a tool sheet at the bottom; the canvas shrinks above it.
-    private func present(panel: EditorToolPanel, apply: @escaping () -> Void) {
+    /// Shows a tool panel in the editor area above the tool bar (the tool bar stays visible).
+    /// The panel never reaches the home-indicator area, so its height doesn't depend on
+    /// safe-area insets and stays the same while it is open.
+    private func present(panel: EditorToolPanel, apply: @escaping () -> Void, tool: EditorTool) {
         draftBackground = nil
         draftEdits = nil
         panel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(panel)
-        let bottom = panel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 400)
-        NSLayoutConstraint.activate([
-            panel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            panel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottom
-        ])
-        view.layoutIfNeeded()
-        panelBottom = bottom
-        activePanel = panel
+        panel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        panel.layer.cornerRadius = 28
+        view.insertSubview(panel, belowSubview: vwToolbar)
+        panelConstraints = [
+            panel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
+            panel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8),
+            panel.bottomAnchor.constraint(equalTo: vwToolbar.topAnchor, constant: -8),
+            panel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5),
+            vwCanvasContainer.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
+        ]
         containerBottom.isActive = false
-        let toPanel = vwCanvasContainer.bottomAnchor.constraint(equalTo: panel.topAnchor, constant: -8)
-        toPanel.isActive = true
-        containerToPanel = toPanel
+        NSLayoutConstraint.activate(panelConstraints)
+        activePanel = panel
+        activeTool = tool
+        activeApply = apply
 
-        panel.onCancel = { [weak self] in self?.closePanel() }
+        panel.onCancel = { [weak self] in self?.closePanel(animated: true) }
         panel.onApply = { [weak self] in
             apply()
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            self?.closePanel()
+            self?.closePanel(animated: true)
         }
-        bottom.constant = 0
         updateChrome()
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0) {
-            self.vwToolbar.alpha = 0
+        panel.alpha = 0
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut]) {
+            panel.alpha = 1
             self.clvThumbnails.alpha = 0
             self.view.layoutIfNeeded()
         }
         UIAccessibility.post(notification: .screenChanged, argument: panel)
     }
 
-    private func closePanel() {
+    private func closePanel(animated: Bool = true) {
         guard let panel = activePanel else { return }
         activePanel = nil
+        activeTool = nil
+        activeApply = nil
         draftBackground = nil
         draftEdits = nil
-        containerToPanel?.isActive = false
-        containerToPanel = nil
+        NSLayoutConstraint.deactivate(panelConstraints)
+        panelConstraints = []
         containerBottom.isActive = true
-        panelBottom?.constant = panel.bounds.height + 40
-        UIView.animate(withDuration: 0.25, animations: {
-            self.vwToolbar.alpha = 1
-            self.clvThumbnails.alpha = 1
-            self.view.layoutIfNeeded()
-        }, completion: { _ in
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: {
+                panel.alpha = 0
+                self.clvThumbnails.alpha = 1
+                self.view.layoutIfNeeded()
+            }, completion: { _ in panel.removeFromSuperview() })
+        } else {
             panel.removeFromSuperview()
-        })
+            clvThumbnails.alpha = 1
+        }
         showCurrentItem(animated: true)
     }
 
@@ -537,7 +576,13 @@ class RemovingBackgroundEditorVC: UIViewController {
         }
         // Processing stops when the user leaves; unfinished items stay "Waiting" in the saved project.
         viewModel.cancelProcessing()
-        viewModel.purgeUnusedFiles()
+        thumbnailTask?.cancel()
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        Task {
+            // Final thumbnail first, then remove files nothing references any more.
+            await viewModel.refreshThumbnail()
+            viewModel.purgeUnusedFiles()
+        }
         navigationController?.popViewController(animated: true)
     }
 
@@ -590,7 +635,9 @@ extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == clvTools {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EditorToolClvCell", for: indexPath) as! EditorToolClvCell
-            cell.setData(tool: tools[indexPath.item], enabled: currentItem?.isCompleted == true)
+            let tool = tools[indexPath.item]
+            cell.setData(title: tool.title, symbol: tool.symbol, enabled: currentItem?.isCompleted == true,
+                         selected: tool == activeTool)
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProcessedImageCell", for: indexPath) as! ProcessedImageCell

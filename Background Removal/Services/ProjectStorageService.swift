@@ -141,6 +141,7 @@ nonisolated final class ProjectStorageService: Sendable {
     /// (old foregrounds after Refine, backgrounds that were replaced).
     func purgeUnreferencedFiles(in project: BackgroundRemovalProject) {
         var keep: Set<String> = ["project.json"]
+        if let thumbnail = project.thumbnailFileName { keep.insert(thumbnail) }
         for item in project.items {
             keep.insert(item.originalFileName)
             if let name = item.foregroundFileName { keep.insert(name) }
@@ -170,6 +171,17 @@ nonisolated final class ProjectStorageService: Sendable {
         guard let cg = image.cgImage, let data = ImageUtilities.pngData(cg) else { throw ProjectStorageError.encodingFailed }
         // Unique per version so undo can return to an earlier (e.g. pre-refine) foreground.
         let name = "foreground_\(itemID.uuidString)_\(UUID().uuidString.prefix(8)).png"
+        try write(data, name: name, projectID: projectID)
+        return name
+    }
+
+    /// Stores the flattened Recents thumbnail (PNG, ≤ 600 px, keeps transparent areas).
+    func saveThumbnail(_ image: UIImage, projectID: UUID) throws -> String {
+        guard let cg = ImageUtilities.uprightCGImage(from: image, maxDimension: 600),
+              let data = ImageUtilities.pngData(cg) else {
+            throw ProjectStorageError.encodingFailed
+        }
+        let name = "thumbnail_\(UUID().uuidString.prefix(8)).png"
         try write(data, name: name, projectID: projectID)
         return name
     }

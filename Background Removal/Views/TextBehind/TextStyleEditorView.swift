@@ -182,11 +182,12 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
         }
         familyTable.dataSource = self
         familyTable.delegate = self
-        familyTable.rowHeight = 40
-        familyTable.backgroundColor = .clear
+        familyTable.rowHeight = TBFontCell.height
+        familyTable.backgroundColor = TBStyle.field
         familyTable.layer.cornerRadius = 12
-        familyTable.register(UITableViewCell.self, forCellReuseIdentifier: "family")
-        familyTable.heightAnchor.constraint(equalToConstant: 168).isActive = true
+        familyTable.separatorInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        familyTable.register(TBFontCell.self, forCellReuseIdentifier: TBFontCell.reuseIdentifier)
+        familyTable.heightAnchor.constraint(equalToConstant: TBFontCell.height * 4).isActive = true
         faceStrip.onSelect = { [weak self] index in
             guard let self, self.shownFaces.indices.contains(index) else { return }
             self.setFont(self.shownFaces[index].postScriptName)
@@ -347,7 +348,12 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
         shownFaces = family?.faces ?? []
         faceStrip.setTitles(shownFaces.map(\.styleName))
         if let index = shownFaces.firstIndex(where: { $0.postScriptName == layer.fontName }) { faceStrip.setSelected([index]) }
-        familyTable.reloadData()
+        // Update the visible rows' selection without reloading (keeps the scroll position).
+        for case let cell as TBFontCell in familyTable.visibleCells {
+            guard let indexPath = familyTable.indexPath(for: cell), filteredFamilies.indices.contains(indexPath.row) else { continue }
+            let family = filteredFamilies[indexPath.row]
+            cell.configure(family, selected: FontCatalog.family(containing: layer.fontName) == family)
+        }
 
         sizeRow.value = Float(layer.fontScale)
         rotationRow.value = Float(layer.rotation)
@@ -385,12 +391,14 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
 
     private func showTab(_ tab: Tab) {
         for (key, section) in sections { section.isHidden = key != tab || selected == nil }
-        if tab == .font { scrollFontListToSelection() }
     }
 
     @objc private func tabChanged() {
         endEditing(true)
-        showTab(Tab(rawValue: tabs.selectedSegmentIndex) ?? .edit)
+        let tab = Tab(rawValue: tabs.selectedSegmentIndex) ?? .edit
+        showTab(tab)
+        // Only when the Font tab is opened – never while the user scrolls and picks fonts.
+        if tab == .font { scrollFontListToSelection() }
     }
 
     // MARK: - Actions
@@ -482,19 +490,10 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == familyTable {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "family", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: TBFontCell.reuseIdentifier, for: indexPath) as! TBFontCell
             let family = filteredFamilies[indexPath.row]
-            var config = cell.defaultContentConfiguration()
-            config.text = family.name
-            config.textProperties.font = UIFont(name: family.defaultFace.postScriptName, size: 17) ?? TBStyle.font(16)
-            config.textProperties.color = TBStyle.text
-            config.secondaryText = family.faces.count > 1 ? "\(family.faces.count) styles" : nil
-            config.secondaryTextProperties.color = TBStyle.secondary
-            cell.contentConfiguration = config
             let current = selected.flatMap { FontCatalog.family(containing: $0.fontName) }
-            cell.accessoryType = current == family ? .checkmark : .none
-            cell.tintColor = TBStyle.accent
-            cell.backgroundColor = .clear
+            cell.configure(family, selected: current == family)
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "layer", for: indexPath) as! TBLayerCell
@@ -547,11 +546,70 @@ final class TextStyleEditorView: TBPanelView, UITextViewDelegate, UITableViewDat
     }
 }
 
-/// Row in the Layers list.
+/// Font family row: the family name drawn in its own font (scaled down to fit, never
+/// clipped), the number of styles and a selected checkmark.
+final class TBFontCell: UITableViewCell {
+    static let reuseIdentifier = "TBFontCell"
+    static let height: CGFloat = 50
+
+    private let previewLabel = UILabel()
+    private let detailLabel = TBStyle.label("", size: 12, weight: .regular, color: TBStyle.secondary)
+    private let checkView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        selectionStyle = .none
+        previewLabel.textColor = TBStyle.text
+        previewLabel.numberOfLines = 1
+        previewLabel.adjustsFontSizeToFitWidth = true
+        previewLabel.minimumScaleFactor = 0.5
+        previewLabel.baselineAdjustment = .alignCenters
+        previewLabel.lineBreakMode = .byTruncatingTail
+        detailLabel.textAlignment = .right
+        detailLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        detailLabel.setContentHuggingPriority(.required, for: .horizontal)
+        checkView.tintColor = TBStyle.accent
+        checkView.contentMode = .scaleAspectFit
+        [previewLabel, detailLabel, checkView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
+        NSLayoutConstraint.activate([
+            previewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            previewLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            previewLabel.heightAnchor.constraint(lessThanOrEqualTo: contentView.heightAnchor, constant: -6),
+            detailLabel.leadingAnchor.constraint(greaterThanOrEqualTo: previewLabel.trailingAnchor, constant: 8),
+            detailLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            checkView.leadingAnchor.constraint(equalTo: detailLabel.trailingAnchor, constant: 8),
+            checkView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            checkView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            checkView.widthAnchor.constraint(equalToConstant: 20),
+            checkView.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func configure(_ family: FontFamily, selected: Bool) {
+        // Fall back to the app font when a face can't be created.
+        let font = UIFont(name: family.defaultFace.postScriptName, size: 18) ?? TBStyle.font(16)
+        previewLabel.font = font
+        previewLabel.text = family.name
+        detailLabel.text = family.faces.count > 1 ? "\(family.faces.count) styles" : "1 style"
+        checkView.isHidden = !selected
+        contentView.backgroundColor = selected ? TBStyle.accent.withAlphaComponent(0.08) : .clear
+        accessibilityLabel = "\(family.name), \(detailLabel.text ?? "")"
+        accessibilityTraits = selected ? [.button, .selected] : .button
+    }
+}
+
+/// Row in the Layers list: a small preview of the text, its name, and fixed-size action icons.
 final class TBLayerCell: UITableViewCell {
     enum Action { case visibility, lock, placement, forward, backward, rename }
 
     var onAction: ((Action) -> Void)?
+    private let thumbnail = UIImageView()
     private let nameButton = UIButton(type: .system)
     private let eye = UIButton(type: .system)
     private let lock = UIButton(type: .system)
@@ -562,9 +620,16 @@ final class TBLayerCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
+        selectionStyle = .none
+        thumbnail.contentMode = .scaleAspectFit
+        thumbnail.backgroundColor = TBStyle.field
+        thumbnail.layer.cornerRadius = 8
+        thumbnail.clipsToBounds = true
         nameButton.titleLabel?.font = TBStyle.font(14, .semibold)
+        nameButton.titleLabel?.lineBreakMode = .byTruncatingTail
         nameButton.contentHorizontalAlignment = .leading
         nameButton.setTitleColor(TBStyle.text, for: .normal)
+        placement.titleLabel?.font = TBStyle.font(12, .semibold)
         let items: [(UIButton, Action, String)] = [
             (nameButton, .rename, "Rename"), (eye, .visibility, "Show or hide"), (lock, .lock, "Lock or unlock"),
             (placement, .placement, "Behind or in front of the subject"), (up, .forward, "Move forward"),
@@ -574,11 +639,22 @@ final class TBLayerCell: UITableViewCell {
             button.tintColor = TBStyle.text
             button.addAction(UIAction { [weak self] _ in self?.onAction?(action) }, for: .touchUpInside)
         }
-        up.setImage(UIImage(systemName: "chevron.up"), for: .normal)
-        down.setImage(UIImage(systemName: "chevron.down"), for: .normal)
-        placement.titleLabel?.font = TBStyle.font(12, .semibold)
-        let stack = TBStyle.hStack([nameButton, placement, eye, lock, up, down], spacing: 12)
+        setIcon(up, "chevron.up")
+        setIcon(down, "chevron.down")
+        // Icons have a fixed size so they can't grow with the image they show.
+        for button in [eye, lock, up, down] {
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        }
+        thumbnail.translatesAutoresizingMaskIntoConstraints = false
+        thumbnail.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        thumbnail.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        placement.setContentHuggingPriority(.required, for: .horizontal)
+        placement.setContentCompressionResistancePriority(.required, for: .horizontal)
         nameButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        nameButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        let stack = TBStyle.hStack([thumbnail, nameButton, placement, eye, lock, up, down], spacing: 6)
         stack.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stack)
         NSLayoutConstraint.activate([
@@ -590,13 +666,42 @@ final class TBLayerCell: UITableViewCell {
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
+    private func setIcon(_ button: UIButton, _ symbol: String) {
+        button.setImage(UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold)),
+                        for: .normal)
+    }
+
     func configure(_ layer: TextLayerModel, selected: Bool) {
         nameButton.setTitle(layer.name, for: .normal)
         nameButton.setTitleColor(selected ? TBStyle.accent : TBStyle.text, for: .normal)
-        eye.setImage(UIImage(systemName: layer.isHidden ? "eye.slash" : "eye"), for: .normal)
-        lock.setImage(UIImage(systemName: layer.isLocked ? "lock.fill" : "lock.open"), for: .normal)
+        setIcon(eye, layer.isHidden ? "eye.slash" : "eye")
+        setIcon(lock, layer.isLocked ? "lock.fill" : "lock.open")
         placement.setTitle(layer.isBehindSubject ? "Behind" : "Front", for: .normal)
+        thumbnail.image = TBLayerCell.preview(of: layer)
         contentView.backgroundColor = selected ? TBStyle.field : .clear
         contentView.layer.cornerRadius = 10
+    }
+
+    /// 34 pt preview of the layer: "Aa" in its font and fill colour.
+    static func preview(of layer: TextLayerModel) -> UIImage {
+        var preview = layer
+        preview.text = "Aa"
+        preview.capitalization = .none
+        preview.rotation = 0
+        preview.centerX = 0.5
+        preview.centerY = 0.5
+        preview.widthFraction = 1
+        preview.fontScale = 440
+        preview.isHidden = false
+        preview.opacity = max(layer.opacity, 0.3)
+        preview.shadow.isOn = false
+        let size = CGSize(width: 68, height: 68)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        return UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor(white: 0.55, alpha: 1).setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            TextRenderingService.draw(preview, in: context.cgContext, canvasSize: size)
+        }
     }
 }

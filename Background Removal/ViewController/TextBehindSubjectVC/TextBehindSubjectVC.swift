@@ -103,6 +103,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private var gestureStart: TextLayerModel?
     private var observers: [NSObjectProtocol] = []
     private var exportTask: Task<Void, Never>?
+    private var thumbnailTask: Task<Void, Never>?
 
     // MARK: - Lifecycle
 
@@ -174,6 +175,11 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             scrollView.trailingAnchor.constraint(equalTo: vwCanvasArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: vwCanvasArea.bottomAnchor)
         ])
+        // The canvas keeps a usable minimum height; tool panels shrink (and scroll) instead,
+        // e.g. while the keyboard is up.
+        let minimumHeight = vwCanvasArea.heightAnchor.constraint(greaterThanOrEqualToConstant: 140)
+        minimumHeight.priority = UILayoutPriority(999)
+        minimumHeight.isActive = true
         canvasView.clipsToBounds = true
         canvasView.layer.cornerRadius = 4
         checker.cellSize = 12
@@ -208,6 +214,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         session.onCommit = { [weak self] document in
             guard let self else { return }
             self.viewModel.setTextBehind(document, for: self.itemID)
+            self.scheduleThumbnail()
         }
         // Make sure a new project is saved with its starter text.
         if viewModel.item(itemID)?.textBehind == nil {
@@ -266,6 +273,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
             self.sourcesReady = true
             self.hideStatus()
+            // Also repairs projects saved before thumbnails showed the edited result.
+            self.scheduleThumbnail(delay: 0)
             self.updateZoomGesture()
             self.clvTools.reloadData()
             self.requestRender(final: true)
@@ -404,6 +413,11 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         let insetX = max((scrollView.bounds.width - scrollView.contentSize.width) / 2, 0)
         let insetY = max((scrollView.bounds.height - scrollView.contentSize.height) / 2, 0)
         scrollView.contentInset = UIEdgeInsets(top: insetY, left: insetX, bottom: insetY, right: insetX)
+        if scrollView.zoomScale == 1 {
+            // Changing the insets doesn't move the content: after the canvas area shrank and grew
+            // again (keyboard, panels) a stale offset left the photo scrolled out of view.
+            scrollView.contentOffset = CGPoint(x: -insetX, y: -insetY)
+        }
     }
 
     private func updateOverlay() {
@@ -542,9 +556,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         guard sourcesReady else { return }
         if activeTool == tool, activePanel != nil { return }
         if activePanel != nil {
-            // Switching tools keeps the current edit.
+            // Switching tools keeps the current edit and replaces the panel.
             session.commit()
-            closePanel(revert: false)
+            closePanel(revert: false, animated: false)
         }
         // Snapshot first: ✕ also undoes anything opening the tool created (e.g. a new text).
         panelSnapshot = (session.document, session.undoStack.count)
@@ -575,7 +589,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
 
     private func present(panel: TBPanelView) {
         panel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(panel)
+        // Below the tool bar in z-order: even while animating it never draws over the tool bar.
+        view.insertSubview(panel, belowSubview: vwToolbar)
         let preferred = panel.heightAnchor.constraint(equalToConstant: panel.preferredHeight)
         preferred.priority = .defaultHigh
         let onToolbar = panel.bottomAnchor.constraint(equalTo: vwToolbar.topAnchor, constant: -8)
@@ -595,17 +610,16 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         canvasBottom.isActive = false
         NSLayoutConstraint.activate(panelConstraints)
         activePanel = panel
+        // Lay the panel out in its final place first, then fade it in (no sliding over the tool bar).
+        view.layoutIfNeeded()
         panel.alpha = 0
-        panel.transform = CGAffineTransform(translationX: 0, y: 40)
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut]) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut]) {
             panel.alpha = 1
-            panel.transform = .identity
-            self.view.layoutIfNeeded()
         }
         UIAccessibility.post(notification: .screenChanged, argument: panel)
     }
 
-    private func closePanel(revert: Bool) {
+    private func closePanel(revert: Bool, animated: Bool = true) {
         guard let panel = activePanel else { return }
         view.endEditing(true)
         if revert, let snapshot = panelSnapshot {
@@ -621,10 +635,16 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         NSLayoutConstraint.deactivate(panelConstraints)
         panelConstraints = []
         canvasBottom.isActive = true
-        UIView.animate(withDuration: 0.2, animations: {
-            panel.alpha = 0
-            self.view.layoutIfNeeded()
-        }, completion: { _ in panel.removeFromSuperview() })
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: {
+                panel.alpha = 0
+                self.view.layoutIfNeeded()
+            }, completion: { _ in panel.removeFromSuperview() })
+        } else {
+            // Switching tools: the next panel takes its place in the same layout pass, so there
+            // is never a second panel on screen and the canvas doesn't resize twice.
+            panel.removeFromSuperview()
+        }
         clvTools.reloadData()
         updateOverlay()
         updateUndoButtons()
@@ -724,8 +744,49 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         if activePanel != nil { closePanel(revert: false) }
         viewModel.setTextBehind(session.document, for: itemID)
         viewModel.cancelProcessing()
-        viewModel.purgeUnusedFiles()
+        thumbnailTask?.cancel()
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        let render = thumbnailRender()
+        Task {
+            // Final thumbnail of the composition, then remove files nothing references any more.
+            if let image = await render?() { await viewModel.saveThumbnail(image) }
+            viewModel.purgeUnusedFiles()
+        }
         navigationController?.popViewController(animated: true)
+    }
+
+    // MARK: - Recents thumbnail
+
+    /// A closure rendering the current composition small (same renderer as preview/export).
+    private func thumbnailRender() -> (() async -> UIImage?)? {
+        guard sourcesReady, let original = previewOriginal else { return nil }
+        let document = session.document
+        let cutout = previewCutout
+        var background: UIImage?
+        if case .image(let selection, _) = document.background {
+            background = backgroundImages[backgroundKey(selection)]
+        }
+        let backgroundImage = background
+        return {
+            await Task.detached(priority: .utility) {
+                let size = TextBehindGeometry.outputSize(photo: original.size, canvas: document.canvas, maxDimension: 600)
+                let sources = TBRenderSources(original: original, cutout: cutout, backgroundImage: backgroundImage, mask: nil)
+                return TextBehindSubjectRenderer.render(document, sources: sources, size: size)
+            }.value
+        }
+    }
+
+    /// Updates the Recents thumbnail after saved changes (debounced, not on every UI event).
+    private func scheduleThumbnail(delay: Double = 1.2) {
+        thumbnailTask?.cancel()
+        thumbnailTask = Task { [weak self] in
+            if delay > 0 { try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
+            guard !Task.isCancelled, let self else { return }
+            _ = await self.ensureBackgroundImage(for: self.session.document.background)
+            guard !Task.isCancelled, let render = self.thumbnailRender() else { return }
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            if let image = await render() { await viewModel.saveThumbnail(image) }
+        }
     }
 
     @IBAction func btnUndo(_ sender: UIButton) {
@@ -771,11 +832,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
                 $0.jpegQuality = quality
             }
         }
-        if let sheet = export.sheetPresentationController {
-            sheet.detents = [.large()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(export, animated: true)
+        // Pushed like the other Export screen (same design and navigation).
+        navigationController?.pushViewController(export, animated: true)
     }
 
     @IBAction func btnRetry(_ sender: UIButton) {

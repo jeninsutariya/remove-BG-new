@@ -19,6 +19,9 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
     var exportSettings: ProjectExportSettings
     /// Flow that created the project (decides the editor tools).
     var mode: EditorMode
+    /// Small flattened preview of the edited result (Recents / Projects). Never replaces the
+    /// original or the editable state; regenerated when the composition changes.
+    var thumbnailFileName: String?
     var createdAt: Date
     var modifiedAt: Date
 
@@ -33,7 +36,7 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
     }
 
     nonisolated private enum CodingKeys: String, CodingKey {
-        case id, name, items, exportSettings, mode, createdAt, modifiedAt
+        case id, name, items, exportSettings, mode, thumbnailFileName, createdAt, modifiedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -43,6 +46,7 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
         items = try c.decode([BackgroundRemovalItem].self, forKey: .items)
         exportSettings = (try? c.decode(ProjectExportSettings.self, forKey: .exportSettings)) ?? ProjectExportSettings()
         mode = (try? c.decode(EditorMode.self, forKey: .mode)) ?? .removeBackground
+        thumbnailFileName = try? c.decodeIfPresent(String.self, forKey: .thumbnailFileName)
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
         modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()
     }

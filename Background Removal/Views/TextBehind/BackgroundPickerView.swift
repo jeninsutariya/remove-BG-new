@@ -165,11 +165,28 @@ final class BackgroundPickerView: TBPanelView, UICollectionViewDataSource, UICol
             infoLabel.text = nil
         }
         infoLabel.isHidden = infoLabel.text == nil
+        // Zoom / position stay in place (only enabled for Crop) so the panel's content height –
+        // and with it the scroll position – doesn't change while choosing images.
         let crop = currentPlacement?.mode == .crop
-        zoomRow.isHidden = !crop
-        positionXRow.isHidden = !crop
-        positionYRow.isHidden = !crop
-        imageCollection.reloadData()
+        for row in [zoomRow, positionXRow, positionYRow] {
+            row.isUserInteractionEnabled = crop
+            row.alpha = crop ? 1 : 0.4
+        }
+        updateVisibleImageSelection()
+    }
+
+    /// Updates the selected look of the visible image cells without reloading the collection
+    /// (keeps its scroll position and already-loaded thumbnails).
+    private func updateVisibleImageSelection() {
+        let list = entries
+        for indexPath in imageCollection.indexPathsForVisibleItems where list.indices.contains(indexPath.item) {
+            guard let cell = imageCollection.cellForItem(at: indexPath) as? BackgroundImageCell else { continue }
+            switch list[indexPath.item] {
+            case .add: cell.setSelectionState(false)
+            case .custom(let fileName): cell.setSelectionState(currentSelection == .customImage(fileName: fileName))
+            case .remote(let item): cell.setSelectionState(currentSelection == .remoteImage(id: item.id, url: item.image))
+            }
+        }
     }
 
     @objc private func tabChanged() {
@@ -222,7 +239,15 @@ final class BackgroundPickerView: TBPanelView, UICollectionViewDataSource, UICol
 
     /// Called by the editor after the user added a photo to the project.
     func addCustomImage(_ fileName: String) {
-        if !customFiles.contains(fileName) { customFiles.insert(fileName, at: 0) }
+        if !customFiles.contains(fileName) {
+            let countBefore = imageCollection.numberOfItems(inSection: 0)
+            customFiles.insert(fileName, at: 0)
+            if countBefore == entries.count - 1 {
+                imageCollection.insertItems(at: [IndexPath(item: 1, section: 0)])
+            } else {
+                imageCollection.reloadData()
+            }
+        }
         select(.customImage(fileName: fileName))
     }
 

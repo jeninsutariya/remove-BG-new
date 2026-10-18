@@ -38,6 +38,11 @@ class BackgroundImageCell: UICollectionViewCell {
         loadFailed = false
     }
 
+    /// Updates only the selected look (no image reload) – used while the list is scrolled.
+    func setSelectionState(_ selected: Bool) {
+        setSelectedBorder(selected)
+    }
+
     private func setSelectedBorder(_ selected: Bool) {
         vwContainer.layer.borderWidth = selected ? 3 : 1
         vwContainer.layer.borderColor = (selected ? UIColor(named: "AccentColor") : UIColor(named: "Border Color"))?.cgColor

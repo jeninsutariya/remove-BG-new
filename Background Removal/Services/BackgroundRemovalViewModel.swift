@@ -343,6 +343,31 @@ final class BackgroundRemovalViewModel {
         if let file = selection.customFileName { storage.deleteFileIfUnreferenced(file, in: project) }
     }
 
+    /// Saves a flattened preview of the edited result as the project's Recents thumbnail.
+    /// The previous thumbnail file is removed; originals and editable state are untouched.
+    func saveThumbnail(_ image: UIImage) async {
+        let projectID = project.id
+        let storage = self.storage
+        guard let name = try? await Task.detached(priority: .utility, operation: {
+            try storage.saveThumbnail(image, projectID: projectID)
+        }).value else { return }
+        let old = project.thumbnailFileName
+        project.thumbnailFileName = name
+        save()
+        if let old, old != name {
+            try? FileManager.default.removeItem(at: storage.fileURL(old, projectID: projectID))
+        }
+    }
+
+    /// Thumbnail for Remove / Change Background projects: the cover image with its background
+    /// and Shadow / Resize edits, rendered by the export compositor.
+    func refreshThumbnail() async {
+        guard let cover = project.completedItems.first,
+              let image = try? await compositePreview(for: cover.id, background: cover.background,
+                                                      edits: cover.edits, maxPixel: 600) else { return }
+        await saveThumbnail(image)
+    }
+
     func recordExport(quality: ExportQuality) {
         project.exportSettings.lastExportQuality = quality
         project.exportSettings.lastExportDate = Date()

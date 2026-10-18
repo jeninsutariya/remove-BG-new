@@ -76,7 +76,17 @@ class BackgroundToolView: EditorToolPanel {
 
     /// Called by the editor after a photo was added to the project.
     func addCustomFile(_ fileName: String) {
-        if !customFiles.contains(fileName) { customFiles.insert(fileName, at: 0) }
+        if !customFiles.contains(fileName) {
+            // Count with the old data first, so the insert below stays consistent.
+            let countBefore = clvPhotos.numberOfItems(inSection: 0)
+            customFiles.insert(fileName, at: 0)
+            if countBefore == photoEntries.count - 1 {
+                // Insert after the "Add Image" tile instead of reloading everything.
+                clvPhotos.insertItems(at: [IndexPath(item: 1, section: 0)])
+            } else {
+                clvPhotos.reloadData()
+            }
+        }
         select(.customImage(fileName: fileName))
     }
 
@@ -88,9 +98,27 @@ class BackgroundToolView: EditorToolPanel {
 
     private func select(_ newSelection: BackgroundSelection) {
         selection = newSelection
-        clvColors.reloadData()
-        clvPhotos.reloadData()
+        updateVisibleSelection()
         onChange?(newSelection)
+    }
+
+    /// Refreshes the selected state of the visible cells without reloading the collections,
+    /// so the scroll position and loaded thumbnails stay as they are.
+    private func updateVisibleSelection() {
+        for indexPath in clvColors.indexPathsForVisibleItems {
+            guard let cell = clvColors.cellForItem(at: indexPath) as? BackgroundColorCell else { continue }
+            let option = BackgroundColorOption.allCases[indexPath.item]
+            cell.configure(option: option, customColor: customColor, selected: isSelected(option))
+        }
+        let entries = photoEntries
+        for indexPath in clvPhotos.indexPathsForVisibleItems where entries.indices.contains(indexPath.item) {
+            guard let cell = clvPhotos.cellForItem(at: indexPath) as? BackgroundImageCell else { continue }
+            switch entries[indexPath.item] {
+            case .add: cell.setSelectionState(false)
+            case .custom(let fileName): cell.setSelectionState(selection == .customImage(fileName: fileName))
+            case .remote(let item): cell.setSelectionState(selection == .remoteImage(id: item.id, url: item.image))
+            }
+        }
     }
 
     private func updateTab() {

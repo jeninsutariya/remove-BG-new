@@ -26,7 +26,7 @@ class RecentsClvCell: UICollectionViewCell {
         imgRecent.contentMode = .scaleAspectFill
     }
 
-    /// Shows the project's cutout (or original while it is still processing).
+    /// Shows the project's edited result (its saved thumbnail).
     func setData(project: BackgroundRemovalProject) {
         representedProjectID = project.id
         isAccessibilityElement = true
@@ -34,14 +34,19 @@ class RecentsClvCell: UICollectionViewCell {
         accessibilityTraits = .button
         guard let item = project.coverItem else { return }
         let projectID = project.id
-        let fileName = item.foregroundFileName ?? item.originalFileName
+        // The edited result (thumbnail) first; older projects fall back to the cutout / original
+        // until their editor is opened once and the thumbnail is generated.
+        let thumbnail = project.thumbnailFileName
+        let fileName = thumbnail ?? item.foregroundFileName ?? item.originalFileName
+        let fill = thumbnail == nil && item.foregroundFileName == nil
+        imgRecent.image = nil
         Task { [weak self] in
             let image = await Task.detached(priority: .utility) {
                 ProjectStorageService.shared.loadImage(fileName, projectID: projectID, maxPixel: 600)
             }.value
-            guard let self, self.representedProjectID == projectID, let image else { return }
-            self.imgRecent.contentMode = item.foregroundFileName == nil ? .scaleAspectFill : .scaleAspectFit
-            self.imgRecent.image = image
+            guard let self, self.representedProjectID == projectID else { return }
+            self.imgRecent.contentMode = fill ? .scaleAspectFill : .scaleAspectFit
+            self.imgRecent.image = image ?? UIImage(named: "Remove BG Image")
         }
     }
 }
