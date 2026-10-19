@@ -203,7 +203,7 @@ extension BackgroundToolView: UICollectionViewDataSource, UICollectionViewDelega
             let option = BackgroundColorOption.allCases[indexPath.item]
             switch option {
             case .transparent:
-                select(.none)
+                select(BackgroundSelection.none)
             case .custom:
                 onPickColor?(customColor)
             default:
