@@ -114,7 +114,10 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        fitCanvas()
+        // The card size is computed from the container's current size (never from the card's
+        // previous size). Apply a changed size right away so it follows panel open/close
+        // animations instead of jumping a frame later.
+        if fitCanvas() { view.layoutIfNeeded() }
     }
 
     deinit {
@@ -331,17 +334,19 @@ class RemovingBackgroundEditorVC: UIViewController {
     }
 
     /// Sizes the canvas card to the rendered image's aspect ratio inside the available area.
-    private func fitCanvas() {
+    /// Returns true when the card size changed.
+    @discardableResult
+    private func fitCanvas() -> Bool {
         let bounds = vwCanvasContainer.bounds.insetBy(dx: 24, dy: 8)
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard bounds.width > 0, bounds.height > 0 else { return false }
         let size = previewSize ?? CGSize(width: 3, height: 4)
         let scale = min(bounds.width / max(size.width, 1), bounds.height / max(size.height, 1))
         let width = floor(size.width * scale)
         let height = floor(size.height * scale)
-        if canvasWidth.constant != width || canvasHeight.constant != height {
-            canvasWidth.constant = width
-            canvasHeight.constant = height
-        }
+        guard canvasWidth.constant != width || canvasHeight.constant != height else { return false }
+        canvasWidth.constant = width
+        canvasHeight.constant = height
+        return true
     }
 
     // MARK: - Undo / redo

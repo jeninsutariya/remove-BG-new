@@ -185,7 +185,7 @@
                 <constraint firstItem="sha-Ma-036" firstAttribute="leading" secondItem="sha-ba-001" secondAttribute="leading" constant="20" id="4XM-W0-Cno"/>
                 <constraint firstItem="sha-ya-023" firstAttribute="centerY" secondItem="sha-za-024" secondAttribute="centerY" id="6jO-zc-TtN"/>
                 <constraint firstAttribute="trailing" secondItem="sha-za-024" secondAttribute="trailing" constant="20" id="8Ol-3V-f0n"/>
-                <constraint firstItem="sha-ca-002" firstAttribute="bottom" secondItem="sha-bb-058" secondAttribute="bottom" constant="10" id="9fB-Yb-Xrb"/>
+                <constraint firstAttribute="bottom" secondItem="sha-bb-058" secondAttribute="bottom" constant="10" id="9fB-Yb-Xrb"/>
                 <constraint firstAttribute="trailing" secondItem="sha-Ma-036" secondAttribute="trailing" constant="20" id="Aav-po-XcT"/>
                 <constraint firstItem="sha-ya-023" firstAttribute="top" secondItem="sha-ga-006" secondAttribute="bottom" constant="10" id="DBe-Kg-gX7"/>
                 <constraint firstItem="sha-ya-023" firstAttribute="leading" secondItem="sha-ba-001" secondAttribute="leading" constant="20" id="EKu-lx-9Nf"/>
