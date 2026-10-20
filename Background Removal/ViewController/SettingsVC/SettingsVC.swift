@@ -201,7 +201,8 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             if PaywallManager.shared.isPremium {
                 showToast(message: "Full-quality export is active")
             } else {
-                PaywallManager.shared.presentPaywall(from: self)
+                let vc = ProUpgradeVC.fatchInstance()
+                self.present(vc, animated: true, completion: nil)
             }
         case .restorePurchases:
             // Shows a loader and the result; premium follows the verified receipt.

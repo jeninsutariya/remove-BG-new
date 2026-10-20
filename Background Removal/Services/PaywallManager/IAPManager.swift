@@ -11,8 +11,8 @@ import StoreKit
 import SwiftyStoreKit
 
 class PurchaseKeys {
-    static var oneMonth = "com.removebg.erase.pro.weekly"
-    static var sixMonth = "com.removebg.erase.pro.monthly"
+    static var oneWeekly = "com.removebg.erase.pro.weekly"
+    static var oneMonth = "com.removebg.erase.pro.monthly"
     static var oneYear = "com.removebg.erase.pro.yearly"
     static var sharedSecret = "3991cde7b71a4c5186a5637b1231af2f"
     #if DEBUG
@@ -45,7 +45,7 @@ class PurchaseConnector {
     
     static let shared = PurchaseConnector()
     
-    var productIds: Set<String> = [PurchaseKeys.oneMonth,PurchaseKeys.sixMonth, PurchaseKeys.oneYear]
+    var productIds: Set<String> = [PurchaseKeys.oneWeekly,PurchaseKeys.oneMonth, PurchaseKeys.oneYear]
     var retrievedProducts = [SKProduct]()
 
     private static let expiryDateKey = "premiumVerifiedExpiryDate"

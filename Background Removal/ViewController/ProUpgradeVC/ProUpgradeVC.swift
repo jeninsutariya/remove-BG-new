@@ -28,7 +28,8 @@ class ProUpgradeVC: UIViewController {
     /// The plans shown on this screen (row order = table order).
     private let plans: [(title: String, period: String, productId: String)] = [
         ("Yearly", "per year", PurchaseKeys.oneYear),
-        ("Monthly", "per month", PurchaseKeys.sixMonth)
+        ("Monthly", "per month", PurchaseKeys.oneMonth),
+        ("Weekly", "per week", PurchaseKeys.oneWeekly),
     ]
     private enum ProductsState { case loading, loaded, failed }
     private var productsState: ProductsState = .loading
@@ -182,7 +183,7 @@ extension ProUpgradeVC: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell =  tableView.dequeueReusableCell(withIdentifier: "ProUpgradeTVC", for: indexPath) as! ProUpgradeTVC
         cell.setSata(isSelected: self.selectedIndex == indexPath.row)
-        cell.veBestValue.isHidden = indexPath.row == 1
+        cell.veBestValue.isHidden = indexPath.row != 0
         let plan = plans[indexPath.row]
         cell.lblTitle.text = plan.title
         // Only the App Store's localized price is shown (never a hard-coded one).

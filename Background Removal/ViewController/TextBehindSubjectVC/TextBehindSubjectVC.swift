@@ -571,17 +571,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private func openTool(_ tool: Tool) {
         guard sourcesReady else { return }
         if activeTool == tool, activePanel != nil { return }
-        // Text edits are counted when applied; with no free use left, show the paywall
-        // before any typing (nothing is counted here).
-        if tool == .text, !PaywallManager.shared.canUse(.textBehindSubject) {
-            PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
-                if unlocked { self?.openTool(.text) }
-            }
-            return
-        }
         if activePanel != nil {
             // Switching tools keeps the current edit and replaces the panel.
-            guard commitOpenPanel(retry: { [weak self] in self?.openTool(tool) }) else { return }
+            session.commit()
             closePanel(revert: false, keepPresenter: true)
         }
         // Snapshot first: ✕ also undoes anything opening the tool created (e.g. a new text).
@@ -601,38 +593,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         case .resize:
             panel = CanvasResizeView(host: self, photoSize: fullPhotoSize)
         }
-        panel.onApply = { [weak self] in self?.applyActivePanel() }
+        panel.onApply = { [weak self] in
+            self?.session.commit()
+            self?.closePanel(revert: false)
+        }
         panel.onCancel = { [weak self] in self?.closePanel(revert: true) }
         present(panel: panel)
         activeTool = tool
         clvTools.reloadData()
-    }
-
-    /// ✓ on the open panel.
-    private func applyActivePanel() {
-        guard commitOpenPanel(retry: { [weak self] in self?.applyActivePanel() }) else { return }
-        closePanel(revert: false)
-    }
-
-    /// Commits the open panel's edit. Leaving the Text tool with changed texts is one Text Behind
-    /// Subject use; when today's free uses are gone the paywall is shown and the panel stays
-    /// open with the edit (✕ still reverts it).
-    /// - Returns: true when committed; false when blocked – `retry` runs after a verified purchase.
-    private func commitOpenPanel(retry: @escaping () -> Void) -> Bool {
-        session.commit()
-        guard activeTool == .text, let snapshot = panelSnapshot,
-              snapshot.document.texts != session.document.texts else { return true }
-        guard PaywallManager.shared.canUse(.textBehindSubject) else {
-            let panel = activePanel
-            PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
-                guard unlocked, let self, self.activePanel === panel else { return }
-                retry()
-            }
-            return false
-        }
-        PaywallManager.shared.recordUse(.textBehindSubject)
-        viewModel.markUsageCounted([itemID])
-        return true
     }
 
     private func present(panel: TBPanelView) {
@@ -755,12 +723,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     // MARK: - Actions
 
     @IBAction func btnBack(_ sender: UIButton) {
-        if activePanel != nil {
-            guard commitOpenPanel(retry: { [weak self] in self?.btnBack(sender) }) else { return }
-            closePanel(revert: false)
-        } else {
-            session.commit()
-        }
+        session.commit()
+        if activePanel != nil { closePanel(revert: false) }
         viewModel.setTextBehind(session.document, for: itemID)
         viewModel.cancelProcessing()
         thumbnailTask?.cancel()
@@ -820,14 +784,12 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     }
 
     @IBAction func btnPreview(_ sender: UIButton) {
-        if !isPreviewing, activePanel != nil {
-            guard commitOpenPanel(retry: { [weak self] in self?.btnPreview(sender) }) else { return }
-        }
         isPreviewing.toggle()
         btnPreview.setSymbol(isPreviewing ? "eye.fill" : "eye", size: 18)
         btnPreview.tintColor = isPreviewing ? UIColor(named: "AccentColor") : UIColor(named: "PrimaryText")
         if isPreviewing, activePanel != nil {
-            // Committed above. Immediately, so the tool bar's hidden state below isn't overridden by an animation.
+            session.commit()
+            // Immediately, so the tool bar's hidden state below isn't overridden by an animation.
             closePanel(revert: false, animated: false)
         }
         UIView.animate(withDuration: 0.2) {
@@ -840,12 +802,8 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
 
     @IBAction func btnExport(_ sender: UIButton) {
         guard sourcesReady else { return }
-        if activePanel != nil {
-            guard commitOpenPanel(retry: { [weak self] in self?.btnExport(sender) }) else { return }
-            closePanel(revert: false)
-        } else {
-            session.commit()
-        }
+        session.commit()
+        if activePanel != nil { closePanel(revert: false) }
         viewModel.setTextBehind(session.document, for: itemID)
         let export = TextBehindExportVC()
         export.viewModel = viewModel
@@ -936,7 +894,8 @@ extension TextBehindSubjectVC: UICollectionViewDataSource, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let tool = Tool.allCases[indexPath.item]
         if tool == activeTool {
-            applyActivePanel()
+            session.commit()
+            closePanel(revert: false)
         } else {
             openTool(tool)
         }

@@ -205,7 +205,7 @@ class ExportVC: UIViewController {
         } else {
             lblNote.text = effective.isTransparent ? "PNG keeps the transparent background." : "PNG keeps full quality."
         }
-        let premium = PaywallManager.shared.isPremium
+        let premium = UserDefaults.isPremiumUser
         vwProBadge.isHidden = premium
         imgHDChevron.isHidden = premium
         lblHDSubtitle.text = premium ? "Full resolution is on" :
@@ -296,7 +296,7 @@ class ExportVC: UIViewController {
     }
 
     @IBAction func btnHD(_ sender: UIButton) {
-        guard !PaywallManager.shared.isPremium else { return }
+        guard !UserDefaults.isPremiumUser else { return }
         let vc = ProUpgradeVC.fatchInstance()
         present(vc, animated: true)
     }
@@ -304,13 +304,6 @@ class ExportVC: UIViewController {
     @IBAction func btnSave(_ sender: UIButton) {
         let items = exportItems
         guard exportTask == nil, !items.isEmpty, !ImageExportService.shared.isBusy else { return }
-        PaywallManager.shared.requestExportAccess(for: items.map(\.id), in: viewModel, from: self) { [weak self] allowed in
-            if allowed { self?.save(items, sender: sender) }
-        }
-    }
-
-    private func save(_ items: [BackgroundRemovalItem], sender: UIButton) {
-        guard exportTask == nil, !ImageExportService.shared.isBusy else { return }
         let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Saving \(items.count) images…" : "Saving…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         let options = self.options
@@ -322,7 +315,6 @@ class ExportVC: UIViewController {
                 }
                 hud.dismiss()
                 if count > 0 {
-                    PaywallManager.shared.recordExport(of: items.map(\.id), in: viewModel)
                     UINotificationFeedbackGenerator().notificationOccurred(.success)
                     showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos")
                 }
@@ -342,13 +334,6 @@ class ExportVC: UIViewController {
     @IBAction func btnShare(_ sender: UIButton) {
         let items = exportItems
         guard exportTask == nil, !items.isEmpty else { return }
-        PaywallManager.shared.requestExportAccess(for: items.map(\.id), in: viewModel, from: self) { [weak self] allowed in
-            if allowed { self?.share(items, sender: sender) }
-        }
-    }
-
-    private func share(_ items: [BackgroundRemovalItem], sender: UIButton) {
-        guard exportTask == nil else { return }
         let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         let options = self.options
@@ -375,7 +360,6 @@ class ExportVC: UIViewController {
                 }
                 hud.dismiss()
                 viewModel.recordExport(quality: quality)
-                PaywallManager.shared.recordExport(of: items.map(\.id), in: viewModel)
                 self?.share(fileURL, sourceView: sender)
             } catch is CancellationError {
                 hud.dismiss()

@@ -3,4 +3,52 @@
    uuid = "1EF2196E-3140-4D74-AE1A-2F651980425F"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B5167760-0DFB-4FBB-B2EF-C3BCC3108B47"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Background Removal/ViewController/ExportVC/ExportVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B5167760-0DFB-4FBB-B2EF-C3BCC3108B47 - bb04fc1ec7739ce"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Background_Removal.ExportVC.viewDidLoad() -&gt; ()"
+                  moduleName = "Background Removal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeninsutariya/Documents/Jenin/Git%20Xcode/remove-BG-new/Background%20Removal/ViewController/ExportVC/ExportVC.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "105"
+                  endingLineNumber = "105">
+               </Location>
+               <Location
+                  uuid = "B5167760-0DFB-4FBB-B2EF-C3BCC3108B47 - bb04fc1ec7739ce"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Background_Removal.ExportVC.viewDidLoad() -&gt; ()"
+                  moduleName = "Background Removal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeninsutariya/Documents/Jenin/Git%20Xcode/remove-BG-new/Background%20Removal/ViewController/ExportVC/ExportVC.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "105"
+                  endingLineNumber = "105">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

@@ -35,8 +35,6 @@ class RemovingBackgroundVC: UIViewController {
     }
     /// What opens after processing.
     var destination: Destination = .editor
-    /// Started from Bulk Background Removal (counts against the bulk daily limit).
-    var isBatch = false
 
     // MARK: - Views
 
@@ -191,8 +189,7 @@ class RemovingBackgroundVC: UIViewController {
                 case .textBehind?: mode = .textBehind
                 default: mode = .removeBackground
                 }
-                let model = try await BackgroundRemovalViewModel.create(from: photos, mode: mode,
-                                                                        isBatch: self?.isBatch ?? false)
+                let model = try await BackgroundRemovalViewModel.create(from: photos, mode: mode)
                 guard let self else { return }
                 self.viewModel = model
                 self.observeViewModel()
@@ -357,12 +354,10 @@ class RemovingBackgroundVC: UIViewController {
             presentErrorAlert(title: "Couldn't remove the background",
                               message: item.errorMessage ?? "Please try again.",
                               retryTitle: "Try Again") { [weak self] in
-                self?.whenRemovalAllowed {
-                    guard let self else { return }
-                    self.isRevealing = false
-                    self.startScanning()
-                    viewModel.retry(item.id)
-                }
+                guard let self else { return }
+                self.isRevealing = false
+                self.startScanning()
+                viewModel.retry(item.id)
             }
             return
         }
@@ -392,35 +387,16 @@ class RemovingBackgroundVC: UIViewController {
             presentErrorAlert(title: "No backgrounds removed",
                               message: viewModel.items.first?.errorMessage ?? "None of the photos could be processed.",
                               retryTitle: "Try Again") { [weak self] in
-                self?.whenRemovalAllowed {
-                    guard let self else { return }
-                    viewModel.startProcessing(viewModel.items.map(\.id))
-                    self.displayIndex = 0
-                    self.showItem(at: 0)
-                }
+                guard let self else { return }
+                viewModel.startProcessing(viewModel.items.map(\.id))
+                self.displayIndex = 0
+                self.showItem(at: 0)
             }
             return
         }
         didFinish = true
         lblStatus.text = "Background removed"
         openEditor()
-    }
-
-    /// Runs `action` now, or – when today's free removals are used up – after a verified
-    /// purchase on the paywall. Closing the paywall without one leaves this screen.
-    private func whenRemovalAllowed(_ action: @escaping () -> Void) {
-        guard let feature = viewModel?.usageFeature, !PaywallManager.shared.canUse(feature) else {
-            action()
-            return
-        }
-        PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
-            if unlocked {
-                action()
-            } else {
-                self?.viewModel?.cancelProcessing()
-                self?.navigationController?.popViewController(animated: true)
-            }
-        }
     }
 
     // MARK: - Update Image Size
