@@ -22,7 +22,20 @@ class OnboardingForthVC: UIViewController {
     @IBAction func btnContinue(_ sender: UIButton) {
         UserDefaults.isUserFistTime = 1
         let vc = MainTabVC.fatchInstance()
-        self.navigationController?.pushViewController(vc, animated: true)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.isNavigationBarHidden = true
+
+        if let window = UIApplication.shared.currentWindow {
+            let transition = CATransition()
+            transition.duration = 0.35
+            transition.type = .push
+            transition.subtype = .fromRight
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+            window.layer.add(transition, forKey: kCATransition)
+            window.rootViewController = nav
+            window.makeKeyAndVisible()
+        }
     }
     func bannerAd(){
         if UserDefaults.isPremiumUser {

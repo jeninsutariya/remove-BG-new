@@ -64,10 +64,36 @@ class SplashVC: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 if UserDefaults.isUserFistTime == 1{
                     let vc = MainTabVC.fatchInstance()
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    let nav = UINavigationController(rootViewController: vc)
+                    nav.isNavigationBarHidden = true
+
+                    if let window = UIApplication.shared.currentWindow {
+                        let transition = CATransition()
+                        transition.duration = 0.35
+                        transition.type = .push
+                        transition.subtype = .fromRight
+                        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+                        window.layer.add(transition, forKey: kCATransition)
+                        window.rootViewController = nav
+                        window.makeKeyAndVisible()
+                    }
                 }else{
                     let vc = OnboardingFastVC.fatchInstance()
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    let nav = UINavigationController(rootViewController: vc)
+                    nav.isNavigationBarHidden = true
+
+                    if let window = UIApplication.shared.currentWindow {
+                        let transition = CATransition()
+                        transition.duration = 0.35
+                        transition.type = .push
+                        transition.subtype = .fromRight
+                        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+                        window.layer.add(transition, forKey: kCATransition)
+                        window.rootViewController = nav
+                        window.makeKeyAndVisible()
+                    }
                 }
                
             }
@@ -97,6 +123,7 @@ class SplashVC: UIViewController {
 }
 extension SplashVC:  AppOpenAdManagerDelegate {
     func appOpenAdManagerAdDidComplete(_ appOpenAdManager: AppOpenAdManager) {
+        print("is App Open Ad is completed")
         startMainScreen()
     }
 }
