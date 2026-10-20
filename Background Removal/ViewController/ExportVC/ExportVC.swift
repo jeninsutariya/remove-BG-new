@@ -36,7 +36,22 @@ class ExportVC: UIViewController {
     /// Set by Text Behind Subject.
     var textBehind: TextBehindExport?
 
+    /// Builds the Export screen and pushes it. Every feature opens it through here;
+    /// pass `textBehind` only from Text Behind Subject.
+    static func push(from navigationController: UINavigationController?,
+                     viewModel: BackgroundRemovalViewModel,
+                     itemID: UUID?,
+                     textBehind: TextBehindExport? = nil) {
+        let vc = ExportVC()
+        vc.viewModel = viewModel
+        vc.itemID = itemID
+        vc.textBehind = textBehind
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     // MARK: - Options
+    
+    var modelNameKey: String?
 
     private enum SizeOption: CaseIterable {
         case original, large, medium, small
@@ -130,6 +145,7 @@ class ExportVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "Background") ?? .systemBackground
+        printEntryFeature()
         if let textBehind {
             format = textBehind.document.exportFormat
             qualityRow.value = Float(textBehind.document.jpegQuality * 100)
@@ -145,6 +161,22 @@ class ExportVC: UIViewController {
             MainActor.assumeIsolated { self?.refresh() }
         }
         refresh()
+    }
+
+    /// Logs which feature opened the Export screen.
+    private func printEntryFeature() {
+        let feature: String
+        if textBehind != nil {
+            feature = "TextBehind"
+        } else {
+            switch viewModel.project.mode {
+            case .changeBackground: feature = "ChangeBG"
+            case .textBehind: feature = "TextBehind"
+            case .removeBackground: feature = viewModel.project.items.count > 1 ? "BulkRemove" : "RemoveBG"
+            }
+        }
+        print("ExportVC opened from: \(feature)")
+        self.modelNameKey = feature
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -613,89 +645,93 @@ class ExportVC: UIViewController {
     }
 
     private func save() {
-        let items = exportItems
-        guard task == nil, !ImageExportService.shared.isBusy, isTextBehind || !items.isEmpty else { return }
-        setBusy(true)
-        let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
-                                    (items.count > 1 ? "Saving \(items.count) images…" : "Saving…"))
-        let viewModel: BackgroundRemovalViewModel = self.viewModel
-        let options = self.options
-        task = Task { [weak self] in
-            defer {
-                self?.task = nil
-                self?.setBusy(false)
-            }
-            do {
-                guard let self else { return }
-                let count: Int
-                if self.isTextBehind {
-                    let output = try await self.renderTextBehind()
-                    hud.update(progress: 0.7, message: "Saving to Photos…")
-                    try await ImageExportService.shared.savePhotoData(output.data, fileName: output.fileName)
-                    viewModel.recordExport(quality: self.quality)
-                    count = 1
-                } else {
-                    count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel,
-                                                                             options: options) { value in
-                        hud.update(progress: value)
+        if PaywallManager.shared.shouldAllowAction(from: self, key: self.modelNameKey ?? "RemoveBG"){
+            let items = exportItems
+            guard task == nil, !ImageExportService.shared.isBusy, isTextBehind || !items.isEmpty else { return }
+            setBusy(true)
+            let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
+                                        (items.count > 1 ? "Saving \(items.count) images…" : "Saving…"))
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            let options = self.options
+            task = Task { [weak self] in
+                defer {
+                    self?.task = nil
+                    self?.setBusy(false)
+                }
+                do {
+                    guard let self else { return }
+                    let count: Int
+                    if self.isTextBehind {
+                        let output = try await self.renderTextBehind()
+                        hud.update(progress: 0.7, message: "Saving to Photos…")
+                        try await ImageExportService.shared.savePhotoData(output.data, fileName: output.fileName)
+                        viewModel.recordExport(quality: self.quality)
+                        count = 1
+                    } else {
+                        count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel,
+                                                                                 options: options) { value in
+                            hud.update(progress: value)
+                        }
                     }
+                    hud.dismiss()
+                    if count > 0 {
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                        showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos")
+                    }
+                } catch ImageExportError.photosAccessDenied {
+                    hud.dismiss()
+                    self?.showPhotosSettingsAlert(message: "Allow \"Add Photos Only\" access in Settings, or use Share › Save Image / Save to Files instead.")
+                } catch is CancellationError {
+                    hud.dismiss()
+                } catch {
+                    hud.dismiss()
+                    self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
+                                            retry: { self?.save() })
                 }
-                hud.dismiss()
-                if count > 0 {
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
-                    showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos")
-                }
-            } catch ImageExportError.photosAccessDenied {
-                hud.dismiss()
-                self?.showPhotosSettingsAlert(message: "Allow \"Add Photos Only\" access in Settings, or use Share › Save Image / Save to Files instead.")
-            } catch is CancellationError {
-                hud.dismiss()
-            } catch {
-                hud.dismiss()
-                self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
-                                        retry: { self?.save() })
             }
         }
     }
 
     private func share() {
-        let items = exportItems
-        guard task == nil, isTextBehind || !items.isEmpty else { return }
-        setBusy(true)
-        let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
-                                    (items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…"))
-        let viewModel: BackgroundRemovalViewModel = self.viewModel
-        let quality = self.quality
-        let zip = exportAll && !isTextBehind
-        task = Task { [weak self] in
-            defer {
-                self?.task = nil
-                self?.setBusy(false)
-            }
-            do {
-                guard let self else { return }
-                let files = try await self.renderFiles { value in hud.update(progress: value * 0.9) }
-                let url: URL
-                if !zip, let file = files.first {
-                    let name = file.name
-                    let data = file.data
-                    url = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
-                } else {
-                    url = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
+        if PaywallManager.shared.shouldAllowAction(from: self, key: self.modelNameKey ?? "RemoveBG"){
+            let items = exportItems
+            guard task == nil, isTextBehind || !items.isEmpty else { return }
+            setBusy(true)
+            let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
+                                        (items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…"))
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            let quality = self.quality
+            let zip = exportAll && !isTextBehind
+            task = Task { [weak self] in
+                defer {
+                    self?.task = nil
+                    self?.setBusy(false)
                 }
-                hud.dismiss()
-                viewModel.recordExport(quality: quality)
-                let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                activity.popoverPresentationController?.sourceView = self.shareButton
-                activity.popoverPresentationController?.sourceRect = self.shareButton.bounds
-                activity.completionWithItemsHandler = { _, _, _, _ in ZIPExportService.shared.cleanUp(url) }
-                self.present(activity, animated: true)
-            } catch is CancellationError {
-                hud.dismiss()
-            } catch {
-                hud.dismiss()
-                self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
-                                        retry: { self?.share() })
+                do {
+                    guard let self else { return }
+                    let files = try await self.renderFiles { value in hud.update(progress: value * 0.9) }
+                    let url: URL
+                    if !zip, let file = files.first {
+                        let name = file.name
+                        let data = file.data
+                        url = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
+                    } else {
+                        url = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
+                    }
+                    hud.dismiss()
+                    viewModel.recordExport(quality: quality)
+                    let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    activity.popoverPresentationController?.sourceView = self.shareButton
+                    activity.popoverPresentationController?.sourceRect = self.shareButton.bounds
+                    activity.completionWithItemsHandler = { _, _, _, _ in ZIPExportService.shared.cleanUp(url) }
+                    self.present(activity, animated: true)
+                } catch is CancellationError {
+                    hud.dismiss()
+                } catch {
+                    hud.dismiss()
+                    self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
+                                            retry: { self?.share() })
+                }
             }
         }
     }

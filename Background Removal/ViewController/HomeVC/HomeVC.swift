@@ -52,7 +52,7 @@ class HomeVC: UIViewController {
     private var storageObserver: NSObjectProtocol?
     static let batchSelectionLimit = 20
     var homeCardData: [HomeCardModel] = [
-        HomeCardModel(title: "Batch Remove", subtitle: "Clear a whole album at once", topImage: "top bg home", bottomImage: "bottom bg home", id: 1),
+        HomeCardModel(title: "Bulk Remove", subtitle: "Clear a whole album at once", topImage: "top bg home", bottomImage: "bottom bg home", id: 1),
         HomeCardModel(title: "Change Background", subtitle: "Pick a color or photo backdrop", topImage: "top chang bg", bottomImage: "bottom chang bg", id: 2),
         HomeCardModel(title: "Text Behind", subtitle: "Put text behind your subject", topImage: "top text behind", bottomImage: "bootm text behind", id: 3),
     ]
@@ -190,8 +190,6 @@ class HomeVC: UIViewController {
     }
     
     func openImagePicker(mode: ImageSelectionMode, destination: RemovingBackgroundVC.Destination) {
-        let typeKey: String = .init(describing: destination)
-        
             pendingDestination = destination
             pendingSelectionMode = mode
             let sheetVC = ImageSourcePickerVC.fatchInstance()
@@ -277,7 +275,6 @@ extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollect
         }
         guard collectionView == clvCardView else { return }
         let item = homeCardData[indexPath.row]
-        print("click = \(item.title),\(item.subtitle) = id: \(item.id)")
         switch item.id {
         case 1:
             openImagePicker(mode: .multiple, destination: .editor)

@@ -572,10 +572,8 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     @IBAction func btnExport(_ sender: UIButton) {
         guard !isPanelOpen else { return }
-        let vc = ExportVC()
-        vc.viewModel = viewModel
-        vc.itemID = currentItem?.isCompleted == true ? currentItemID : viewModel.project.completedItems.first?.id
-        navigationController?.pushViewController(vc, animated: true)
+        ExportVC.push(from: navigationController, viewModel: viewModel,
+                      itemID: currentItem?.isCompleted == true ? currentItemID : viewModel.project.completedItems.first?.id)
     }
 
     @IBAction func btnStatus(_ sender: UIButton) {

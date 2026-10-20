@@ -46,7 +46,7 @@ class LoaderView {
         loadingView.addSubview(containerView)
         
         // 4. Create Lottie animation view
-        let animationView = LottieAnimationView(name: "Cosmos")
+        let animationView = LottieAnimationView(name: "stack_animation")
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
         animationView.loopMode = .loop

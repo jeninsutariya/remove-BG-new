@@ -52,7 +52,7 @@ final class BackgroundRemovalViewModel {
     static func create(from picked: [PickedImage], mode: EditorMode = .removeBackground) async throws -> BackgroundRemovalViewModel {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, HH:mm"
-        let name = picked.count > 1 ? "Batch · \(formatter.string(from: Date()))"
+        let name = picked.count > 1 ? "Bulk · \(formatter.string(from: Date()))"
                                     : (picked.first?.suggestedName ?? "Cutout · \(formatter.string(from: Date()))")
         var project = BackgroundRemovalProject(name: name, mode: mode)
         let storage = ProjectStorageService.shared

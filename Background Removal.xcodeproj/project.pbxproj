@@ -96,6 +96,7 @@
 		DE79866C3087371A000A2560 /* PaywallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986683087371A000A2560 /* PaywallManager.swift */; };
 		DE79866D3087371A000A2560 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986673087371A000A2560 /* IAPManager.swift */; };
 		DE7986703087374D000A2560 /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = DE79866F3087374D000A2560 /* SwiftyStoreKit */; };
+		DE79867230877018000A2560 /* stack_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = DE79867130877018000A2560 /* stack_animation.json */; };
 		DE7FAE1530777201001E7D59 /* ProjectsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE1430777201001E7D59 /* ProjectsVC.swift */; };
 		DE7FAE19307772B7001E7D59 /* ProjectClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */; };
 		DE7FAE1A307772B7001E7D59 /* ProjectClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */; };
@@ -213,6 +214,7 @@
 		DE7986673087371A000A2560 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		DE7986683087371A000A2560 /* PaywallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallManager.swift; sourceTree = "<group>"; };
 		DE7986693087371A000A2560 /* RatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManager.swift; sourceTree = "<group>"; };
+		DE79867130877018000A2560 /* stack_animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stack_animation.json; sourceTree = "<group>"; };
 		DE7FAE1430777201001E7D59 /* ProjectsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsVC.swift; sourceTree = "<group>"; };
 		DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectClvCell.swift; sourceTree = "<group>"; };
 		DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectClvCell.xib; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 		C0DE0000000000000000003B /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				DE79867130877018000A2560 /* stack_animation.json */,
 				C0DE00000000000000000039 /* image_urls.json */,
 			);
 			path = Data;
@@ -816,6 +819,7 @@
 				C0DE00000000000000000054 /* ResizeToolView.xib in Resources */,
 				C0DE00000000000000000024 /* ProcessedImageCell.xib in Resources */,
 				C0DE00000000000000000028 /* BackgroundImageCell.xib in Resources */,
+				DE79867230877018000A2560 /* stack_animation.json in Resources */,
 				C0DE0000000000000000002C /* BackgroundColorCell.xib in Resources */,
 				C0DE00000000000000000038 /* Editor.storyboard in Resources */,
 				C0DE0000000000000000003A /* image_urls.json in Resources */,
