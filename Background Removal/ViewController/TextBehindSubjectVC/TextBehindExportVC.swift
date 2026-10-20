@@ -41,7 +41,7 @@ final class TextBehindExportVC: UIViewController {
     private var observer: NSObjectProtocol?
 
     private var format: ExportFormat { formatControl.selectedSegmentIndex == 0 ? .png : .jpg }
-    private var quality: ExportQuality { PremiumManager.shared.exportQuality }
+    private var quality: ExportQuality { ExportQuality.current }
     private var outputSize: CGSize {
         TextBehindGeometry.outputSize(photo: photoSize, canvas: document.canvas, maxDimension: quality.maxPixelDimension)
     }
@@ -52,7 +52,7 @@ final class TextBehindExportVC: UIViewController {
         build()
         formatControl.selectedSegmentIndex = document.exportFormat == .png ? 0 : 1
         qualityRow.value = Float(document.jpegQuality * 100)
-        observer = NotificationCenter.default.addObserver(forName: PremiumManager.didChangeNotification, object: nil,
+        observer = NotificationCenter.default.addObserver(forName: .refreshPremiumLog, object: nil,
                                                           queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         }

@@ -3,12 +3,16 @@
 //  Background Removal
 //
 //  Single place that defines what "Standard" (free) and "Full" (premium) export mean.
-//  Every export path (Gallery and ZIP) asks PremiumManager.shared.exportQuality.
+//  Every export path (Gallery and ZIP) asks ExportQuality.current.
 //
 
 import CoreGraphics
+import Foundation
 
 nonisolated enum ExportQuality: String, Codable {
+    /// Quality every export path must use, based on the premium flag.
+    static var current: ExportQuality { UserDefaults.isPremiumUser ? .full : .standard }
+
     /// Free: long side limited to 2048 px (only when the image is larger), JPEG 0.85.
     case standard
     /// Premium: the full resolution produced by the pipeline, JPEG 0.95.

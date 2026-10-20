@@ -398,10 +398,23 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
 
     /// Fits the canvas (rendered image aspect ratio) in the canvas area.
     private func layoutCanvas() {
-        let area = scrollView.bounds.insetBy(dx: 12, dy: 12)
-        guard area.width > 0, area.height > 0, scrollView.zoomScale == 1 else { return }
+        // viewDidLayoutSubviews runs before the canvas area lays out its own subviews, so the
+        // scroll view can still have its previous (e.g. panel-reduced) frame here. Lay the area
+        // out first and measure the area itself, so the canvas is always sized from the current
+        // available space – never from an earlier, smaller layout.
+        vwCanvasArea.layoutIfNeeded()
+        let area = vwCanvasArea.bounds.insetBy(dx: 12, dy: 12)
+        guard area.width > 0, area.height > 0 else { return }
         let scale = min(area.width / canvasSize.width, area.height / canvasSize.height)
         let size = CGSize(width: floor(canvasSize.width * scale), height: floor(canvasSize.height * scale))
+        guard canvasView.bounds.size != size else {
+            centerCanvas()
+            return
+        }
+        if scrollView.zoomScale != 1 {
+            // The available space changed while zoomed in: start again from the fitted size.
+            scrollView.setZoomScale(1, animated: false)
+        }
         if canvasView.bounds.size != size {
             canvasView.frame = CGRect(origin: .zero, size: size)
             [checker, imageView, overlay].forEach { $0.frame = canvasView.bounds }

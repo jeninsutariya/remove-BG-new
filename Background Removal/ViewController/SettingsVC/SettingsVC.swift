@@ -198,29 +198,15 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
         case .saveToPhotos:
             break
         case .hdExport:
-            if PremiumManager.shared.isPremium {
-                showToast(message: "Full-quality export is active")
-            } else {
-                let vc = ProUpgradeVC.fatchInstance()
-                self.present(vc, animated: true, completion: nil)
-            }
+//            if UserDefaults.isPremiumUser {
+//                showToast(message: "Full-quality export is active")
+//            } else {
+//                let vc = ProUpgradeVC.fatchInstance()
+//                self.present(vc, animated: true, completion: nil)
+//            }
+            break
         case .restorePurchases:
-            LoaderView.shared.show()
-            Task { [weak self] in
-                do {
-                    try await PremiumManager.shared.restorePurchases()
-                    LoaderView.shared.hide()
-                    if PremiumManager.shared.hasActiveEntitlement {
-                        showToast(message: "Purchases restored")
-                    } else {
-                        self?.presentErrorAlert(title: "Nothing to restore",
-                                                message: "No active subscription was found for your Apple ID.")
-                    }
-                } catch {
-                    LoaderView.shared.hide()
-                    self?.presentErrorAlert(title: "Restore failed", message: error.localizedDescription)
-                }
-            }
+            break
         case .rateApp:
             print("Rate App")
         case .shareApp:

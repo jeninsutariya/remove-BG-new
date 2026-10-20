@@ -119,12 +119,8 @@ final class CanvasResizeView: TBPanelView, UITextFieldDelegate {
         zoomRow.value = Float(canvas.contentZoom)
         xRow.value = Float(canvas.contentOffsetX)
         yRow.value = Float(canvas.contentOffsetY)
-        let full = TextBehindGeometry.canvasPixelSize(photo: photoSize, canvas: canvas)
-        let quality = PremiumManager.shared.exportQuality
-        let output = TextBehindGeometry.outputSize(photo: photoSize, canvas: canvas, maxDimension: quality.maxPixelDimension)
-        var text = "Canvas \(Int(full.width)) × \(Int(full.height)) px"
-        if output != full { text += " · export \(Int(output.width)) × \(Int(output.height)) px (Standard)" }
-        sizeLabel.text = text
+
+        sizeLabel.text = "text"
         sizeLabel.numberOfLines = 0
     }
 

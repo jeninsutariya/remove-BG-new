@@ -34,6 +34,8 @@ final class EditorPanelPresenter {
     private(set) var panel: UIView?
     private var containerConstraints: [NSLayoutConstraint] = []
     private var panelConstraints: [NSLayoutConstraint] = []
+    /// Hidden state of `alsoHidden` views before a panel opened (restored exactly on close).
+    private var hiddenBeforeShowing: [ObjectIdentifier: Bool] = [:]
 
     var isOpen: Bool { panel != nil }
 
@@ -116,6 +118,14 @@ final class EditorPanelPresenter {
         NSLayoutConstraint.activate(panelConstraints)
 
         if replacing {
+            if normalCanvasBottom.isActive {
+                // Opened while the previous panel was still closing: back to the editing layout.
+                normalCanvasBottom.isActive = false
+                NSLayoutConstraint.activate(containerConstraints)
+                toolbar.isHidden = true
+                toolbar.alpha = 1
+                alsoHidden.forEach { $0.isHidden = true }
+            }
             // Same container, new content: no slide, the tool bar stays hidden.
             UIView.performWithoutAnimation { rootView.layoutIfNeeded() }
             panel.alpha = 0
@@ -132,6 +142,7 @@ final class EditorPanelPresenter {
         normalCanvasBottom.isActive = false
         NSLayoutConstraint.activate(containerConstraints)
         toolbar.isHidden = true
+        hiddenBeforeShowing = Dictionary(uniqueKeysWithValues: alsoHidden.map { (ObjectIdentifier($0), $0.isHidden) })
         alsoHidden.forEach { $0.isHidden = true }
 
         // Final layout first, then slide the container up from the bottom.
@@ -144,9 +155,21 @@ final class EditorPanelPresenter {
     }
 
     /// Slides the panel down and restores the tool bar and normal canvas layout.
+    ///
+    /// The normal layout is restored by re-activating the storyboard's canvas constraint – the
+    /// same one used before any panel opened – so Auto Layout recomputes the full canvas size
+    /// (never derived from the reduced size). The canvas grows while the panel slides away, so
+    /// both animations end in the same, final state.
     func dismiss(animated: Bool = true) {
         guard let rootView, let panel else { return }
         self.panel = nil
+
+        // 1. Back to the normal layout state (one constraint swap, nothing is recreated).
+        NSLayoutConstraint.deactivate(containerConstraints.filter { $0.firstItem === canvas || $0.secondItem === canvas })
+        normalCanvasBottom.isActive = true
+        toolbar.isHidden = false
+        for view in alsoHidden { view.isHidden = hiddenBeforeShowing[ObjectIdentifier(view)] ?? false }
+
         let finish = { [weak self] in
             // A new panel was shown while closing: keep the container.
             guard let self, self.panel == nil else { return }
@@ -156,22 +179,22 @@ final class EditorPanelPresenter {
             panel.removeFromSuperview()
             self.container.removeFromSuperview()
             self.container.transform = .identity
-            self.normalCanvasBottom.isActive = true
-            self.toolbar.isHidden = false
-            self.alsoHidden.forEach { $0.isHidden = false }
             rootView.layoutIfNeeded()
         }
         guard animated else {
+            rootView.layoutIfNeeded()
             finish()
             return
         }
-        UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseIn], animations: {
+        toolbar.alpha = 0
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut], animations: {
+            // 2. Canvas grows back while the panel slides down.
             self.container.transform = CGAffineTransform(translationX: 0, y: self.container.bounds.height)
+            self.toolbar.alpha = 1
+            rootView.layoutIfNeeded()
         }, completion: { _ in
-            guard self.panel == nil else { return }
+            // 3. Remove the panel once it is off screen.
             finish()
-            self.toolbar.alpha = 0
-            UIView.animate(withDuration: 0.15) { self.toolbar.alpha = 1 }
         })
     }
 }

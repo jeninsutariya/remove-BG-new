@@ -76,7 +76,7 @@ class ExportVC: UIViewController {
     private var exportTask: Task<Void, Never>?
     private var observers: [NSObjectProtocol] = []
 
-    private var quality: ExportQuality { PremiumManager.shared.exportQuality }
+    private var quality: ExportQuality { ExportQuality.current }
 
     private var item: BackgroundRemovalItem? {
         itemID.flatMap { viewModel.item($0) } ?? viewModel.project.completedItems.first
@@ -102,7 +102,7 @@ class ExportVC: UIViewController {
         super.viewDidLoad()
         if let item { format = item.background.isTransparent ? .png : .jpg }
         setupUI()
-        observers.append(NotificationCenter.default.addObserver(forName: PremiumManager.didChangeNotification,
+        observers.append(NotificationCenter.default.addObserver(forName: .refreshPremiumLog,
                                                                 object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         })
@@ -205,7 +205,7 @@ class ExportVC: UIViewController {
         } else {
             lblNote.text = effective.isTransparent ? "PNG keeps the transparent background." : "PNG keeps full quality."
         }
-        let premium = PremiumManager.shared.isPremium
+        let premium = UserDefaults.isPremiumUser
         vwProBadge.isHidden = premium
         imgHDChevron.isHidden = premium
         lblHDSubtitle.text = premium ? "Full resolution is on" :
@@ -296,7 +296,7 @@ class ExportVC: UIViewController {
     }
 
     @IBAction func btnHD(_ sender: UIButton) {
-        guard !PremiumManager.shared.isPremium else { return }
+        guard !UserDefaults.isPremiumUser else { return }
         let vc = ProUpgradeVC.fatchInstance()
         present(vc, animated: true)
     }
