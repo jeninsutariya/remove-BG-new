@@ -747,6 +747,480 @@
             </objects>
             <point key="canvasLocation" x="500" y="0.0"/>
         </scene>
+        <!--ExportVC-->
+        <scene sceneID="exp-3c-164">
+            <objects>
+                <viewController storyboardIdentifier="ExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="exp-ba-001" customClass="ExportVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="exp-ca-002">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ea-004">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <color key="backgroundColor" name="Surface Color"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                <color key="tintColor" name="PrimaryText"/>
+                                <state key="normal" title="">
+                                    <color key="titleColor" name="PrimaryText"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="exp-fa-005"/>
+                                    <constraint firstAttribute="height" constant="44" id="exp-ga-006"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="22"/></userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="btnBackTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ha-007"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ia-008">
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="22"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-6b-110">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="600"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="exp-7b-111">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="800"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-oa-013">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="200"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qa-015">
+                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="26"/></userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cellSize"><real key="value" value="12.5"/></userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ra-016">
+                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="26"/></userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="200" id="exp-pa-014"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image.png" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ca-027">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="20"/>
+                                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                                <color key="textColor" name="PrimaryText"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2048 × 2048 px" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Da-028">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="16"/>
+                                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
+                                                <color key="textColor" name="SecondaryText"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ea-029">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="40"/>
+                                                <segments>
+                                                    <segment title="This image"/>
+                                                    <segment title="All images"/>
+                                                </segments>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" priority="999" id="exp-Fa-030"/>
+                                                </constraints>
+                                                <connections>
+                                                    <action selector="scopeChanged:" destination="exp-ba-001" eventType="valueChanged" id="exp-Ga-031"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <view contentMode="scaleToFill" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ha-032">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Free users can save up to 3 images per day. Get Premium to save all images." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ja-033">
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
+                                                        <color key="textColor" name="AccentColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ka-034">
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                                        <state key="normal" title="">
+                                                            <color key="titleColor" name="PrimaryText"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="limitTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-La-035"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Va-044">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="260"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Wa-045">
+                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="234"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Xa-046">
+                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="40"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-4a-051">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="20"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
+                                                                        <color key="textColor" name="PrimaryText"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-5a-052">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="129" height="40"/>
+                                                                    </view>
+                                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ya-047">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="132" height="40"/>
+                                                                        <segments>
+                                                                            <segment title="PNG"/>
+                                                                            <segment title="JPG"/>
+                                                                        </segments>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="132" id="exp-Za-048"/>
+                                                                            <constraint firstAttribute="height" constant="40" id="exp-2a-049"/>
+                                                                        </constraints>
+                                                                        <connections>
+                                                                            <action selector="formatChanged:" destination="exp-ba-001" eventType="valueChanged" id="exp-3a-050"/>
+                                                                        </connections>
+                                                                    </segmentedControl>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-6a-053">
+                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <color key="backgroundColor" name="Border Color"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="1" id="exp-7a-054"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-8a-055">
+                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-bb-058">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="20"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
+                                                                        <color key="textColor" name="PrimaryText"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-cb-059">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="133" height="34"/>
+                                                                    </view>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-9a-056">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="34"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                                                                        <state key="normal" title="Original  ›">
+                                                                            <color key="titleColor" name="AccentColor"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="sizeTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ab-057"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-db-060">
+                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <color key="backgroundColor" name="Border Color"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="1" id="exp-eb-061"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-fb-062">
+                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ib-065">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="100" height="20"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
+                                                                        <color key="textColor" name="PrimaryText"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-jb-066">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                    </view>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-gb-063">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="34"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
+                                                                        <state key="normal" title="As edited  ›">
+                                                                            <color key="titleColor" name="AccentColor"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="backgroundTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-hb-064"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-kb-067">
+                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <color key="backgroundColor" name="Border Color"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="1" id="exp-mb-068"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="exp-nb-069">
+                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="50"/>
+                                                                <subviews>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ob-070">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="18"/>
+                                                                        <subviews>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JPEG quality" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qb-072">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="90" height="16"/>
+                                                                                <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
+                                                                                <color key="textColor" name="PrimaryText"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-rb-073">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="183" height="16"/>
+                                                                            </view>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="85%" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-pb-071">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="40" height="16"/>
+                                                                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
+                                                                                <color key="textColor" name="SecondaryText"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="85" minValue="50" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="exp-sb-074">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="31"/>
+                                                                        <color key="minimumTrackTintColor" name="AccentColor"/>
+                                                                        <color key="maximumTrackTintColor" name="Border Color"/>
+                                                                        <connections>
+                                                                            <action selector="qualityChanged:" destination="exp-ba-001" eventType="valueChanged" id="exp-tb-075"/>
+                                                                            <action selector="qualityFinished:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ub-076"/>
+                                                                            <action selector="qualityFinished:" destination="exp-ba-001" eventType="touchUpOutside" id="exp-vb-077"/>
+                                                                            <action selector="qualityFinished:" destination="exp-ba-001" eventType="touchCancel" id="exp-wb-078"/>
+                                                                        </connections>
+                                                                    </slider>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="Surface Color"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="24"/></userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PNG keeps the transparent background." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Bb-083">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="20"/>
+                                                <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
+                                                <color key="textColor" name="SecondaryText"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Cb-084">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="66"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Db-085">
+                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Eb-086">
+                                                                <rect key="frame" x="0.0" y="0.0" width="230" height="44"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Gb-088">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="20"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
+                                                                        <color key="textColor" name="PrimaryText"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Free exports up to 2048 px · Full resolution with Pro" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Fb-087">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="32"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
+                                                                        <color key="textColor" name="SecondaryText"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Rb-097">
+                                                                <rect key="frame" x="0.0" y="0.0" width="17" height="44"/>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Hb-089">
+                                                                <rect key="frame" x="0.0" y="0.0" width="48" height="24"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Kb-091">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="28" height="15"/>
+                                                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="12"/>
+                                                                        <color key="textColor" name="Link Color"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" name="Badge Color"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="24" id="exp-Jb-090"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="12"/></userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Pb-095">
+                                                                <rect key="frame" x="0.0" y="0.0" width="14" height="20"/>
+                                                                <color key="tintColor" name="PrimaryText"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="14" id="exp-Qb-096"/>
+                                                                </constraints>
+                                                            </imageView>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Sb-098">
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="66"/>
+                                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
+                                                        <state key="normal" title="">
+                                                            <color key="titleColor" name="PrimaryText"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="hdTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-Tb-099"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" name="Surface Color"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="24"/></userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-4b-108">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="30"/>
+                                                <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="14"/>
+                                                <state key="normal" title="Save project for later">
+                                                    <color key="titleColor" name="AccentColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="saveProjectTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-5b-109"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-dc-117">
+                                <rect key="frame" x="0.0" y="0.0" width="361" height="58"/>
+                                <color key="backgroundColor" name="AccentColor"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="  Save to Photos">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="exp-ec-118"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="29"/></userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="saveTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-fc-119"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-gc-120">
+                                <rect key="frame" x="0.0" y="0.0" width="361" height="54"/>
+                                <color key="backgroundColor" name="Surface Color"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="17"/>
+                                <color key="tintColor" name="AccentColor"/>
+                                <state key="normal" title="  Share">
+                                    <color key="titleColor" name="AccentColor"/>
+                                </state>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="exp-hc-121"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="27"/></userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="shareTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ic-122"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="exp-da-003"/>
+                        <color key="backgroundColor" name="Background"/>
+                        <constraints>
+                            <constraint firstItem="exp-ea-004" firstAttribute="top" secondItem="exp-da-003" secondAttribute="top" constant="8" id="exp-ja-009"/>
+                            <constraint firstItem="exp-ea-004" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-ka-010"/>
+                            <constraint firstItem="exp-ia-008" firstAttribute="centerX" secondItem="exp-ca-002" secondAttribute="centerX" id="exp-ma-011"/>
+                            <constraint firstItem="exp-ia-008" firstAttribute="centerY" secondItem="exp-ea-004" secondAttribute="centerY" id="exp-na-012"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="centerX" secondItem="exp-oa-013" secondAttribute="centerX" id="exp-sa-017"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="centerY" secondItem="exp-oa-013" secondAttribute="centerY" id="exp-ta-018"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="height" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="height" id="exp-ua-019"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="width" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="width" id="exp-va-020"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="height" secondItem="exp-oa-013" secondAttribute="height" priority="750" id="exp-wa-021"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="width" secondItem="exp-ra-016" secondAttribute="height" multiplier="3:4" id="exp-xa-022"/>
+                            <constraint firstItem="exp-qa-015" firstAttribute="top" secondItem="exp-ra-016" secondAttribute="top" id="exp-ya-023"/>
+                            <constraint firstItem="exp-qa-015" firstAttribute="leading" secondItem="exp-ra-016" secondAttribute="leading" id="exp-za-024"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="trailing" secondItem="exp-qa-015" secondAttribute="trailing" id="exp-Aa-025"/>
+                            <constraint firstItem="exp-ra-016" firstAttribute="bottom" secondItem="exp-qa-015" secondAttribute="bottom" id="exp-Ba-026"/>
+                            <constraint firstItem="exp-Ja-033" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ma-036"/>
+                            <constraint firstItem="exp-Ja-033" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Na-037"/>
+                            <constraint firstItem="exp-Ha-032" firstAttribute="trailing" secondItem="exp-Ja-033" secondAttribute="trailing" id="exp-Pa-038"/>
+                            <constraint firstItem="exp-Ha-032" firstAttribute="bottom" secondItem="exp-Ja-033" secondAttribute="bottom" id="exp-Qa-039"/>
+                            <constraint firstItem="exp-Ka-034" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ra-040"/>
+                            <constraint firstItem="exp-Ka-034" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Sa-041"/>
+                            <constraint firstItem="exp-Ha-032" firstAttribute="trailing" secondItem="exp-Ka-034" secondAttribute="trailing" id="exp-Ta-042"/>
+                            <constraint firstItem="exp-Ha-032" firstAttribute="bottom" secondItem="exp-Ka-034" secondAttribute="bottom" id="exp-Ua-043"/>
+                            <constraint firstItem="exp-Wa-045" firstAttribute="top" secondItem="exp-Va-044" secondAttribute="top" constant="12" id="exp-xb-079"/>
+                            <constraint firstItem="exp-Wa-045" firstAttribute="leading" secondItem="exp-Va-044" secondAttribute="leading" constant="18" id="exp-yb-080"/>
+                            <constraint firstItem="exp-Va-044" firstAttribute="trailing" secondItem="exp-Wa-045" secondAttribute="trailing" constant="14" id="exp-zb-081"/>
+                            <constraint firstItem="exp-Va-044" firstAttribute="bottom" secondItem="exp-Wa-045" secondAttribute="bottom" constant="14" id="exp-Ab-082"/>
+                            <constraint firstItem="exp-Kb-091" firstAttribute="leading" secondItem="exp-Hb-089" secondAttribute="leading" constant="10" id="exp-Lb-092"/>
+                            <constraint firstItem="exp-Hb-089" firstAttribute="trailing" secondItem="exp-Kb-091" secondAttribute="trailing" constant="10" id="exp-Mb-093"/>
+                            <constraint firstItem="exp-Kb-091" firstAttribute="centerY" secondItem="exp-Hb-089" secondAttribute="centerY" id="exp-Nb-094"/>
+                            <constraint firstItem="exp-Db-085" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" constant="11" id="exp-Ub-100"/>
+                            <constraint firstItem="exp-Db-085" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" constant="18" id="exp-Vb-101"/>
+                            <constraint firstItem="exp-Cb-084" firstAttribute="trailing" secondItem="exp-Db-085" secondAttribute="trailing" constant="14" id="exp-Wb-102"/>
+                            <constraint firstItem="exp-Cb-084" firstAttribute="bottom" secondItem="exp-Db-085" secondAttribute="bottom" constant="11" id="exp-Xb-103"/>
+                            <constraint firstItem="exp-Sb-098" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" id="exp-Yb-104"/>
+                            <constraint firstItem="exp-Sb-098" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" id="exp-Zb-105"/>
+                            <constraint firstItem="exp-Cb-084" firstAttribute="trailing" secondItem="exp-Sb-098" secondAttribute="trailing" id="exp-2b-106"/>
+                            <constraint firstItem="exp-Cb-084" firstAttribute="bottom" secondItem="exp-Sb-098" secondAttribute="bottom" id="exp-3b-107"/>
+                            <constraint firstItem="exp-7b-111" firstAttribute="top" secondItem="exp-6b-110" secondAttribute="top" constant="8" id="exp-8b-112"/>
+                            <constraint firstItem="exp-7b-111" firstAttribute="leading" secondItem="exp-6b-110" secondAttribute="leading" constant="16" id="exp-9b-113"/>
+                            <constraint firstItem="exp-6b-110" firstAttribute="trailing" secondItem="exp-7b-111" secondAttribute="trailing" constant="16" id="exp-ac-114"/>
+                            <constraint firstItem="exp-6b-110" firstAttribute="bottom" secondItem="exp-7b-111" secondAttribute="bottom" constant="8" id="exp-bc-115"/>
+                            <constraint firstItem="exp-7b-111" firstAttribute="width" secondItem="exp-6b-110" secondAttribute="width" constant="-32" id="exp-cc-116"/>
+                            <constraint firstItem="exp-6b-110" firstAttribute="top" secondItem="exp-ea-004" secondAttribute="bottom" constant="8" id="exp-jc-123"/>
+                            <constraint firstItem="exp-6b-110" firstAttribute="leading" secondItem="exp-ca-002" secondAttribute="leading" id="exp-kc-124"/>
+                            <constraint firstItem="exp-ca-002" firstAttribute="trailing" secondItem="exp-6b-110" secondAttribute="trailing" id="exp-mc-125"/>
+                            <constraint firstItem="exp-dc-117" firstAttribute="top" secondItem="exp-6b-110" secondAttribute="bottom" constant="12" id="exp-nc-126"/>
+                            <constraint firstItem="exp-dc-117" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-oc-127"/>
+                            <constraint firstItem="exp-da-003" firstAttribute="trailing" secondItem="exp-dc-117" secondAttribute="trailing" constant="16" id="exp-pc-128"/>
+                            <constraint firstItem="exp-gc-120" firstAttribute="top" secondItem="exp-dc-117" secondAttribute="bottom" constant="10" id="exp-qc-129"/>
+                            <constraint firstItem="exp-gc-120" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-rc-130"/>
+                            <constraint firstItem="exp-da-003" firstAttribute="trailing" secondItem="exp-gc-120" secondAttribute="trailing" constant="16" id="exp-sc-131"/>
+                            <constraint firstItem="exp-da-003" firstAttribute="bottom" secondItem="exp-gc-120" secondAttribute="bottom" constant="8" id="exp-tc-132"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="backButton" destination="exp-ea-004" id="exp-uc-133"/>
+                        <outlet property="scrollView" destination="exp-6b-110" id="exp-vc-134"/>
+                        <outlet property="contentStack" destination="exp-7b-111" id="exp-wc-135"/>
+                        <outlet property="checker" destination="exp-qa-015" id="exp-xc-136"/>
+                        <outlet property="previewView" destination="exp-ra-016" id="exp-yc-137"/>
+                        <outlet property="previewAspect" destination="exp-xa-022" id="exp-zc-138"/>
+                        <outlet property="fileLabel" destination="exp-Ca-027" id="exp-Ac-139"/>
+                        <outlet property="sizeLabel" destination="exp-Da-028" id="exp-Bc-140"/>
+                        <outlet property="scopeControl" destination="exp-Ea-029" id="exp-Cc-141"/>
+                        <outlet property="limitView" destination="exp-Ha-032" id="exp-Dc-142"/>
+                        <outlet property="limitLabel" destination="exp-Ja-033" id="exp-Ec-143"/>
+                        <outlet property="optionsView" destination="exp-Va-044" id="exp-Fc-144"/>
+                        <outlet property="formatControl" destination="exp-Ya-047" id="exp-Gc-145"/>
+                        <outlet property="sizeSeparator" destination="exp-6a-053" id="exp-Hc-146"/>
+                        <outlet property="sizeRow" destination="exp-8a-055" id="exp-Jc-147"/>
+                        <outlet property="sizeButton" destination="exp-9a-056" id="exp-Kc-148"/>
+                        <outlet property="backgroundSeparator" destination="exp-db-060" id="exp-Lc-149"/>
+                        <outlet property="backgroundRow" destination="exp-fb-062" id="exp-Mc-150"/>
+                        <outlet property="backgroundButton" destination="exp-gb-063" id="exp-Nc-151"/>
+                        <outlet property="qualityView" destination="exp-nb-069" id="exp-Pc-152"/>
+                        <outlet property="qualityValueLabel" destination="exp-pb-071" id="exp-Qc-153"/>
+                        <outlet property="qualitySlider" destination="exp-sb-074" id="exp-Rc-154"/>
+                        <outlet property="noteLabel" destination="exp-Bb-083" id="exp-Sc-155"/>
+                        <outlet property="hdView" destination="exp-Cb-084" id="exp-Tc-156"/>
+                        <outlet property="hdButton" destination="exp-Sb-098" id="exp-Uc-157"/>
+                        <outlet property="hdSubtitle" destination="exp-Fb-087" id="exp-Vc-158"/>
+                        <outlet property="proBadge" destination="exp-Hb-089" id="exp-Wc-159"/>
+                        <outlet property="hdChevron" destination="exp-Pb-095" id="exp-Xc-160"/>
+                        <outlet property="projectButton" destination="exp-4b-108" id="exp-Yc-161"/>
+                        <outlet property="saveButton" destination="exp-dc-117" id="exp-Zc-162"/>
+                        <outlet property="shareButton" destination="exp-gc-120" id="exp-2c-163"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="exp-4c-165" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2000" y="0.0"/>
+        </scene>
     </scenes>
     <resources>
         <namedColor name="AccentColor">
@@ -755,11 +1229,17 @@
         <namedColor name="Background">
             <color red="0.96078431372549022" green="0.98039215686274506" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Badge Color">
+            <color red="0.851" green="0.925" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Border Color">
             <color red="0.86274509803921573" green="0.9137254901960784" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="BrandPrimary">
             <color red="0.78823529411764703" green="0.86274509803921573" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Link Color">
+            <color red="0.043" green="0.369" blue="0.843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="PrimaryText">
             <color red="0.058823529411764705" green="0.10980392156862745" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
