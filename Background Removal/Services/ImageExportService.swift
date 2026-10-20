@@ -192,10 +192,13 @@ nonisolated enum ExportWatermark {
         let size = CGSize(width: image.width, height: image.height)
         // The image's own RGB colour space when possible (colours unchanged), otherwise sRGB.
         let spaces = [image.colorSpace.flatMap { $0.model == .rgb ? $0 : nil }, CGColorSpace(name: CGColorSpace.sRGB)]
-        guard let context = spaces.compactMap({ $0 }).lazy.compactMap({ space in
-            CGContext(data: nil, width: image.width, height: image.height, bitsPerComponent: 8, bytesPerRow: 0,
-                      space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
-        }).first else { return nil }
+        var created: CGContext?
+        for space in spaces.compactMap({ $0 }) {
+            created = CGContext(data: nil, width: image.width, height: image.height, bitsPerComponent: 8, bytesPerRow: 0,
+                                space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+            if created != nil { break }
+        }
+        guard let context = created else { return nil }
         context.interpolationQuality = .high
         context.draw(image, in: CGRect(origin: .zero, size: size))
         // Core Graphics has a bottom-left origin.
