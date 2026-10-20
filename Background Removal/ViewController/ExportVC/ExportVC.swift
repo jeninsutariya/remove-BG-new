@@ -72,6 +72,10 @@ class ExportVC: UIViewController {
     private var previewKey: (UUID, BackgroundSelection)?
     private var task: Task<Void, Never>?
     private var observer: NSObjectProtocol?
+    /// The free size limit reduces the current export (the HD card then opens Pro).
+    private var isCapped = false
+    /// Cutout projects use the quality's JPEG default until the slider is moved.
+    private var jpegQualityChosen = false
 
     private var quality: ExportQuality { ExportQuality.current }
     private var isTextBehind: Bool { textBehind != nil }
@@ -93,7 +97,7 @@ class ExportVC: UIViewController {
         case .white: override = .color(hex: "FFFFFF")
         }
         return ExportOptions(format: format, maxDimension: size.maxDimension, backgroundOverride: override,
-                             jpegQuality: format == .jpg ? jpegQuality : nil)
+                             jpegQuality: format == .jpg && jpegQualityChosen ? jpegQuality : nil)
     }
 
     // MARK: - Views
@@ -250,7 +254,10 @@ class ExportVC: UIViewController {
         scopeControl.setTitle("All \(completedCount) images", forSegmentAt: 1)
         scopeControl.selectedSegmentIndex = 0
         scopeControl.applyEditorStyle()
-        scopeControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        // Below required: the stack view collapses it to 0 while hidden.
+        let scopeHeight = scopeControl.heightAnchor.constraint(equalToConstant: 40)
+        scopeHeight.priority = UILayoutPriority(999)
+        scopeHeight.isActive = true
         scopeControl.addTarget(self, action: #selector(scopeChanged), for: .valueChanged)
         scopeControl.isHidden = isTextBehind || completedCount < 2
 
@@ -261,6 +268,7 @@ class ExportVC: UIViewController {
         formatControl.widthAnchor.constraint(equalToConstant: 132).isActive = true
         formatControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
         qualityRow.onChange = { [weak self] _, finished in
+            self?.jpegQualityChosen = true
             if finished { self?.formatChanged() }
         }
         var rows: [UIView] = [TBStyle.hStack([TBStyle.label("Format", size: 16), UIView(), formatControl])]
@@ -406,7 +414,12 @@ class ExportVC: UIViewController {
         formatControl.selectedSegmentIndex = format.rawValue
         qualityRow.isUserInteractionEnabled = format == .jpg
         qualityRow.alpha = format == .jpg ? 1 : 0.4
+        if textBehind == nil, !jpegQualityChosen {
+            // Follows the quality (e.g. after upgrading on the Pro screen).
+            qualityRow.value = Float(quality.jpegQuality * 100)
+        }
         let capped = textBehind != nil ? refreshTextBehind() : refreshCutout()
+        isCapped = capped
         let premium = UserDefaults.isPremiumUser
         proBadge.isHidden = premium || !capped
         hdChevron.isHidden = premium || !capped
@@ -563,7 +576,7 @@ class ExportVC: UIViewController {
     }
 
     @objc private func hdTapped() {
-        guard !UserDefaults.isPremiumUser else { return }
+        guard !UserDefaults.isPremiumUser, isCapped else { return }
         present(ProUpgradeVC.fatchInstance(), animated: true)
     }
 
