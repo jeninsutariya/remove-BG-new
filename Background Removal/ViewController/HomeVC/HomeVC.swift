@@ -25,6 +25,8 @@ struct HomeCardModel: Codable {
 
 class HomeVC: UIViewController {
     
+    @IBOutlet weak var btnRecents: UIButton!
+    @IBOutlet weak var lblRecents: UILabel!
     @IBOutlet weak var vwRemoveBGImage: UIView!
     @IBOutlet weak var vwRemoveBackground: UIView!
     @IBOutlet weak var vwChangeBGImage: UIView!
@@ -75,7 +77,10 @@ class HomeVC: UIViewController {
         }
         reloadRecents()
     }
-    
+    func isRecentsShow(_ isShow :Bool){
+        btnRecents.isHidden = isShow
+        lblRecents.isHidden = isShow
+    }
     func reloadRecents() {
         Task { [weak self] in
             let projects = await Task.detached(priority: .utility) {
@@ -84,6 +89,7 @@ class HomeVC: UIViewController {
             guard let self else { return }
             self.recentProjects = projects
             self.clvRecents.reloadData()
+            self.isRecentsShow(self.recentProjects.count == 0)
         }
     }
     func setupCollectionView(){

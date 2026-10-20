@@ -112,7 +112,7 @@ final class ImageExportService {
         let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
         guard status == .authorized || status == .limited else { throw ImageExportError.photosAccessDenied }
 
-        let quality = PremiumManager.shared.exportQuality
+        let quality = ExportQuality.current
         let outputs = try await renderOutputs(for: items, in: viewModel, quality: quality, options: options) { value in
             progress?(value * 0.8)
         }

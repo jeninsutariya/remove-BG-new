@@ -50,6 +50,9 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h3S-71-qD6">
                                 <rect key="frame" x="0.0" y="0.0" width="290" height="123"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Remove BG Image" translatesAutoresizingMaskIntoConstraints="NO" id="e8z-ni-iaE">
+                                        <rect key="frame" x="0.0" y="0.0" width="290" height="123"/>
+                                    </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Remove BG Image" translatesAutoresizingMaskIntoConstraints="NO" id="mqS-rc-DAW">
                                         <rect key="frame" x="0.0" y="0.0" width="290" height="123"/>
                                     </imageView>
@@ -57,8 +60,12 @@
                                 <color key="backgroundColor" name="Light blue"/>
                                 <constraints>
                                     <constraint firstItem="mqS-rc-DAW" firstAttribute="top" secondItem="h3S-71-qD6" secondAttribute="top" id="GIa-El-ABs"/>
+                                    <constraint firstAttribute="trailing" secondItem="e8z-ni-iaE" secondAttribute="trailing" id="Oa7-72-iE2"/>
+                                    <constraint firstAttribute="bottom" secondItem="e8z-ni-iaE" secondAttribute="bottom" id="gff-9G-FHu"/>
                                     <constraint firstAttribute="trailing" secondItem="mqS-rc-DAW" secondAttribute="trailing" id="p6c-Hy-fQk"/>
                                     <constraint firstItem="mqS-rc-DAW" firstAttribute="leading" secondItem="h3S-71-qD6" secondAttribute="leading" id="pql-6u-3Ra"/>
+                                    <constraint firstItem="e8z-ni-iaE" firstAttribute="top" secondItem="h3S-71-qD6" secondAttribute="top" id="tKB-IF-MQc"/>
+                                    <constraint firstItem="e8z-ni-iaE" firstAttribute="leading" secondItem="h3S-71-qD6" secondAttribute="leading" id="vau-Pt-FHD"/>
                                     <constraint firstAttribute="bottom" secondItem="mqS-rc-DAW" secondAttribute="bottom" id="wrV-Gr-Nj4"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -93,9 +100,9 @@
             </constraints>
             <size key="customSize" width="300" height="182"/>
             <connections>
+                <outlet property="imgThumb" destination="mqS-rc-DAW" id="pjC-im-001"/>
                 <outlet property="lblName" destination="Tev-S7-8pk" id="Z1V-SD-ACb"/>
                 <outlet property="lbltype" destination="Wrs-2s-V3s" id="FNy-ax-TdM"/>
-                <outlet property="imgThumb" destination="mqS-rc-DAW" id="pjC-im-001"/>
             </connections>
             <point key="canvasLocation" x="328.24427480916029" y="200"/>
         </collectionViewCell>

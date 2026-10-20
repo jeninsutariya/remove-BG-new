@@ -9,6 +9,7 @@ import UIKit
 
 class ProjectsVC: UIViewController {
 
+    @IBOutlet weak var nodata: UIView!
     @IBOutlet weak var clvProjects: UICollectionView!
     /// Saved background-removal projects, newest first.
     var projects: [BackgroundRemovalProject] = []
@@ -37,6 +38,7 @@ class ProjectsVC: UIViewController {
             guard let self else { return }
             self.projects = projects
             self.clvProjects.reloadData()
+            self.nodata.isHidden = self.projects.count > 0
         }
     }
     func openProject(_ project: BackgroundRemovalProject) {

@@ -54,7 +54,7 @@ class ProjectClvCell: UICollectionViewCell {
                 return (storage.loadImage(fallback, projectID: projectID, maxPixel: 500), fallbackFills)
             }.value
             guard let self, self.representedProjectID == projectID else { return }
-            self.imgThumb.contentMode = result.1 ? .scaleAspectFill : .scaleAspectFit
+            self.imgThumb.contentMode = result.1 ? .scaleAspectFill : .scaleAspectFill
             self.imgThumb.image = result.0 ?? UIImage(named: "Remove BG Image")
         }
     }

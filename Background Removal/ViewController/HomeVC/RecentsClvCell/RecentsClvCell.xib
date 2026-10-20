@@ -21,16 +21,23 @@
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="igp-B6-FHF">
                         <rect key="frame" x="5" y="5" width="274" height="192"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Remove BG Image" translatesAutoresizingMaskIntoConstraints="NO" id="sTt-pM-UTz">
+                                <rect key="frame" x="0.0" y="0.0" width="274" height="192"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Remove BG Image" translatesAutoresizingMaskIntoConstraints="NO" id="ke3-eL-0ma">
                                 <rect key="frame" x="0.0" y="0.0" width="274" height="192"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" name="Light blue"/>
                         <constraints>
+                            <constraint firstItem="sTt-pM-UTz" firstAttribute="top" secondItem="igp-B6-FHF" secondAttribute="top" id="5g7-OG-9kn"/>
+                            <constraint firstItem="sTt-pM-UTz" firstAttribute="leading" secondItem="igp-B6-FHF" secondAttribute="leading" id="NUP-Kw-c1K"/>
+                            <constraint firstAttribute="trailing" secondItem="sTt-pM-UTz" secondAttribute="trailing" id="Rps-0t-QtY"/>
                             <constraint firstAttribute="trailing" secondItem="ke3-eL-0ma" secondAttribute="trailing" id="en6-px-0Uw"/>
                             <constraint firstItem="ke3-eL-0ma" firstAttribute="leading" secondItem="igp-B6-FHF" secondAttribute="leading" id="iBK-dh-dcR"/>
                             <constraint firstAttribute="bottom" secondItem="ke3-eL-0ma" secondAttribute="bottom" id="jp5-d7-k91"/>
                             <constraint firstItem="ke3-eL-0ma" firstAttribute="top" secondItem="igp-B6-FHF" secondAttribute="top" id="mYW-70-i55"/>
+                            <constraint firstAttribute="bottom" secondItem="sTt-pM-UTz" secondAttribute="bottom" id="svR-ZG-31J"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

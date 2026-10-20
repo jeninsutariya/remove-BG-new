@@ -81,13 +81,13 @@
                                 </constraints>
                             </progressView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove BG" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pn2-JO-BjB">
-                                <rect key="frame" x="50" y="486" width="293" height="48.333333333333371"/>
+                                <rect key="frame" x="50" y="476" width="293" height="48.333333333333371"/>
                                 <fontDescription key="fontDescription" name="InstrumentSerif-Italic" family="Instrument Serif" pointSize="37"/>
                                 <color key="textColor" name="PrimaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove any background in one tap" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HUY-Jm-1Dv">
-                                <rect key="frame" x="20" y="534.33333333333337" width="353" height="19.333333333333371"/>
+                                <rect key="frame" x="20" y="524.33333333333337" width="353" height="19.333333333333371"/>
                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="16"/>
                                 <color key="textColor" name="SecondaryText"/>
                                 <nil key="highlightedColor"/>
@@ -104,7 +104,7 @@
                             <constraint firstItem="GqZ-Md-8Da" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="KB6-EI-fuT"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oHm-KS-XJL" secondAttribute="trailing" constant="-80" id="L8l-Ux-C9R"/>
                             <constraint firstItem="pW1-P8-S75" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="MZ7-jN-N1m"/>
-                            <constraint firstItem="pn2-JO-BjB" firstAttribute="top" secondItem="GqZ-Md-8Da" secondAttribute="bottom" constant="10" id="Tqh-he-uVY"/>
+                            <constraint firstItem="pn2-JO-BjB" firstAttribute="top" secondItem="GqZ-Md-8Da" secondAttribute="bottom" id="Tqh-he-uVY"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HUY-Jm-1Dv" secondAttribute="trailing" constant="20" id="UeO-5p-VoC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="pn2-JO-BjB" secondAttribute="trailing" constant="50" id="ejF-Sn-uFv"/>
                             <constraint firstItem="HUY-Jm-1Dv" firstAttribute="top" secondItem="pn2-JO-BjB" secondAttribute="bottom" id="rVf-le-2hK"/>
@@ -1369,8 +1369,10 @@ Remove</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Home" image="home" selectedImage="home_seleced" id="oJT-yv-yGn"/>
                     <connections>
+                        <outlet property="btnRecents" destination="6XX-ya-Jad" id="3r1-H8-EZv"/>
                         <outlet property="clvCardView" destination="W1h-T4-xSI" id="G1J-tQ-XBm"/>
                         <outlet property="clvRecents" destination="NBz-6Y-OGR" id="qBQ-Os-xzu"/>
+                        <outlet property="lblRecents" destination="b8K-Q3-MhV" id="Jfz-b3-8nS"/>
                         <outlet property="stackView" destination="twb-zd-F6G" id="M0Z-Sb-80Y"/>
                         <outlet property="vwBatchRemove" destination="FkQ-ei-pL1" id="pDf-ND-yLj"/>
                         <outlet property="vwBatchRemoveImage" destination="8p2-gc-Orp" id="0ZL-az-DL5"/>
@@ -1429,24 +1431,83 @@ Remove</string>
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XBC-mL-maQ">
+                                <rect key="frame" x="20" y="337.33333333333331" width="353" height="177.66666666666669"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4P4-oz-BmX">
+                                        <rect key="frame" x="146.66666666666666" y="25" width="60" height="60"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no data" translatesAutoresizingMaskIntoConstraints="NO" id="acy-4t-TGb">
+                                                <rect key="frame" x="18" y="18" width="24" height="24"/>
+                                                <color key="tintColor" name="AccentColor"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" name="Ultra Light Blue"/>
+                                        <constraints>
+                                            <constraint firstItem="acy-4t-TGb" firstAttribute="top" secondItem="4P4-oz-BmX" secondAttribute="top" constant="18" id="H5J-mo-1Kx"/>
+                                            <constraint firstItem="acy-4t-TGb" firstAttribute="leading" secondItem="4P4-oz-BmX" secondAttribute="leading" constant="18" id="Oqn-vo-EbL"/>
+                                            <constraint firstAttribute="width" secondItem="4P4-oz-BmX" secondAttribute="height" id="R1H-N6-kLn"/>
+                                            <constraint firstAttribute="height" constant="60" id="geY-vY-YcL"/>
+                                            <constraint firstAttribute="trailing" secondItem="acy-4t-TGb" secondAttribute="trailing" constant="18" id="u9v-FK-gAU"/>
+                                            <constraint firstAttribute="bottom" secondItem="acy-4t-TGb" secondAttribute="bottom" constant="18" id="zSe-Dl-79M"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isCircleOn" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No projects yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A9u-pw-vic">
+                                        <rect key="frame" x="10" y="95" width="333" height="21"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="17"/>
+                                        <color key="textColor" name="PrimaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove a background from any photo and your edits will show up here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B8Q-eX-4h2">
+                                        <rect key="frame" x="20" y="119.00000000000001" width="313" height="33.666666666666671"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="14"/>
+                                        <color key="textColor" name="SecondaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="Surface Color"/>
+                                <constraints>
+                                    <constraint firstItem="B8Q-eX-4h2" firstAttribute="top" secondItem="A9u-pw-vic" secondAttribute="bottom" constant="3" id="0Dc-P4-QnA"/>
+                                    <constraint firstAttribute="trailing" secondItem="B8Q-eX-4h2" secondAttribute="trailing" constant="20" id="5ut-zd-2uI"/>
+                                    <constraint firstItem="B8Q-eX-4h2" firstAttribute="leading" secondItem="XBC-mL-maQ" secondAttribute="leading" constant="20" id="AI4-GJ-pgT"/>
+                                    <constraint firstAttribute="trailing" secondItem="A9u-pw-vic" secondAttribute="trailing" constant="10" id="NRX-L8-lrx"/>
+                                    <constraint firstItem="A9u-pw-vic" firstAttribute="top" secondItem="4P4-oz-BmX" secondAttribute="bottom" constant="10" id="QUH-CG-Vku"/>
+                                    <constraint firstItem="A9u-pw-vic" firstAttribute="leading" secondItem="XBC-mL-maQ" secondAttribute="leading" constant="10" id="RrH-5e-ByP"/>
+                                    <constraint firstItem="4P4-oz-BmX" firstAttribute="top" secondItem="XBC-mL-maQ" secondAttribute="top" constant="25" id="hbZ-pV-zUb"/>
+                                    <constraint firstItem="4P4-oz-BmX" firstAttribute="centerX" secondItem="XBC-mL-maQ" secondAttribute="centerX" id="nEp-Hl-c08"/>
+                                    <constraint firstAttribute="bottom" secondItem="B8Q-eX-4h2" secondAttribute="bottom" constant="25" id="xJD-uz-TCJ"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="R8l-Mn-GHM"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="R8l-Mn-GHM" firstAttribute="trailing" secondItem="n1p-od-8jf" secondAttribute="trailing" constant="15" id="8uZ-sh-mFP"/>
                             <constraint firstItem="n1p-od-8jf" firstAttribute="top" secondItem="r6A-xV-dHW" secondAttribute="bottom" constant="10" id="Gcn-kU-Pfh"/>
+                            <constraint firstItem="XBC-mL-maQ" firstAttribute="leading" secondItem="dFW-BS-lrq" secondAttribute="leading" constant="20" id="PSQ-D5-8g9"/>
                             <constraint firstAttribute="bottom" secondItem="n1p-od-8jf" secondAttribute="bottom" id="SWT-1s-Efs"/>
                             <constraint firstItem="EAE-VH-V0W" firstAttribute="leading" secondItem="r6A-xV-dHW" secondAttribute="trailing" constant="10" id="TbL-aw-xwV"/>
                             <constraint firstItem="R8l-Mn-GHM" firstAttribute="trailing" secondItem="EAE-VH-V0W" secondAttribute="trailing" constant="20" id="WZt-dQ-bSS"/>
                             <constraint firstItem="r6A-xV-dHW" firstAttribute="top" secondItem="R8l-Mn-GHM" secondAttribute="top" id="XcM-gF-3T4"/>
                             <constraint firstItem="n1p-od-8jf" firstAttribute="leading" secondItem="R8l-Mn-GHM" secondAttribute="leading" constant="15" id="XgY-Wd-kk7"/>
                             <constraint firstItem="r6A-xV-dHW" firstAttribute="leading" secondItem="dFW-BS-lrq" secondAttribute="leading" constant="20" id="bO5-0e-K0s"/>
+                            <constraint firstItem="XBC-mL-maQ" firstAttribute="centerY" secondItem="dFW-BS-lrq" secondAttribute="centerY" id="cAe-LO-DQb"/>
+                            <constraint firstAttribute="trailing" secondItem="XBC-mL-maQ" secondAttribute="trailing" constant="20" id="uEs-gW-N8g"/>
                             <constraint firstItem="EAE-VH-V0W" firstAttribute="top" secondItem="R8l-Mn-GHM" secondAttribute="top" id="yHq-zD-xLR"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Projects" image="projects" selectedImage="projects_seleced" id="qav-EZ-jKd"/>
                     <connections>
                         <outlet property="clvProjects" destination="n1p-od-8jf" id="Xt9-XV-mxE"/>
+                        <outlet property="nodata" destination="XBC-mL-maQ" id="dYy-NQ-w5e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dgg-wK-6Nu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2491,9 +2552,9 @@ Remove</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Pro" image="ProTab" selectedImage="ProTab" id="Jvp-vu-KEH"/>
                     <connections>
-                        <outlet property="tblProdact" destination="RM1-PW-ghH" id="osv-ei-p1n"/>
                         <outlet property="btnContinue" destination="ujn-Wj-2TR" id="puC-ou-001"/>
                         <outlet property="btnRestore" destination="HTQ-LP-jSu" id="puR-ou-001"/>
+                        <outlet property="tblProdact" destination="RM1-PW-ghH" id="osv-ei-p1n"/>
                         <outlet property="tblProdactHeight" destination="JHz-8e-UqL" id="ZZT-94-CQr"/>
                         <outlet property="vwLimage" destination="Dxs-hf-qah" id="qhI-Gl-urY"/>
                         <outlet property="vwRimage" destination="zxF-a5-r4m" id="VwW-c3-O86"/>
@@ -2607,12 +2668,12 @@ Remove</string>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="veBackground" destination="9C8-Gf-JVc" id="t9g-mB-dLz"/>
                         <outlet property="lblPercent" destination="mDY-0G-unp" id="rbP-lP-001"/>
                         <outlet property="lblStatus" destination="6q2-a4-fFw" id="rbP-lS-002"/>
                         <outlet property="lblSubtitle" destination="dJA-AA-Koj" id="rbP-lU-003"/>
                         <outlet property="lblTitle" destination="Zzc-rv-pEY" id="rbP-lT-004"/>
                         <outlet property="progressView" destination="hod-h2-ZTO" id="rbP-pV-005"/>
+                        <outlet property="veBackground" destination="9C8-Gf-JVc" id="t9g-mB-dLz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mdW-Uw-bqq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2754,6 +2815,7 @@ Remove</string>
         <image name="home" width="24" height="24"/>
         <image name="home_seleced" width="24" height="24"/>
         <image name="ic_check" width="24" height="24"/>
+        <image name="no data" width="18" height="18"/>
         <image name="proChangB" width="736" height="736"/>
         <image name="proTextB" width="736" height="736"/>
         <image name="projects" width="24" height="24"/>
