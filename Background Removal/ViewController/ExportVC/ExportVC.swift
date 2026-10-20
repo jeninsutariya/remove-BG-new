@@ -122,6 +122,10 @@ class ExportVC: UIViewController {
     private let previewView = UIImageView()
     private let checker = CheckerboardView(frame: .zero)
     private var previewAspect: NSLayoutConstraint?
+    /// The clean preview (never watermarked) and what is currently shown from it.
+    private var previewSource: UIImage?
+    private var previewShownSource: UIImage?
+    private var previewShownPremium: Bool?
     private let fileLabel = TBStyle.label("", size: 15, weight: .bold)
     private let sizeLabel = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
     private let scopeControl = UISegmentedControl(items: ["This image", "All images"])
@@ -433,10 +437,26 @@ class ExportVC: UIViewController {
     }
 
     private func setPreview(_ image: UIImage?) {
-        previewView.image = image
+        previewSource = image
+        showPreview()
         if let size = image?.size, size.width > 0, size.height > 0 {
             setPreviewAspect(size.width / size.height)
         }
+    }
+
+    /// Shows the clean preview with the watermark on top for free users, drawn the same way as
+    /// on the exported file (the clean image is kept, so it is never watermarked twice).
+    private func showPreview() {
+        let premium = UserDefaults.isPremiumUser
+        guard previewShownPremium != premium || previewShownSource !== previewSource else { return }
+        previewShownPremium = premium
+        previewShownSource = previewSource
+        guard let source = previewSource else {
+            previewView.image = nil
+            return
+        }
+        let watermark = try? ExportWatermark.forCurrentUser()
+        previewView.image = ExportWatermark.applying(watermark, to: source) ?? source
     }
 
     // MARK: - Display
@@ -452,6 +472,7 @@ class ExportVC: UIViewController {
         }
         let capped = textBehind != nil ? refreshTextBehind() : refreshCutout()
         isCapped = capped
+        showPreview()   // adds / removes the watermark when the premium state changed
         let premium = UserDefaults.isPremiumUser
         proBadge.isHidden = premium || !capped
         hdChevron.isHidden = premium || !capped
@@ -756,6 +777,8 @@ class ExportVC: UIViewController {
         let jpegQuality = self.jpegQuality
         let maxDimension = quality.maxPixelDimension
         let photo = CGSize(width: originalCG.width, height: originalCG.height)
+        // Read when the export is rendered (free users only; drawn onto the final composition).
+        let watermark = try ExportWatermark.forCurrentUser()
         let data = await Task.detached(priority: .userInitiated) { () -> Data? in
             autoreleasepool { () -> Data? in
                 let scale = CGFloat(originalCG.width) / 1000
@@ -766,7 +789,8 @@ class ExportVC: UIViewController {
                 let sources = TBRenderSources(original: UIImage(cgImage: originalCG, scale: 1, orientation: .up),
                                               cutout: cutout, backgroundImage: backgroundImage, mask: nil)
                 let size = TextBehindGeometry.outputSize(photo: photo, canvas: document.canvas, maxDimension: maxDimension)
-                let image = TextBehindSubjectRenderer.render(document, sources: sources, size: size, opaque: format == .jpg)
+                let composed = TextBehindSubjectRenderer.render(document, sources: sources, size: size, opaque: format == .jpg)
+                guard let image = ExportWatermark.applying(watermark, to: composed) else { return nil }
                 return TextBehindSubjectRenderer.encode(image, format: format, jpegQuality: jpegQuality)
             }
         }.value
