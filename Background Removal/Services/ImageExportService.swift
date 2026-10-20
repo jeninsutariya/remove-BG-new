@@ -151,7 +151,7 @@ nonisolated enum ExportWatermark {
     static let widthRatio: CGFloat = 0.1
     /// …but never taller than this share of the image height (wide images).
     static let maxHeightRatio: CGFloat = 0.08
-    /// Gap to the left and bottom edges as a share of the image's shorter side.
+
     static let bottomPaddingRatio: CGFloat = 0.03
 
     /// The watermark for the current user, nil for premium users (`UserDefaults.isPremiumUser`).

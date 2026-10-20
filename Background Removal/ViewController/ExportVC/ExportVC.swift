@@ -134,6 +134,8 @@ class ExportVC: UIViewController {
     private let backgroundButton = UIButton(type: .system)
     private let qualityRow = TBSliderRow("JPEG quality", min: 50, max: 100) { "\(Int($0.rounded()))%" }
     private let noteLabel = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
+    /// Bulk Remove: tells free users about the daily limit when the project has more images than it.
+    private let limitLabel = TBStyle.label("", size: 13, weight: .semibold, color: TBStyle.accent)
     private let hdView = UIView()
     private let hdSubtitle = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
     private let proBadge = UIView()
@@ -328,6 +330,9 @@ class ExportVC: UIViewController {
             optionsStack.bottomAnchor.constraint(equalTo: options.bottomAnchor, constant: -14)
         ])
         noteLabel.numberOfLines = 0
+        limitLabel.numberOfLines = 0
+        limitLabel.isUserInteractionEnabled = true
+        limitLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(limitTapped)))
 
         // HD export card (opens Pro when the export is size-limited)
         let hdTitle = TBStyle.label("HD export", size: 16)
@@ -367,7 +372,7 @@ class ExportVC: UIViewController {
         projectButton.addAction(UIAction { [weak self] _ in self?.saveProject() }, for: .touchUpInside)
 
         // Scrolling settings
-        let content = TBStyle.vStack([previewBox, fileLabel, sizeLabel, scopeControl, options, noteLabel, hdView,
+        let content = TBStyle.vStack([previewBox, fileLabel, sizeLabel, scopeControl, limitLabel, options, noteLabel, hdView,
                                       projectButton], spacing: 12)
         content.setCustomSpacing(2, after: fileLabel)
         content.setCustomSpacing(20, after: sizeLabel)
@@ -479,7 +484,21 @@ class ExportVC: UIViewController {
         hdSubtitle.text = capped && !premium
             ? "Free exports up to \(Int(ExportQuality.standardMaxPixelDimension)) px · Full resolution with Pro"
             : "Full resolution"
+        refreshBulkLimit()
         hdView.accessibilityLabel = "HD export. \(hdSubtitle.text ?? "")"
+    }
+
+    /// Shows the free daily limit text when a Bulk Remove project has more images than the limit.
+    private func refreshBulkLimit() {
+        let total = viewModel.project.completedItems.count
+        let limit = PaywallManager.bulkDailyLimit
+        let show = isBulk && !UserDefaults.isPremiumUser && !isTextBehind && total > limit
+        limitLabel.isHidden = !show
+        limitLabel.text = "Free users can save up to \(limit) images per day. Get Premium to save all \(total) images."
+    }
+
+    @objc private func limitTapped() {
+        present(ProUpgradeVC.fatchInstance(), animated: true)
     }
 
     /// Text Behind Subject. Returns whether the free size limit reduces the export.
@@ -665,8 +684,17 @@ class ExportVC: UIViewController {
         return outputs.map { (name: $0.fileName, data: $0.data) }
     }
 
+    private var isBulk: Bool { modelNameKey == "BulkRemove" }
+
+    /// Bulk Remove counts exported images per day (3 free); every other feature keeps its tap limit.
+    private func allowExport(items: [BackgroundRemovalItem]) -> Bool {
+        guard task == nil, !ImageExportService.shared.isBusy else { return false }
+        if isBulk { return PaywallManager.shared.shouldAllowBulkExport(from: self, itemIDs: items.map(\.id)) }
+        return PaywallManager.shared.shouldAllowAction(from: self, key: self.modelNameKey ?? "RemoveBG")
+    }
+
     private func save() {
-        if PaywallManager.shared.shouldAllowAction(from: self, key: self.modelNameKey ?? "RemoveBG"){
+        if allowExport(items: exportItems) {
             let items = exportItems
             guard task == nil, !ImageExportService.shared.isBusy, isTextBehind || !items.isEmpty else { return }
             setBusy(true)
@@ -696,6 +724,7 @@ class ExportVC: UIViewController {
                     }
                     hud.dismiss()
                     if count > 0 {
+                        if self.isBulk { PaywallManager.shared.recordBulkExport(itemIDs: items.map(\.id)) }
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
                         showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos")
                     }
@@ -714,7 +743,7 @@ class ExportVC: UIViewController {
     }
 
     private func share() {
-        if PaywallManager.shared.shouldAllowAction(from: self, key: self.modelNameKey ?? "RemoveBG"){
+        if allowExport(items: exportItems) {
             let items = exportItems
             guard task == nil, isTextBehind || !items.isEmpty else { return }
             setBusy(true)
@@ -744,7 +773,12 @@ class ExportVC: UIViewController {
                     let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                     activity.popoverPresentationController?.sourceView = self.shareButton
                     activity.popoverPresentationController?.sourceRect = self.shareButton.bounds
-                    activity.completionWithItemsHandler = { _, _, _, _ in ZIPExportService.shared.cleanUp(url) }
+                    let bulkIDs = self.isBulk ? items.map(\.id) : []
+                    activity.completionWithItemsHandler = { _, completed, _, _ in
+                        ZIPExportService.shared.cleanUp(url)
+                        // Only a completed share (not a cancelled sheet) uses up the daily limit.
+                        if completed, !bulkIDs.isEmpty { PaywallManager.shared.recordBulkExport(itemIDs: bulkIDs) }
+                    }
                     self.present(activity, animated: true)
                 } catch is CancellationError {
                     hud.dismiss()
