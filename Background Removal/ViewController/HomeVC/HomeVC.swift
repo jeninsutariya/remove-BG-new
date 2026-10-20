@@ -278,16 +278,24 @@ class HomeVC: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @IBAction func btnRemoveBackground(_ sender: UIButton) {
-        self.selectRemoveBG()
+        adsManager.showInterstitial {
+            self.selectRemoveBG()
+        }
     }
     @IBAction func btnChangeBackground(_ sender: UIButton) {
-        openImagePicker(mode: .single, destination: .changeBackground)
+        adsManager.showInterstitial {
+            self.openImagePicker(mode: .single, destination: .changeBackground)
+        }
     }
     @IBAction func btnTextBehind(_ sender: UIButton) {
-        openImagePicker(mode: .single, destination: .textBehind)
+        adsManager.showInterstitial {
+            self.openImagePicker(mode: .single, destination: .textBehind)
+        }
     }
     @IBAction func btnBatchRemove(_ sender: UIButton) {
-        openImagePicker(mode: .multiple, destination: .editor)
+        adsManager.showInterstitial {
+            self.openImagePicker(mode: .multiple, destination: .editor)
+        }
     }
     
     func openProject(_ project: BackgroundRemovalProject) {
@@ -339,21 +347,23 @@ extension HomeVC: UICollectionViewDelegate,UICollectionViewDataSource, UICollect
         setPageViewAnimate()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == clvRecents {
-            openProject(recentProjects[indexPath.row])
-            return
-        }
-        guard collectionView == clvCardView else { return }
-        let item = homeCardData[indexPath.row]
-        switch item.id {
-        case 1:
-            openImagePicker(mode: .multiple, destination: .editor)
-        case 2:
-            openImagePicker(mode: .single, destination: .changeBackground)
-        case 3:
-            openImagePicker(mode: .single, destination: .textBehind)
-        default:
-            break
+        adsManager.showInterstitial {
+            if collectionView == self.clvRecents {
+                self.openProject(self.recentProjects[indexPath.row])
+                return
+            }
+            guard collectionView == self.clvCardView else { return }
+            let item = self.homeCardData[indexPath.row]
+            switch item.id {
+            case 1:
+                self.openImagePicker(mode: .multiple, destination: .editor)
+            case 2:
+                self.openImagePicker(mode: .single, destination: .changeBackground)
+            case 3:
+                self.openImagePicker(mode: .single, destination: .textBehind)
+            default:
+                break
+            }
         }
     }
 }

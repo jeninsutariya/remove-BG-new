@@ -40,8 +40,10 @@ class OnboardingFastVC: UIViewController {
         revealView.rightImage = rightIMG
     }
     @IBAction func btnContinue(_ sender: UIButton) {
-        let vc = OnboardingSecondVC.fatchInstance()
-        self.navigationController?.pushViewController(vc, animated: true)
+        adsManager.showInterstitial {
+            let vc = OnboardingSecondVC.fatchInstance()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     func bannerAd(){
         if UserDefaults.isPremiumUser {

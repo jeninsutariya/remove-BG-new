@@ -452,19 +452,23 @@ class RemovingBackgroundEditorVC: UIViewController {
     }
 
     @IBAction func btnUndo(_ sender: UIButton) {
-        guard let id = currentItemID, let previous = undoStacks[id]?.popLast(),
-              let current = viewModel.snapshot(of: id) else { return }
-        redoStacks[id, default: []].append(current)
-        viewModel.restore(previous)
-        updateUndoButtons()
+        adsManager.showInterstitial {
+            guard let id = self.currentItemID, let previous = self.undoStacks[id]?.popLast(),
+                  let current = self.viewModel.snapshot(of: id) else { return }
+            self.redoStacks[id, default: []].append(current)
+            self.viewModel.restore(previous)
+            self.updateUndoButtons()
+        }
     }
 
     @IBAction func btnRedo(_ sender: UIButton) {
-        guard let id = currentItemID, let next = redoStacks[id]?.popLast(),
-              let current = viewModel.snapshot(of: id) else { return }
-        undoStacks[id, default: []].append(current)
-        viewModel.restore(next)
-        updateUndoButtons()
+        adsManager.showInterstitial {
+            guard let id = self.currentItemID, let next = self.redoStacks[id]?.popLast(),
+                  let current = self.viewModel.snapshot(of: id) else { return }
+            self.undoStacks[id, default: []].append(current)
+            self.viewModel.restore(next)
+            self.updateUndoButtons()
+        }
     }
 
     // MARK: - Tools
@@ -623,55 +627,65 @@ class RemovingBackgroundEditorVC: UIViewController {
     // MARK: - Actions
 
     @IBAction func btnBack(_ sender: UIButton) {
-        if isPanelOpen {
-            closePanel()
-            return
+        adsManager.showInterstitial {
+            if self.isPanelOpen {
+                self.closePanel()
+                return
+            }
+            // Processing stops when the user leaves; unfinished items stay "Waiting" in the saved project.
+            self.viewModel.cancelProcessing()
+            self.thumbnailTask?.cancel()
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            Task {
+                // Final thumbnail first, then remove files nothing references any more.
+                await viewModel.refreshThumbnail()
+                viewModel.purgeUnusedFiles()
+            }
+            self.navigationController?.popViewController(animated: true)
         }
-        // Processing stops when the user leaves; unfinished items stay "Waiting" in the saved project.
-        viewModel.cancelProcessing()
-        thumbnailTask?.cancel()
-        let viewModel: BackgroundRemovalViewModel = self.viewModel
-        Task {
-            // Final thumbnail first, then remove files nothing references any more.
-            await viewModel.refreshThumbnail()
-            viewModel.purgeUnusedFiles()
-        }
-        navigationController?.popViewController(animated: true)
     }
 
     @IBAction func btnExport(_ sender: UIButton) {
-        guard !isPanelOpen else { return }
-        ExportVC.push(from: navigationController, viewModel: viewModel,
-                      itemID: currentItem?.isCompleted == true ? currentItemID : viewModel.project.completedItems.first?.id)
+        adsManager.showInterstitial {
+            guard !self.isPanelOpen else { return }
+            ExportVC.push(from: self.navigationController, viewModel: self.viewModel,
+                          itemID: self.currentItem?.isCompleted == true ? self.currentItemID : self.viewModel.project.completedItems.first?.id)
+        }
     }
 
     @IBAction func btnStatus(_ sender: UIButton) {
-        guard let item = currentItem, item.status == .failed else { return }
-        if let message = item.errorMessage {
-            presentErrorAlert(title: "Background removal failed", message: message,
-                              retry: { [weak self] in self?.viewModel.retry(item.id) })
-        } else {
-            viewModel.retry(item.id)
+        adsManager.showInterstitial {
+            guard let item = self.currentItem, item.status == .failed else { return }
+            if let message = item.errorMessage {
+                self.presentErrorAlert(title: "Background removal failed", message: message,
+                                  retry: { [weak self] in self?.viewModel.retry(item.id) })
+            } else {
+                self.viewModel.retry(item.id)
+            }
         }
     }
 
     @IBAction func btnCompareDown(_ sender: UIButton) {
-        guard let id = currentItemID, currentItem?.isCompleted == true else { return }
-        isComparing = true
-        let viewModel: BackgroundRemovalViewModel = self.viewModel
-        Task { [weak self] in
-            let original = await viewModel.originalPreview(for: id, maxPixel: 1400)
-            guard let self, self.isComparing, self.currentItemID == id else { return }
-            self.vwChecker.isHidden = true
-            self.imgPreview.image = original
+        adsManager.showInterstitial {
+            guard let id = self.currentItemID, self.currentItem?.isCompleted == true else { return }
+            self.isComparing = true
+            let viewModel: BackgroundRemovalViewModel = self.viewModel
+            Task { [weak self] in
+                let original = await viewModel.originalPreview(for: id, maxPixel: 1400)
+                guard let self, self.isComparing, self.currentItemID == id else { return }
+                self.vwChecker.isHidden = true
+                self.imgPreview.image = original
+            }
         }
     }
 
     @IBAction func btnCompareUp(_ sender: UIButton) {
-        guard isComparing else { return }
-        isComparing = false
-        vwChecker.isHidden = !shownBackground.isTransparent
-        imgPreview.image = lastPreview
+        adsManager.showInterstitial {
+            guard self.isComparing else { return }
+            self.isComparing = false
+            self.vwChecker.isHidden = !self.shownBackground.isTransparent
+            self.imgPreview.image = self.lastPreview
+        }
     }
 }
 

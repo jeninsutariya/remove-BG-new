@@ -255,7 +255,9 @@ class SearchVC: UIViewController {
         }
     }
     @IBAction func btnClearRecent(_ sender: UIButton) {
-        self.clearRecentSearches()
+        adsManager.showInterstitial {
+            self.clearRecentSearches()
+        }
     }
 }
 
@@ -312,11 +314,13 @@ extension SearchVC:UICollectionViewDataSource, UICollectionViewDelegate {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let searchText = self.recentSearches[indexPath.row]
-        self.txtSearch.text = searchText
-        self.btnClear.isHidden = false
-        self.updateSearchAppearance(isHighlighted: true)
-        self.performSearch(searchText)
+        adsManager.showInterstitial {
+            let searchText = self.recentSearches[indexPath.row]
+            self.txtSearch.text = searchText
+            self.btnClear.isHidden = false
+            self.updateSearchAppearance(isHighlighted: true)
+            self.performSearch(searchText)
+        }
     }
     
 }

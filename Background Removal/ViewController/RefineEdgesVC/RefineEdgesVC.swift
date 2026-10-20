@@ -594,39 +594,49 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     @IBAction func btnApply(_ sender: UIButton) { apply() }
 
     @IBAction func btnUndo(_ sender: UIButton) {
-        guard historyIndex > 0 else { return }
-        historyIndex -= 1
-        restore(history[historyIndex])
+        adsManager.showInterstitial {
+            guard self.historyIndex > 0 else { return }
+            self.historyIndex -= 1
+            self.restore(self.history[self.historyIndex])
+        }
     }
 
     @IBAction func btnRedo(_ sender: UIButton) {
-        guard historyIndex < history.count - 1 else { return }
-        historyIndex += 1
-        restore(history[historyIndex])
+        adsManager.showInterstitial {
+            guard self.historyIndex < self.history.count - 1 else { return }
+            self.historyIndex += 1
+            self.restore(self.history[self.historyIndex])
+        }
     }
 
     @IBAction func segModeChanged(_ sender: UISegmentedControl) {
-        lblHint.text = isErasing ? modeHints.erase : modeHints.restore
-        vwHint.isHidden = false
-        // Show the removed parts faintly while restoring.
-        UIView.animate(withDuration: 0.2) { self.ghostView.alpha = self.isErasing ? 0 : 0.3 }
+        adsManager.showInterstitial {
+            self.lblHint.text = self.isErasing ? self.modeHints.erase : self.modeHints.restore
+            self.vwHint.isHidden = false
+            // Show the removed parts faintly while restoring.
+            UIView.animate(withDuration: 0.2) { self.ghostView.alpha = self.isErasing ? 0 : 0.3 }
+        }
     }
 
     @IBAction func sliderBrushChanged(_ sender: UISlider) {
-        lblBrushValue.text = "\(Int(sender.value.rounded()))"
-        showBrush(at: CGPoint(x: view.bounds.midX, y: vwCanvasArea.frame.midY))
-        loupe.isHidden = true
-        // Touch-up events from UISlider aren't reliable on every iOS version, so the preview
-        // also hides itself once the value stops changing.
-        hidePreviewWork?.cancel()
-        let work = DispatchWorkItem { [weak self] in self?.hideBrush() }
-        hidePreviewWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: work)
+        adsManager.showInterstitial {
+            self.lblBrushValue.text = "\(Int(sender.value.rounded()))"
+            self.showBrush(at: CGPoint(x: self.view.bounds.midX, y: self.vwCanvasArea.frame.midY))
+            self.loupe.isHidden = true
+            // Touch-up events from UISlider aren't reliable on every iOS version, so the preview
+            // also hides itself once the value stops changing.
+            self.hidePreviewWork?.cancel()
+            let work = DispatchWorkItem { [weak self] in self?.hideBrush() }
+            self.hidePreviewWork = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: work)
+        }
     }
 
     @IBAction func sliderSoftnessChanged(_ sender: UISlider) {
-        lblSoftnessValue.text = "\(Int(sender.value.rounded()))"
-        stamp = MaskBrushCanvas.makeStamp(softness: CGFloat(sender.value) / 100)
+        adsManager.showInterstitial {
+            self.lblSoftnessValue.text = "\(Int(sender.value.rounded()))"
+            self.stamp = MaskBrushCanvas.makeStamp(softness: CGFloat(sender.value) / 100)
+        }
     }
 }
 

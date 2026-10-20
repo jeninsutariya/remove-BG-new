@@ -127,8 +127,10 @@ class ProjectsVC: UIViewController {
         })
     }
     @IBAction func btnSearch(_ sender: UIButton) {
-        let vc = SearchVC.fatchInstance()
-        self.navigationController?.pushViewController(vc, animated: true)
+        adsManager.showInterstitial {
+            let vc = SearchVC.fatchInstance()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
 }
@@ -148,7 +150,9 @@ extension ProjectsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        openProject(projects[indexPath.item])
+        adsManager.showInterstitial {
+            self.openProject(self.projects[indexPath.item])
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

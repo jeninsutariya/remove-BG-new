@@ -212,7 +212,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
                 ImageExportService.saveToPhotosEnabled = isOn
             }
         case .value?:
-            cell.setText("PNG")
+            cell.setText(ImageExportService.defaultFormat.title)
         case .theme?:
             cell.setSegmentedControl()
         default:
@@ -237,12 +237,23 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
         case .theme:
             break
         case .defaultFormat:
-            break
+            let sheet = UIAlertController(title: "Default format", message: nil, preferredStyle: .actionSheet)
+            for format in ExportFormat.allCases {
+                let title = format == ImageExportService.defaultFormat ? "\(format.title) ✓" : format.title
+                sheet.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
+                    ImageExportService.defaultFormat = format
+                    self?.tblExport.reloadData()
+                })
+            }
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.popoverPresentationController?.sourceView = tableView
+            sheet.popoverPresentationController?.sourceRect = tableView.rectForRow(at: indexPath)
+            present(sheet, animated: true)
         case .saveToPhotos:
             break
         case .hdExport:
             if PaywallManager.shared.isPremium {
-                showToast(message: "Full-quality export is active")
+                showAlert(title: "Full-Quality Export", msg: "Export your image in full resolution with maximum clarity. Enjoy high-quality results with no loss of detail.")
             } else {
                 let vc = ProUpgradeVC.fatchInstance()
                 self.present(vc, animated: true, completion: nil)

@@ -21,8 +21,10 @@ class OnboardingThardVC: UIViewController {
         
     }
     @IBAction func btnContinue(_ sender: UIButton) {
-        let vc = OnboardingForthVC.fatchInstance()
-        self.navigationController?.pushViewController(vc, animated: true)
+        adsManager.showInterstitial {
+            let vc = OnboardingForthVC.fatchInstance()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     func bannerAd(){
         if UserDefaults.isPremiumUser {

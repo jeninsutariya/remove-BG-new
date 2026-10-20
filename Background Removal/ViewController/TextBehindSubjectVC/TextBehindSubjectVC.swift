@@ -38,19 +38,19 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     @IBOutlet weak var clvTools: UICollectionView!
     /// Strong: deactivated while a tool panel is open.
     @IBOutlet var canvasBottom: NSLayoutConstraint!
-
+    
     // MARK: - Input
-
+    
     var viewModel: BackgroundRemovalViewModel!
     var itemID: UUID!
-
+    
     private(set) lazy var session: TBEditorSession = {
         let document = viewModel.item(itemID)?.textBehind ?? .starter()
         return TBEditorSession(document: document)
     }()
-
+    
     // MARK: - Tools
-
+    
     private enum Tool: Int, CaseIterable {
         case background, text, refine, shadow, resize
         var title: String {
@@ -72,18 +72,18 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
         }
     }
-
+    
     // MARK: - Canvas views
-
+    
     private let scrollView = UIScrollView()
     private let canvasView = UIView()
     private let checker = CheckerboardView(frame: .zero)
     private let imageView = UIImageView()
     private let overlay = TextSelectionOverlayView(frame: .zero)
     private var canvasSize = CGSize(width: 3, height: 4)
-
+    
     // MARK: - Sources (preview resolution)
-
+    
     private var fullPhotoSize = CGSize(width: 1, height: 1)
     private var previewOriginal: UIImage?
     private var previewMask: CGImage?
@@ -94,9 +94,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     /// Background images that failed to load (not retried on every render).
     private var failedBackgroundKeys = Set<String>()
     private var sourcesReady = false
-
+    
     // MARK: - State
-
+    
     private var renderTask: Task<Void, Never>?
     private var renderGeneration = 0
     private var isMaskPreview = false
@@ -111,9 +111,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private var observers: [NSObjectProtocol] = []
     private var exportTask: Task<Void, Never>?
     private var thumbnailTask: Task<Void, Never>?
-
+    
     // MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bannerAd()
@@ -123,20 +123,20 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         observe()
         loadSources()
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layoutCanvas()
     }
-
+    
     deinit {
         observers.forEach { NotificationCenter.default.removeObserver($0) }
         renderTask?.cancel()
         exportTask?.cancel()
     }
-
+    
     // MARK: - Setup
-
+    
     private func setupChrome() {
         btnBack.setSymbol("chevron.left", size: 17, weight: .bold)
         btnBack.tintColor = UIColor(named: "PrimaryText")
@@ -159,14 +159,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         vwToolbar.layer.shadowOpacity = 0.06
         vwToolbar.layer.shadowRadius = 14
         vwToolbar.layer.shadowOffset = CGSize(width: 0, height: 4)
-
+        
         clvTools.register(UINib(nibName: "EditorToolClvCell", bundle: nil), forCellWithReuseIdentifier: "EditorToolClvCell")
         clvTools.dataSource = self
         clvTools.delegate = self
         clvTools.isScrollEnabled = false
         updateUndoButtons()
     }
-
+    
     private func setupCanvas() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.minimumZoomScale = 1
@@ -196,7 +196,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         imageView.accessibilityLabel = "Text behind subject preview"
         [checker, imageView, overlay].forEach { canvasView.addSubview($0) }
         scrollView.addSubview(canvasView)
-
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(canvasTapped(_:)))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(canvasDoubleTapped(_:)))
         doubleTap.numberOfTapsRequired = 2
@@ -208,7 +208,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         for gesture in [pan, pinch, rotate] as [UIGestureRecognizer] { gesture.delegate = self }
         [tap, doubleTap, pan, pinch, rotate].forEach { canvasView.addGestureRecognizer($0) }
     }
-
+    
     private func setupSession() {
         session.onChange = { [weak self] final in
             self?.requestRender(final: final)
@@ -229,7 +229,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             viewModel.setTextBehind(session.document, for: itemID)
         }
     }
-
+    
     private func observe() {
         observers.append(NotificationCenter.default.addObserver(forName: BackgroundRemovalViewModel.itemDidChangeNotification,
                                                                 object: viewModel, queue: .main) { [weak self] note in
@@ -240,9 +240,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
         })
     }
-
+    
     // MARK: - Sources
-
+    
     /// Loads the preview-size original, the subject mask and the cutout (never re-runs Vision
     /// for text or style changes).
     private func loadSources() {
@@ -289,7 +289,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             self.updateOverlay()
         }
     }
-
+    
     /// Preview mask for the current settings (refined file or Vision), sized to the preview.
     private func ensureMask(for settings: MaskSettings) async -> CGImage? {
         let key = settings.refinedMaskFileName ?? "vision"
@@ -304,7 +304,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         previewMaskKey = key
         return mask
     }
-
+    
     /// Preview subject cutout, rebuilt only when the mask or its settings change.
     private func ensureCutout(for settings: MaskSettings) async -> UIImage? {
         let key = "\(settings.refinedMaskFileName ?? "vision")|\(settings.feather)|\(settings.edgeSmoothing)"
@@ -324,7 +324,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         }
         return cutout
     }
-
+    
     private func backgroundKey(_ selection: BackgroundSelection) -> String {
         switch selection {
         case .remoteImage(let id, _): return "remote-\(id)"
@@ -333,12 +333,12 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         case .none: return "none"
         }
     }
-
+    
     /// Picking a background again retries it after a failed download.
     func retryBackground(_ selection: BackgroundSelection) {
         failedBackgroundKeys.remove(backgroundKey(selection))
     }
-
+    
     /// `quiet`: background work (thumbnails) never shows an error the user didn't trigger.
     private func ensureBackgroundImage(for background: TBBackground, quiet: Bool = false) async -> UIImage? {
         guard case .image(let selection, _) = background else { return nil }
@@ -356,9 +356,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         }
         return nil
     }
-
+    
     // MARK: - Rendering
-
+    
     /// Renders the preview. Live changes use a smaller size; the latest request always wins.
     private func requestRender(final: Bool) {
         guard sourcesReady, let original = previewOriginal else { return }
@@ -401,7 +401,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
         }
     }
-
+    
     /// Fits the canvas (rendered image aspect ratio) in the canvas area.
     private func layoutCanvas() {
         // viewDidLayoutSubviews runs before the canvas area lays out its own subviews, so the
@@ -429,7 +429,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         }
         centerCanvas()
     }
-
+    
     /// Keeps the canvas centred in the scroll view at any zoom.
     private func centerCanvas() {
         let insetX = max((scrollView.bounds.width - scrollView.contentSize.width) / 2, 0)
@@ -441,7 +441,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             scrollView.contentOffset = CGPoint(x: -insetX, y: -insetY)
         }
     }
-
+    
     private func updateOverlay() {
         guard !isPreviewing, !isMaskPreview, let text = session.selectedText, !text.isHidden else {
             overlay.layout = nil
@@ -450,7 +450,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         overlay.isLocked = text.isLocked
         overlay.layout = TextRenderingService.layout(for: text, canvasSize: canvasView.bounds.size)
     }
-
+    
     private func updateUndoButtons() {
         let disabled = UIColor(red: 0.72, green: 0.79, blue: 0.87, alpha: 1)
         btnUndo.isEnabled = session.canUndo
@@ -458,14 +458,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         btnUndo.tintColor = session.canUndo ? UIColor(named: "PrimaryText") : disabled
         btnRedo.tintColor = session.canRedo ? UIColor(named: "PrimaryText") : disabled
     }
-
+    
     private func updateZoomGesture() {
         // Pinch zooms the canvas only when no text is selected; otherwise it resizes the text.
         scrollView.pinchGestureRecognizer?.isEnabled = session.selectedText == nil
     }
-
+    
     // MARK: - Status overlay
-
+    
     private func showStatus(_ message: String, busy: Bool, retry: Bool) {
         vwStatus.isHidden = false
         lblStatus.text = message
@@ -475,7 +475,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         vwToolbar.alpha = 0.5
         btnExport.isEnabled = false
     }
-
+    
     private func hideStatus() {
         vwStatus.isHidden = true
         spinner.stopAnimating()
@@ -483,31 +483,31 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         vwToolbar.alpha = 1
         btnExport.isEnabled = true
     }
-
+    
     // MARK: - Hit testing
-
+    
     /// Front-most visible text layer under `point` (canvas coordinates).
     private func textLayer(at point: CGPoint) -> TextLayerModel? {
         return session.textsFrontToBack.filter { !$0.isHidden }.first {
             TextRenderingService.layout(for: $0, canvasSize: canvasView.bounds.size).contains(point)
         }
     }
-
+    
     // MARK: - Canvas gestures
-
+    
     @objc private func canvasTapped(_ gesture: UITapGestureRecognizer) {
         guard !isPreviewing else { return }
         session.selectedTextID = textLayer(at: gesture.location(in: canvasView))?.id
         (activePanel as? TextStyleEditorView)?.refresh()
         (activePanel as? ShadowEditorView)?.refresh()
     }
-
+    
     @objc private func canvasDoubleTapped(_ gesture: UITapGestureRecognizer) {
         guard !isPreviewing, let layer = textLayer(at: gesture.location(in: canvasView)) else { return }
         session.selectedTextID = layer.id
         openTool(.text)
     }
-
+    
     @objc private func textPanned(_ gesture: UIPanGestureRecognizer) {
         let size = canvasView.bounds.size
         switch gesture.state {
@@ -526,7 +526,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             activePanel?.refresh()
         }
     }
-
+    
     @objc private func textPinched(_ gesture: UIPinchGestureRecognizer) {
         switch gesture.state {
         case .began:
@@ -540,7 +540,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             finishTransformGesture()
         }
     }
-
+    
     @objc private func textRotated(_ gesture: UIRotationGestureRecognizer) {
         switch gesture.state {
         case .began:
@@ -559,21 +559,21 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             finishTransformGesture()
         }
     }
-
+    
     private func finishTransformGesture() {
         // Pinch and rotate can run together; commit once both ended.
         let active = canvasView.gestureRecognizers?.contains {
             ($0 is UIPinchGestureRecognizer || $0 is UIRotationGestureRecognizer)
-                && ($0.state == .began || $0.state == .changed)
+            && ($0.state == .began || $0.state == .changed)
         } ?? false
         guard !active else { return }
         gestureStart = nil
         session.commit()
         activePanel?.refresh()
     }
-
+    
     // MARK: - Tools
-
+    
     private func openTool(_ tool: Tool) {
         guard sourcesReady else { return }
         if activeTool == tool, activePanel != nil { return }
@@ -608,13 +608,13 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         activeTool = tool
         clvTools.reloadData()
     }
-
+    
     private func present(panel: TBPanelView) {
         // Hides the tool bar and slides the panel up from the bottom (or replaces the open one).
         panelPresenter.show(panel, preferredHeight: panel.preferredHeight)
         activePanel = panel
     }
-
+    
     /// - Parameter keepPresenter: switching tools – the next panel replaces this one, so the
     ///   tool bar stays hidden and nothing slides.
     private func closePanel(revert: Bool, keepPresenter: Bool = false, animated: Bool = true) {
@@ -638,9 +638,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         updateOverlay()
         updateUndoButtons()
     }
-
+    
     // MARK: - TBPanelHost
-
+    
     func presentColorPicker(initial: UIColor, completion: @escaping (UIColor) -> Void) {
         let picker = TBColorPickerController()
         picker.selectedColor = initial
@@ -648,7 +648,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         picker.onPick = completion
         present(picker, animated: true)
     }
-
+    
     func presentBackgroundPhotoPicker() {
         var configuration = PHPickerConfiguration()
         configuration.filter = .images
@@ -657,7 +657,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         picker.delegate = self
         present(picker, animated: true)
     }
-
+    
     func openMaskBrush() {
         let hud = ProgressHUD.show(in: view, message: "Preparing mask…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
@@ -681,7 +681,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
-
+    
     private func saveRefinedMask(_ mask: CGImage) {
         let hud = ProgressHUD.show(in: view, message: "Saving mask…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
@@ -698,24 +698,24 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             }
         }
     }
-
+    
     func setMaskPreview(_ enabled: Bool) {
         isMaskPreview = enabled
         updateOverlay()
         requestRender(final: true)
     }
-
+    
     func showMessage(_ title: String, _ message: String) {
         presentErrorAlert(title: title, message: message)
     }
-
+    
     func confirm(_ title: String, _ message: String, action: String, completion: @escaping () -> Void) {
         
         showAlert(title: title, msg: message, okayTitle: action, cancelTitle: "Cancel", doneAction: {
             completion()
         })
     }
-
+    
     func promptText(_ title: String, initial: String, completion: @escaping (String) -> Void) {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addTextField { $0.text = initial; $0.clearButtonMode = .whileEditing }
@@ -725,9 +725,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         })
         present(alert, animated: true)
     }
-
+    
     // MARK: - Actions
-
+    
     @IBAction func btnBack(_ sender: UIButton) {
         session.commit()
         if activePanel != nil { closePanel(revert: false) }
@@ -743,9 +743,9 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         }
         navigationController?.popViewController(animated: true)
     }
-
+    
     // MARK: - Recents thumbnail
-
+    
     /// A closure rendering the current composition small (same renderer as preview/export).
     private func thumbnailRender() -> (() async -> UIImage?)? {
         guard sourcesReady, let original = previewOriginal else { return nil }
@@ -839,62 +839,72 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             await viewModel.saveThumbnail(image)
         }
     }
-
+    
     @IBAction func btnUndo(_ sender: UIButton) {
-        session.undo()
-        activePanel?.refresh()
+        adsManager.showInterstitial {
+            self.session.undo()
+            self.activePanel?.refresh()
+        }
     }
-
+    
     @IBAction func btnRedo(_ sender: UIButton) {
-        session.redo()
-        activePanel?.refresh()
+        adsManager.showInterstitial {
+            self.session.redo()
+            self.activePanel?.refresh()
+        }
     }
-
+    
     @IBAction func btnPreview(_ sender: UIButton) {
-        isPreviewing.toggle()
-        btnPreview.setSymbol(isPreviewing ? "eye.fill" : "eye", size: 18)
-        btnPreview.tintColor = isPreviewing ? UIColor(named: "AccentColor") : UIColor(named: "PrimaryText")
-        if isPreviewing, activePanel != nil {
-            session.commit()
-            // Immediately, so the tool bar's hidden state below isn't overridden by an animation.
-            closePanel(revert: false, animated: false)
+        adsManager.showInterstitial {
+            self.isPreviewing.toggle()
+            self.btnPreview.setSymbol(self.isPreviewing ? "eye.fill" : "eye", size: 18)
+            self.btnPreview.tintColor = self.isPreviewing ? UIColor(named: "AccentColor") : UIColor(named: "PrimaryText")
+            if self.isPreviewing, self.activePanel != nil {
+                self.session.commit()
+                // Immediately, so the tool bar's hidden state below isn't overridden by an animation.
+                self.closePanel(revert: false, animated: false)
+            }
+            UIView.animate(withDuration: 0.2) {
+                self.vwToolbar.alpha = self.isPreviewing ? 0 : 1
+                self.scrollView.setZoomScale(1, animated: false)
+            }
+            self.vwToolbar.isUserInteractionEnabled = !self.isPreviewing
+            self.updateOverlay()
         }
-        UIView.animate(withDuration: 0.2) {
-            self.vwToolbar.alpha = self.isPreviewing ? 0 : 1
-            self.scrollView.setZoomScale(1, animated: false)
-        }
-        vwToolbar.isUserInteractionEnabled = !isPreviewing
-        updateOverlay()
     }
-
+    
     @IBAction func btnExport(_ sender: UIButton) {
-        guard sourcesReady else { return }
-        session.commit()
-        if activePanel != nil { closePanel(revert: false) }
-        viewModel.setTextBehind(session.document, for: itemID)
-        // The shared Export screen (same as every other feature).
-        ExportVC.push(
-            from: navigationController, viewModel: viewModel, itemID: itemID,
-            textBehind: ExportVC.TextBehindExport(
-                document: session.document, previewImage: imageView.image, photoSize: fullPhotoSize,
-                onFormatChange: { [weak self] format, quality in
-                    self?.session.change {
-                        $0.exportFormat = format
-                        $0.jpegQuality = quality
-                    }
-                }))
+        adsManager.showInterstitial {
+            guard self.sourcesReady else { return }
+            self.session.commit()
+            if self.activePanel != nil { self.closePanel(revert: false) }
+            self.viewModel.setTextBehind(self.session.document, for: self.itemID)
+            // The shared Export screen (same as every other feature).
+            ExportVC.push(
+                from: self.navigationController, viewModel: self.viewModel, itemID: self.itemID,
+                textBehind: ExportVC.TextBehindExport(
+                    document: self.session.document, previewImage: self.imageView.image, photoSize: self.fullPhotoSize,
+                    onFormatChange: { [weak self] format, quality in
+                        self?.session.change {
+                            $0.exportFormat = format
+                            $0.jpegQuality = quality
+                        }
+                    }))
+        }
     }
-
+    
     @IBAction func btnRetry(_ sender: UIButton) {
-        guard let item = viewModel.item(itemID) else { return }
-        sourcesReady = false
-        previewMaskKey = nil
-        cutoutKey = nil
-        if item.isCompleted {
-            loadSources()
-        } else {
-            showStatus("Finding the subject…", busy: true, retry: false)
-            viewModel.retry(item.id)
+        adsManager.showInterstitial {
+            guard let item = self.viewModel.item(self.itemID) else { return }
+            self.sourcesReady = false
+            self.previewMaskKey = nil
+            self.cutoutKey = nil
+            if item.isCompleted {
+                self.loadSources()
+            } else {
+                self.showStatus("Finding the subject…", busy: true, retry: false)
+                self.viewModel.retry(item.id)
+            }
         }
     }
 }
@@ -902,7 +912,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
 // MARK: - Gestures
 
 extension TextBehindSubjectVC: UIGestureRecognizerDelegate, UIScrollViewDelegate {
-
+    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard sourcesReady, !isPreviewing, !isMaskPreview else { return false }
         if gestureRecognizer is UIPanGestureRecognizer {
@@ -918,15 +928,15 @@ extension TextBehindSubjectVC: UIGestureRecognizerDelegate, UIScrollViewDelegate
         guard let selected = session.selectedText else { return false }
         return !selected.isLocked && !selected.isHidden
     }
-
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                            shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
         (gestureRecognizer is UIPinchGestureRecognizer && other is UIRotationGestureRecognizer)
-            || (gestureRecognizer is UIRotationGestureRecognizer && other is UIPinchGestureRecognizer)
+        || (gestureRecognizer is UIRotationGestureRecognizer && other is UIPinchGestureRecognizer)
     }
-
+    
     func viewForZooming(in scrollView: UIScrollView) -> UIView? { canvasView }
-
+    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         centerCanvas()
     }
@@ -935,26 +945,26 @@ extension TextBehindSubjectVC: UIGestureRecognizerDelegate, UIScrollViewDelegate
 // MARK: - Tool bar
 
 extension TextBehindSubjectVC: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Tool.allCases.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EditorToolClvCell", for: indexPath) as! EditorToolClvCell
         let tool = Tool.allCases[indexPath.item]
         cell.setData(title: tool.title, symbol: tool.symbol, enabled: sourcesReady, selected: tool == activeTool)
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: floor(collectionView.bounds.width / CGFloat(Tool.allCases.count)), height: collectionView.bounds.height)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat { 0 }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let tool = Tool.allCases[indexPath.item]
         if tool == activeTool {
@@ -1004,25 +1014,25 @@ extension TextBehindSubjectVC: PHPickerViewControllerDelegate {
 final class TBColorPickerController: UIColorPickerViewController, UIColorPickerViewControllerDelegate {
     var onPick: ((UIColor) -> Void)?
     private var lastHex: String?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
         // Closing the picker without choosing keeps the current colour.
         lastHex = selectedColor.hexRGB
     }
-
+    
     private func deliver(_ color: UIColor) {
         // didSelect and didFinish can report the same colour; apply it once.
         guard color.hexRGB != lastHex else { return }
         lastHex = color.hexRGB
         onPick?(color)
     }
-
+    
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         deliver(viewController.selectedColor)
     }
-
+    
     func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
         guard !continuously else { return }
         deliver(color)

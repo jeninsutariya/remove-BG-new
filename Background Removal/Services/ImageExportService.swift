@@ -55,6 +55,14 @@ final class ImageExportService {
         set { UserDefaults.standard.set(newValue, forKey: saveToPhotosKey) }
     }
 
+    private static let defaultFormatKey = "defaultExportFormat"
+
+    /// Settings › Default format. Pre-selected in the Export screen (PNG unless the user changed it).
+    static var defaultFormat: ExportFormat {
+        get { ExportFormat(rawValue: UserDefaults.standard.integer(forKey: defaultFormatKey)) ?? .png }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: defaultFormatKey) }
+    }
+
     /// Writes the files into the app's Documents folder (shown in Files › On My iPhone › app name).
     /// Existing files are never overwritten. Returns the number of files written.
     func saveToAppFolder(_ files: [(name: String, data: Data)]) async throws -> Int {

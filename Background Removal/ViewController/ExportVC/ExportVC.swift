@@ -181,7 +181,8 @@ class ExportVC: UIViewController {
             format = textBehind.document.exportFormat
             qualityValue = Float(textBehind.document.jpegQuality * 100)
         } else {
-            if let item { format = item.background.isTransparent ? .png : .jpg }
+            // Pre-select the format chosen in Settings › Default format.
+            format = ImageExportService.defaultFormat
             qualityValue = Float(quality.jpegQuality * 100)
         }
         formatControl.selectedSegmentIndex = format.rawValue
@@ -575,11 +576,13 @@ class ExportVC: UIViewController {
     }
 
     @IBAction func saveProjectTapped(_ sender: UIButton) {
-        if let textBehind, let id = item?.id {
-            viewModel.setTextBehind(textBehind.document, for: id)
+        adsManager.showInterstitial {
+            if let textBehind = self.textBehind, let id = self.item?.id {
+                self.viewModel.setTextBehind(textBehind.document, for: id)
+            }
+            self.viewModel.save()
+            showToast(message: "Project saved – find it in Projects")
         }
-        viewModel.save()
-        showToast(message: "Project saved – find it in Projects")
     }
 
     private func setBusy(_ busy: Bool) {
@@ -617,11 +620,15 @@ class ExportVC: UIViewController {
     }
 
     @IBAction func saveTapped(_ sender: UIButton) {
-        save()
+        adsManager.showInterstitial {
+            self.save()
+        }
     }
 
     @IBAction func shareTapped(_ sender: UIButton) {
-        share()
+        adsManager.showInterstitial {
+            self.share()
+        }
     }
 
     private func save() {
