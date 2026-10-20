@@ -27,6 +27,31 @@ enum AppAppearance: Int, CaseIterable {
         case .dark:   return .dark
         }
     }
+    
+    private static let storageKey = "selectedAppAppearance"
+    
+    /// Saved theme choice; defaults to following the system.
+    static var current: AppAppearance {
+        get { AppAppearance(rawValue: UserDefaults.standard.integer(forKey: storageKey)) ?? .system }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: storageKey) }
+    }
+    
+    /// Applies the saved theme to every window of every connected scene.
+    static func applySaved(animated: Bool = false) {
+        let style = current.style
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+        for window in windows {
+            if animated {
+                UIView.transition(with: window, duration: 0.25, options: .transitionCrossDissolve) {
+                    window.overrideUserInterfaceStyle = style
+                }
+            } else {
+                window.overrideUserInterfaceStyle = style
+            }
+        }
+    }
 }
 
 enum SettingsItemID {

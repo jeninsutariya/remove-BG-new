@@ -97,7 +97,7 @@ class PurchaseConnector {
         SwiftyStoreKit.purchaseProduct(purchaseId, quantity: 1, atomically: true) { result in
             switch result {
             case .success(let purchase):
-//                GAEventsTracker.logEvents("purchase", ["success": true,"restore_purchases": purchase])
+                GAEventsTracker.logEvents("purchase", ["success": true,"restore_purchases": purchase])
                 print(">>>> Purchase Success: \(purchase.productId)")
                 // Premium is unlocked by the verified receipt only (checkPremiumStatus sets the
                 // flag and posts .refreshPremiumLog).
@@ -211,7 +211,7 @@ class PurchaseConnector {
                 complition(false)
             } else if results.restoredPurchases.count > 0 {
                 print(">>>> Restore Success: \(results.restoredPurchases)")
-//                GAEventsTracker.logEvents("restore_purchases", ["success": true,"restore_purchases": results.restoredPurchases])
+                GAEventsTracker.logEvents("restore_purchases", ["success": true,"restore_purchases": results.restoredPurchases])
                 // Verify the restored purchases (sets the premium flag from the receipt).
                 self.checkPremiumStatus {
                     LoaderView.shared.hide()

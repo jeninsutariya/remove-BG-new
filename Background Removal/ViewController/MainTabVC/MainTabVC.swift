@@ -28,7 +28,21 @@ class MainTabVC: UITabBarController,UITabBarControllerDelegate {
         }
 
       }
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            if let items = tabBar.items, items.count > 2 {
 
+                let proImage = UIImage(named: "ProTab")?
+                    .withRenderingMode(.alwaysOriginal)
+
+                items[2].image = proImage
+                items[2].selectedImage = proImage
+            }
+            // Premium users don't need the Pro tab, so remove it from the tab bar
+        }
+    }
       // 2. This method dictates whether the tab bar should switch to the selected tab
       func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
           

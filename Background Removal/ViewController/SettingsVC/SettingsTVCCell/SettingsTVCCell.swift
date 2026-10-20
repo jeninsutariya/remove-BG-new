@@ -20,7 +20,13 @@ class SettingsTVCCell: UITableViewCell {
     @IBOutlet weak var lblTitle: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        sgmtAppaerance.addTarget(self, action: #selector(appearanceChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc private func appearanceChanged(_ sender: UISegmentedControl) {
+        guard let appearance = AppAppearance(rawValue: sender.selectedSegmentIndex) else { return }
+        AppAppearance.current = appearance
+        AppAppearance.applySaved(animated: true)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -52,7 +58,7 @@ class SettingsTVCCell: UITableViewCell {
         for item in AppAppearance.allCases {
             self.sgmtAppaerance.insertSegment(withTitle: item.title, at: item.rawValue, animated: false)
         }
-        self.sgmtAppaerance.selectedSegmentIndex = 0
+        self.sgmtAppaerance.selectedSegmentIndex = AppAppearance.current.rawValue
         
     }
     func setArrow(){
