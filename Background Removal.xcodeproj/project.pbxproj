@@ -60,7 +60,6 @@
 		C0DE00000000000000000075 /* MaskRefinementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000074 /* MaskRefinementView.swift */; };
 		C0DE00000000000000000077 /* TextSelectionOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000076 /* TextSelectionOverlayView.swift */; };
 		C0DE0000000000000000007A /* TextBehindSubjectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000079 /* TextBehindSubjectVC.swift */; };
-		C0DE0000000000000000007C /* TextBehindExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000007B /* TextBehindExportVC.swift */; };
 		C0DE0000000000000000007F /* EditorPanelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000007E /* EditorPanelPresenter.swift */; };
 		DE0C509D307A604D007992F3 /* SettingsTVCCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE0C509C307A604D007992F3 /* SettingsTVCCell.xib */; };
 		DE0C509E307A604D007992F3 /* SettingsTVCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0C509B307A604D007992F3 /* SettingsTVCCell.swift */; };
@@ -179,7 +178,6 @@
 		C0DE00000000000000000074 /* MaskRefinementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskRefinementView.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000076 /* TextSelectionOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSelectionOverlayView.swift; sourceTree = "<group>"; };
 		C0DE00000000000000000079 /* TextBehindSubjectVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBehindSubjectVC.swift; sourceTree = "<group>"; };
-		C0DE0000000000000000007B /* TextBehindExportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBehindExportVC.swift; sourceTree = "<group>"; };
 		C0DE0000000000000000007E /* EditorPanelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorPanelPresenter.swift; sourceTree = "<group>"; };
 		DE0C509B307A604D007992F3 /* SettingsTVCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCCell.swift; sourceTree = "<group>"; };
 		DE0C509C307A604D007992F3 /* SettingsTVCCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsTVCCell.xib; sourceTree = "<group>"; };
@@ -386,7 +384,6 @@
 			isa = PBXGroup;
 			children = (
 				C0DE00000000000000000079 /* TextBehindSubjectVC.swift */,
-				C0DE0000000000000000007B /* TextBehindExportVC.swift */,
 			);
 			path = TextBehindSubjectVC;
 			sourceTree = "<group>";
@@ -870,7 +867,6 @@
 				C0DE00000000000000000075 /* MaskRefinementView.swift in Sources */,
 				C0DE00000000000000000077 /* TextSelectionOverlayView.swift in Sources */,
 				C0DE0000000000000000007A /* TextBehindSubjectVC.swift in Sources */,
-				C0DE0000000000000000007C /* TextBehindExportVC.swift in Sources */,
 				C0DE00000000000000000040 /* ItemEdits.swift in Sources */,
 				C0DE00000000000000000042 /* MaskRefineService.swift in Sources */,
 				C0DE00000000000000000044 /* EditorToolPanel.swift in Sources */,

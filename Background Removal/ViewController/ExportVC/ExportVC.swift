@@ -2,43 +2,39 @@
 //  ExportVC.swift
 //  Background Removal
 //
-//  11 Export (Editor.storyboard): format, size, background, HD export (premium),
-//  Save to Photos and Share. Batch projects can export this image or all images
-//  (Share then creates BackgroundRemoval_Export.zip). Rendering goes through
-//  ImageExportService, so the result matches the editor preview.
+//  The one Export screen for every feature (Remove Background, Batch Remove, Change Background
+//  and Text Behind Subject), with the Text Behind export layout: preview, file name and size,
+//  Format (PNG keeps transparency / JPG with a quality slider), HD / Pro, Save project,
+//  and Save to Photos / Share fixed at the bottom.
+//
+//  • Cutout projects render through ImageExportService (same compositor as the editor) and
+//    also offer Size and Background; batch projects can export this image or all images
+//    (Share then creates BackgroundRemoval_Export.zip).
+//  • Text Behind Subject (`textBehind` set) renders the text design at the canvas size with
+//    the same renderer as the editor preview.
 //
 
 import UIKit
 
 class ExportVC: UIViewController {
 
-    // MARK: - Outlets
-
-    @IBOutlet weak var btnBack: UIButton!
-    @IBOutlet weak var vwPreviewChecker: CheckerboardView!
-    @IBOutlet weak var imgPreview: UIImageView!
-    @IBOutlet weak var previewWidth: NSLayoutConstraint!
-    @IBOutlet weak var lblFileName: UILabel!
-    @IBOutlet weak var lblDimensions: UILabel!
-    @IBOutlet weak var segScope: UISegmentedControl!
-    @IBOutlet weak var scopeHeight: NSLayoutConstraint!
-    @IBOutlet weak var vwOptions: UIView!
-    @IBOutlet weak var segFormat: UISegmentedControl!
-    @IBOutlet weak var btnSize: UIButton!
-    @IBOutlet weak var btnBackground: UIButton!
-    @IBOutlet weak var lblNote: UILabel!
-    @IBOutlet weak var vwHD: UIView!
-    @IBOutlet weak var lblHDSubtitle: UILabel!
-    @IBOutlet weak var vwProBadge: UIView!
-    @IBOutlet weak var imgHDChevron: UIImageView!
-    @IBOutlet weak var btnSave: UIButton!
-    @IBOutlet weak var btnShare: UIButton!
+    /// What Text Behind Subject passes in; the screen then exports the text design.
+    struct TextBehindExport {
+        var document: TextBehindDocument
+        var previewImage: UIImage?
+        /// Full-resolution photo size (pixels).
+        var photoSize: CGSize
+        /// The editor keeps the chosen format / JPEG quality in its document.
+        var onFormatChange: ((ExportFormat, Double) -> Void)?
+    }
 
     // MARK: - Input
 
     var viewModel: BackgroundRemovalViewModel!
     /// Image shown in the preview (and exported with "This image").
     var itemID: UUID?
+    /// Set by Text Behind Subject.
+    var textBehind: TextBehindExport?
 
     // MARK: - Options
 
@@ -73,10 +69,13 @@ class ExportVC: UIViewController {
     private var background: BackgroundOption = .edited
     private var exportAll = false
     private var previewTask: Task<Void, Never>?
-    private var exportTask: Task<Void, Never>?
-    private var observers: [NSObjectProtocol] = []
+    private var previewKey: (UUID, BackgroundSelection)?
+    private var task: Task<Void, Never>?
+    private var observer: NSObjectProtocol?
 
     private var quality: ExportQuality { ExportQuality.current }
+    private var isTextBehind: Bool { textBehind != nil }
+    private var jpegQuality: CGFloat { CGFloat(qualityRow.value) / 100 }
 
     private var item: BackgroundRemovalItem? {
         itemID.flatMap { viewModel.item($0) } ?? viewModel.project.completedItems.first
@@ -93,19 +92,54 @@ class ExportVC: UIViewController {
         case .transparent: override = BackgroundSelection.none
         case .white: override = .color(hex: "FFFFFF")
         }
-        return ExportOptions(format: format, maxDimension: size.maxDimension, backgroundOverride: override)
+        return ExportOptions(format: format, maxDimension: size.maxDimension, backgroundOverride: override,
+                             jpegQuality: format == .jpg ? jpegQuality : nil)
     }
+
+    // MARK: - Views
+
+    private let backButton = UIButton(type: .system)
+    private let scrollView = UIScrollView()
+    private let previewView = UIImageView()
+    private let checker = CheckerboardView(frame: .zero)
+    private var previewAspect: NSLayoutConstraint?
+    private let fileLabel = TBStyle.label("", size: 15, weight: .bold)
+    private let sizeLabel = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
+    private let scopeControl = UISegmentedControl(items: ["This image", "All images"])
+    private let formatControl = UISegmentedControl(items: ["PNG", "JPG"])
+    private let sizeButton = UIButton(type: .system)
+    private let backgroundButton = UIButton(type: .system)
+    private let qualityRow = TBSliderRow("JPEG quality", min: 50, max: 100) { "\(Int($0.rounded()))%" }
+    private let noteLabel = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
+    private let hdView = UIView()
+    private let hdSubtitle = TBStyle.label("", size: 13, weight: .regular, color: TBStyle.secondary)
+    private let proBadge = UIView()
+    private let hdChevron = UIImageView(image: UIImage(systemName: "chevron.right"))
+    private let saveButton = UIButton(type: .system)
+    private let shareButton = UIButton(type: .system)
+    private let projectButton = UIButton(type: .system)
+    /// Views with a border colour (updated for Dark Mode).
+    private var bordered: [UIView] = []
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let item { format = item.background.isTransparent ? .png : .jpg }
-        setupUI()
-        observers.append(NotificationCenter.default.addObserver(forName: .refreshPremiumLog,
-                                                                object: nil, queue: .main) { [weak self] _ in
+        view.backgroundColor = UIColor(named: "Background") ?? .systemBackground
+        if let textBehind {
+            format = textBehind.document.exportFormat
+            qualityRow.value = Float(textBehind.document.jpegQuality * 100)
+        } else {
+            if let item { format = item.background.isTransparent ? .png : .jpg }
+            qualityRow.value = Float(quality.jpegQuality * 100)
+        }
+        build()
+        formatControl.selectedSegmentIndex = format.rawValue
+        if let image = textBehind?.previewImage { setPreview(image) }
+        observer = NotificationCenter.default.addObserver(forName: .refreshPremiumLog, object: nil,
+                                                          queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
-        })
+        }
         refresh()
     }
 
@@ -114,63 +148,337 @@ class ExportVC: UIViewController {
         refresh()   // the user may have upgraded on the Pro screen
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Keep the last settings reachable above the fixed buttons on every screen size.
+        scrollView.contentInset.bottom = 12
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) { applyBorders() }
     }
 
     deinit {
-        observers.forEach { NotificationCenter.default.removeObserver($0) }
+        if let observer { NotificationCenter.default.removeObserver(observer) }
         previewTask?.cancel()
+        task?.cancel()
     }
 
-    private func setupUI() {
-        btnBack.setSymbol("chevron.left", size: 17, weight: .bold)
-        btnBack.tintColor = UIColor(named: "PrimaryText")
-        btnBack.layer.cornerRadius = 22
-        btnBack.accessibilityLabel = "Back"
-        vwPreviewChecker.layer.cornerRadius = 26
-        vwPreviewChecker.clipsToBounds = true
-        vwPreviewChecker.cellSize = 12.5
-        imgPreview.contentMode = .scaleAspectFit
-        vwOptions.layer.cornerRadius = 24
-        vwHD.layer.cornerRadius = 24
-        vwProBadge.layer.cornerRadius = 12
-        btnSave.layer.cornerRadius = 29
-        btnShare.layer.cornerRadius = 27
-        segFormat.applyEditorStyle()
-        segScope.applyEditorStyle()
-        btnSave.setSymbol("arrow.down.to.line", size: 17, weight: .bold)
-        btnSave.tintColor = .white
-        btnShare.setSymbol("square.and.arrow.up", size: 16, weight: .bold)
-        btnShare.tintColor = UIColor(named: "AccentColor")
-        imgHDChevron.image = UIImage(systemName: "chevron.right",
-                                     withConfiguration: UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold))
-        imgHDChevron.tintColor = UIColor(named: "PrimaryText")
-        for button in [btnSave!, btnShare!] {
-            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -6, bottom: 0, right: 6)
-        }
-        let count = viewModel.project.completedItems.count
-        segScope.setTitle("This image", forSegmentAt: 0)
-        segScope.setTitle("All \(count) images", forSegmentAt: 1)
-        segScope.selectedSegmentIndex = 0
-        let multiple = count > 1
-        segScope.isHidden = !multiple
-        scopeHeight.constant = multiple ? 44 : 0
-        applyBorders()
+    // MARK: - Layout
+
+    private func card(_ view: UIView) -> UIView {
+        view.backgroundColor = TBStyle.surface
+        view.layer.cornerRadius = 24
+        bordered.append(view)
+        return view
     }
 
     private func applyBorders() {
-        let border = (UIColor(named: "Border Color") ?? .lightGray).cgColor
-        for view in [btnBack!, vwOptions!, vwHD!] {
+        for view in bordered {
             view.layer.borderWidth = 1
-            view.layer.borderColor = border
+            view.layer.borderColor = TBStyle.border.resolvedColor(with: traitCollection).cgColor
         }
-        btnShare.layer.borderWidth = 1
-        btnShare.layer.borderColor = (UIColor(named: "BrandPrimary") ?? .lightGray).cgColor
+        shareButton.layer.borderWidth = 1
+        shareButton.layer.borderColor = (UIColor(named: "BrandPrimary") ?? TBStyle.border)
+            .resolvedColor(with: traitCollection).cgColor
+    }
+
+    private func optionButton(_ button: UIButton, action: Selector) -> UIButton {
+        button.titleLabel?.font = TBStyle.font(15, .semibold)
+        button.setTitleColor(TBStyle.accent, for: .normal)
+        button.contentHorizontalAlignment = .trailing
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
+    }
+
+    private func separator() -> UIView {
+        let line = UIView()
+        line.backgroundColor = TBStyle.border
+        line.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        return line
+    }
+
+    private func build() {
+        // Top bar
+        backButton.setSymbol("chevron.left", size: 17, weight: .bold)
+        backButton.tintColor = TBStyle.text
+        backButton.backgroundColor = TBStyle.surface
+        backButton.layer.cornerRadius = 22
+        bordered.append(backButton)
+        backButton.accessibilityLabel = "Back"
+        backButton.addAction(UIAction { [weak self] _ in
+            self?.task?.cancel()
+            self?.navigationController?.popViewController(animated: true)
+        }, for: .touchUpInside)
+        let title = TBStyle.label("Export", size: 18, weight: .bold)
+        title.textAlignment = .center
+
+        // Preview card (keeps the export's aspect ratio)
+        checker.cellSize = 12.5
+        checker.layer.cornerRadius = 26
+        checker.clipsToBounds = true
+        previewView.contentMode = .scaleAspectFit
+        previewView.layer.cornerRadius = 26
+        previewView.clipsToBounds = true
+        previewView.accessibilityLabel = "Export preview"
+        let previewBox = UIView()
+        [checker, previewView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            previewBox.addSubview($0)
+        }
+        let fillHeight = previewView.heightAnchor.constraint(equalTo: previewBox.heightAnchor)
+        fillHeight.priority = .defaultHigh
+        NSLayoutConstraint.activate([
+            previewBox.heightAnchor.constraint(equalToConstant: 200),
+            previewView.centerXAnchor.constraint(equalTo: previewBox.centerXAnchor),
+            previewView.centerYAnchor.constraint(equalTo: previewBox.centerYAnchor),
+            previewView.heightAnchor.constraint(lessThanOrEqualTo: previewBox.heightAnchor),
+            previewView.widthAnchor.constraint(lessThanOrEqualTo: previewBox.widthAnchor),
+            fillHeight,
+            checker.topAnchor.constraint(equalTo: previewView.topAnchor),
+            checker.bottomAnchor.constraint(equalTo: previewView.bottomAnchor),
+            checker.leadingAnchor.constraint(equalTo: previewView.leadingAnchor),
+            checker.trailingAnchor.constraint(equalTo: previewView.trailingAnchor)
+        ])
+        setPreviewAspect(3.0 / 4.0)
+        fileLabel.textAlignment = .center
+        sizeLabel.textAlignment = .center
+
+        // Batch projects: this image or all images
+        let completedCount = viewModel.project.completedItems.count
+        scopeControl.setTitle("All \(completedCount) images", forSegmentAt: 1)
+        scopeControl.selectedSegmentIndex = 0
+        scopeControl.applyEditorStyle()
+        scopeControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        scopeControl.addTarget(self, action: #selector(scopeChanged), for: .valueChanged)
+        scopeControl.isHidden = isTextBehind || completedCount < 2
+
+        // Options card: Format, (Size, Background,) JPEG quality
+        formatControl.applyEditorStyle()
+        formatControl.addTarget(self, action: #selector(formatChanged), for: .valueChanged)
+        formatControl.translatesAutoresizingMaskIntoConstraints = false
+        formatControl.widthAnchor.constraint(equalToConstant: 132).isActive = true
+        formatControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        qualityRow.onChange = { [weak self] _, finished in
+            if finished { self?.formatChanged() }
+        }
+        var rows: [UIView] = [TBStyle.hStack([TBStyle.label("Format", size: 16), UIView(), formatControl])]
+        if !isTextBehind {
+            rows += [separator(),
+                     TBStyle.hStack([TBStyle.label("Size", size: 16), UIView(),
+                                     optionButton(sizeButton, action: #selector(sizeTapped))]),
+                     separator(),
+                     TBStyle.hStack([TBStyle.label("Background", size: 16), UIView(),
+                                     optionButton(backgroundButton, action: #selector(backgroundTapped))])]
+        }
+        rows += [separator(), qualityRow]
+        let optionsStack = TBStyle.vStack(rows, spacing: 12)
+        let options = card(UIView())
+        optionsStack.translatesAutoresizingMaskIntoConstraints = false
+        options.addSubview(optionsStack)
+        NSLayoutConstraint.activate([
+            optionsStack.topAnchor.constraint(equalTo: options.topAnchor, constant: 12),
+            optionsStack.leadingAnchor.constraint(equalTo: options.leadingAnchor, constant: 18),
+            optionsStack.trailingAnchor.constraint(equalTo: options.trailingAnchor, constant: -14),
+            optionsStack.bottomAnchor.constraint(equalTo: options.bottomAnchor, constant: -14)
+        ])
+        noteLabel.numberOfLines = 0
+
+        // HD export card (opens Pro when the export is size-limited)
+        let hdTitle = TBStyle.label("HD export", size: 16)
+        hdSubtitle.numberOfLines = 2
+        proBadge.backgroundColor = UIColor(named: "Badge Color") ?? TBStyle.field
+        proBadge.layer.cornerRadius = 12
+        let badgeLabel = TBStyle.label("PRO", size: 12, weight: .bold, color: UIColor(named: "Link Color") ?? TBStyle.accent)
+        badgeLabel.translatesAutoresizingMaskIntoConstraints = false
+        proBadge.addSubview(badgeLabel)
+        NSLayoutConstraint.activate([
+            badgeLabel.leadingAnchor.constraint(equalTo: proBadge.leadingAnchor, constant: 10),
+            badgeLabel.trailingAnchor.constraint(equalTo: proBadge.trailingAnchor, constant: -10),
+            badgeLabel.centerYAnchor.constraint(equalTo: proBadge.centerYAnchor),
+            proBadge.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        hdChevron.tintColor = TBStyle.text
+        hdChevron.contentMode = .scaleAspectFit
+        hdChevron.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        let hdText = TBStyle.vStack([hdTitle, hdSubtitle], spacing: 2)
+        let hdRow = TBStyle.hStack([hdText, UIView(), proBadge, hdChevron], spacing: 6)
+        hdRow.translatesAutoresizingMaskIntoConstraints = false
+        _ = card(hdView)
+        hdView.addSubview(hdRow)
+        NSLayoutConstraint.activate([
+            hdRow.topAnchor.constraint(equalTo: hdView.topAnchor, constant: 11),
+            hdRow.leadingAnchor.constraint(equalTo: hdView.leadingAnchor, constant: 18),
+            hdRow.trailingAnchor.constraint(equalTo: hdView.trailingAnchor, constant: -14),
+            hdRow.bottomAnchor.constraint(equalTo: hdView.bottomAnchor, constant: -11)
+        ])
+        hdView.isAccessibilityElement = true
+        hdView.accessibilityTraits = .button
+        hdView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hdTapped)))
+
+        projectButton.setTitle("Save project for later", for: .normal)
+        projectButton.titleLabel?.font = TBStyle.font(14, .semibold)
+        projectButton.setTitleColor(TBStyle.accent, for: .normal)
+        projectButton.addAction(UIAction { [weak self] _ in self?.saveProject() }, for: .touchUpInside)
+
+        // Scrolling settings
+        let content = TBStyle.vStack([previewBox, fileLabel, sizeLabel, scopeControl, options, noteLabel, hdView,
+                                      projectButton], spacing: 12)
+        content.setCustomSpacing(2, after: fileLabel)
+        content.setCustomSpacing(20, after: sizeLabel)
+        content.setCustomSpacing(20, after: noteLabel)
+
+        // Fixed buttons
+        saveButton.setTitle("  Save to Photos", for: .normal)
+        saveButton.setSymbol("arrow.down.to.line", size: 17, weight: .bold)
+        saveButton.titleLabel?.font = TBStyle.font(18, .bold)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.tintColor = .white
+        saveButton.backgroundColor = TBStyle.accent
+        saveButton.layer.cornerRadius = 29
+        saveButton.addAction(UIAction { [weak self] _ in self?.save() }, for: .touchUpInside)
+        shareButton.setTitle("  Share", for: .normal)
+        shareButton.setSymbol("square.and.arrow.up", size: 16, weight: .bold)
+        shareButton.titleLabel?.font = TBStyle.font(17, .bold)
+        shareButton.setTitleColor(TBStyle.accent, for: .normal)
+        shareButton.tintColor = TBStyle.accent
+        shareButton.backgroundColor = TBStyle.surface
+        shareButton.layer.cornerRadius = 27
+        shareButton.addAction(UIAction { [weak self] _ in self?.share() }, for: .touchUpInside)
+        applyBorders()
+
+        [backButton, title, scrollView, saveButton, shareButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+        content.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(content)
+        scrollView.alwaysBounceVertical = true
+        let safe = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            backButton.topAnchor.constraint(equalTo: safe.topAnchor, constant: 8),
+            backButton.leadingAnchor.constraint(equalTo: safe.leadingAnchor, constant: 16),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            title.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+
+            scrollView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 8),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -12),
+            // Vertical scrolling: content pinned to the content guide, width to the frame guide.
+            content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 8),
+            content.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 16),
+            content.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -16),
+            content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -8),
+            content.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -32),
+
+            saveButton.leadingAnchor.constraint(equalTo: safe.leadingAnchor, constant: 16),
+            saveButton.trailingAnchor.constraint(equalTo: safe.trailingAnchor, constant: -16),
+            saveButton.heightAnchor.constraint(equalToConstant: 58),
+            shareButton.topAnchor.constraint(equalTo: saveButton.bottomAnchor, constant: 10),
+            shareButton.leadingAnchor.constraint(equalTo: safe.leadingAnchor, constant: 16),
+            shareButton.trailingAnchor.constraint(equalTo: safe.trailingAnchor, constant: -16),
+            shareButton.heightAnchor.constraint(equalToConstant: 54),
+            shareButton.bottomAnchor.constraint(equalTo: safe.bottomAnchor, constant: -8)
+        ])
+    }
+
+    private func setPreviewAspect(_ aspect: CGFloat) {
+        previewAspect?.isActive = false
+        previewAspect = previewView.widthAnchor.constraint(equalTo: previewView.heightAnchor, multiplier: aspect)
+        previewAspect?.isActive = true
+    }
+
+    private func setPreview(_ image: UIImage?) {
+        previewView.image = image
+        if let size = image?.size, size.width > 0, size.height > 0 {
+            setPreviewAspect(size.width / size.height)
+        }
     }
 
     // MARK: - Display
+
+    private func refresh() {
+        guard isViewLoaded else { return }
+        formatControl.selectedSegmentIndex = format.rawValue
+        qualityRow.isUserInteractionEnabled = format == .jpg
+        qualityRow.alpha = format == .jpg ? 1 : 0.4
+        let capped = textBehind != nil ? refreshTextBehind() : refreshCutout()
+        let premium = UserDefaults.isPremiumUser
+        proBadge.isHidden = premium || !capped
+        hdChevron.isHidden = premium || !capped
+        hdSubtitle.text = capped && !premium
+            ? "Free exports up to \(Int(ExportQuality.standardMaxPixelDimension)) px · Full resolution with Pro"
+            : "Full resolution"
+        hdView.accessibilityLabel = "HD export. \(hdSubtitle.text ?? "")"
+    }
+
+    /// Text Behind Subject. Returns whether the free size limit reduces the export.
+    private func refreshTextBehind() -> Bool {
+        guard let textBehind else { return false }
+        let size = textBehindOutputSize(maxDimension: quality.maxPixelDimension)
+        fileLabel.text = textBehindFileName(format: format)
+        sizeLabel.text = "\(Int(size.width)) × \(Int(size.height)) px"
+        let transparent = textBehind.document.background.isTransparent
+        switch format {
+        case .png:
+            noteLabel.text = transparent ? "PNG keeps the transparent background around the text and subject."
+                                         : "PNG keeps full quality (larger file)."
+        case .jpg:
+            noteLabel.text = transparent ? "JPG has no transparency – transparent areas become white. Choose PNG to keep them."
+                                         : "JPG makes a smaller file for a fully composed image."
+        }
+        checker.isHidden = !(transparent && format == .png)
+        return size != textBehindOutputSize(maxDimension: nil)
+    }
+
+    /// Cutout projects (Remove Background, Batch, Change Background). Returns whether the
+    /// free size limit reduces the export.
+    private func refreshCutout() -> Bool {
+        guard let item else {
+            fileLabel.text = nil
+            sizeLabel.text = "Nothing to export yet"
+            return false
+        }
+        fileLabel.text = cutoutFileName
+        sizeButton.setTitle("\(size.title)  ›", for: .normal)
+        backgroundButton.setTitle("\(backgroundTitle(background))  ›", for: .normal)
+        let options = self.options
+        let effective = options.background(for: item)
+        if format == .jpg {
+            noteLabel.text = "JPG files are smaller. Transparent areas become white."
+        } else {
+            noteLabel.text = effective.isTransparent ? "PNG keeps the transparent background." : "PNG keeps full quality."
+        }
+        renderPreview(for: item, background: effective)
+
+        guard let name = item.foregroundFileName,
+              let pixel = ImageUtilities.pixelSize(at: ProjectStorageService.shared.fileURL(name, projectID: viewModel.project.id))
+        else { return quality.maxPixelDimension != nil }
+        let compositor = ImageCompositingService.shared
+        let output = compositor.outputSize(for: pixel, edits: item.edits, maxDimension: options.maxDimension(for: quality))
+        let text = "\(Int(output.width)) × \(Int(output.height)) px"
+        sizeLabel.text = exportAll ? "\(viewModel.project.completedItems.count) images · this one \(text)" : text
+        return output != compositor.outputSize(for: pixel, edits: item.edits, maxDimension: options.maxDimension(for: .full))
+    }
+
+    private func renderPreview(for item: BackgroundRemovalItem, background: BackgroundSelection) {
+        if let key = previewKey, key.0 == item.id, key.1 == background { return }
+        previewKey = (item.id, background)
+        previewTask?.cancel()
+        checker.isHidden = !background.isTransparent
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        let id = item.id
+        let edits = item.edits
+        previewTask = Task { [weak self] in
+            let image = try? await viewModel.compositePreview(for: id, background: background, edits: edits, maxPixel: 600)
+            guard let self, !Task.isCancelled else { return }
+            self.setPreview(image)
+        }
+    }
 
     private func backgroundTitle(_ option: BackgroundOption) -> String {
         switch option {
@@ -185,83 +493,42 @@ class ExportVC: UIViewController {
         }
     }
 
-    private var fileName: String {
+    private var cutoutFileName: String {
         if exportAll { return "BackgroundRemoval_Export.zip" }
         var namer = UniqueFileNamer()
         return namer.name(for: item?.sourceName, index: 1, fileExtension: format.fileExtension)
     }
 
-    private func refresh() {
-        guard isViewLoaded, let item else { return }
-        segFormat.selectedSegmentIndex = format.rawValue
-        lblFileName.text = fileName
-        btnSize.setTitle("\(size.title)  ›", for: .normal)
-        btnBackground.setTitle("\(backgroundTitle(background))  ›", for: .normal)
-
-        let options = self.options
-        let effective = options.background(for: item)
-        if format == .jpg {
-            lblNote.text = "JPG files are smaller. Transparent areas become white."
-        } else {
-            lblNote.text = effective.isTransparent ? "PNG keeps the transparent background." : "PNG keeps full quality."
-        }
-        let premium = UserDefaults.isPremiumUser
-        vwProBadge.isHidden = premium
-        imgHDChevron.isHidden = premium
-        lblHDSubtitle.text = premium ? "Full resolution is on" :
-            "Free exports up to \(Int(ExportQuality.standardMaxPixelDimension)) px · Full resolution with Pro"
-        vwHD.accessibilityLabel = "HD export. \(lblHDSubtitle.text ?? "")"
-
-        updateDimensions(for: item, options: options)
-        renderPreview(for: item, background: effective)
+    private func textBehindOutputSize(maxDimension: CGFloat?) -> CGSize {
+        guard let textBehind else { return .zero }
+        return TextBehindGeometry.outputSize(photo: textBehind.photoSize, canvas: textBehind.document.canvas,
+                                             maxDimension: maxDimension)
     }
 
-    private func updateDimensions(for item: BackgroundRemovalItem, options: ExportOptions) {
-        guard let name = item.foregroundFileName else { return }
-        let url = ProjectStorageService.shared.fileURL(name, projectID: viewModel.project.id)
-        guard let pixel = ImageUtilities.pixelSize(at: url) else { return }
-        let output = ImageCompositingService.shared.outputSize(for: pixel, edits: item.edits,
-                                                               maxDimension: options.maxDimension(for: quality))
-        let text = "\(Int(output.width)) × \(Int(output.height)) px"
-        lblDimensions.text = exportAll ? "\(viewModel.project.completedItems.count) images · this one \(text)" : text
-    }
-
-    private func renderPreview(for item: BackgroundRemovalItem, background: BackgroundSelection) {
-        previewTask?.cancel()
-        vwPreviewChecker.isHidden = !background.isTransparent
-        let viewModel: BackgroundRemovalViewModel = self.viewModel
-        let id = item.id
-        let edits = item.edits
-        previewTask = Task { [weak self] in
-            let image = try? await viewModel.compositePreview(for: id, background: background, edits: edits, maxPixel: 600)
-            guard let self, !Task.isCancelled else { return }
-            self.imgPreview.image = image
-            if let size = image?.size, size.height > 0 {
-                // Card keeps the export's aspect ratio (height fixed in the storyboard).
-                let height = self.vwPreviewChecker.bounds.height > 0 ? self.vwPreviewChecker.bounds.height : 180
-                self.previewWidth.constant = min(300, max(90, height * size.width / size.height))
-            }
-        }
+    private func textBehindFileName(format: ExportFormat) -> String {
+        let base = (item?.sourceName.map { ($0 as NSString).deletingPathExtension } ?? "TextBehind")
+            .components(separatedBy: CharacterSet(charactersIn: "/\\:?%*|\"<>")).joined(separator: "-")
+        return "\(base.isEmpty ? "TextBehind" : base)_text.\(format.fileExtension)"
     }
 
     // MARK: - Actions
 
-    @IBAction func btnBack(_ sender: UIButton) {
-        exportTask?.cancel()
-        navigationController?.popViewController(animated: true)
-    }
-
-    @IBAction func segScopeChanged(_ sender: UISegmentedControl) {
-        exportAll = sender.selectedSegmentIndex == 1
+    @objc private func scopeChanged() {
+        exportAll = scopeControl.selectedSegmentIndex == 1
         refresh()
     }
 
-    @IBAction func segFormatChanged(_ sender: UISegmentedControl) {
-        format = ExportFormat(rawValue: sender.selectedSegmentIndex) ?? .png
+    @objc private func formatChanged() {
+        format = ExportFormat(rawValue: formatControl.selectedSegmentIndex) ?? .png
+        if textBehind != nil {
+            textBehind?.document.exportFormat = format
+            textBehind?.document.jpegQuality = Double(qualityRow.value) / 100
+            textBehind?.onFormatChange?(format, Double(qualityRow.value) / 100)
+        }
         refresh()
     }
 
-    @IBAction func btnSize(_ sender: UIButton) {
+    @objc private func sizeTapped() {
         let cap = quality.maxPixelDimension
         let message = cap.map { "Free exports are limited to \(Int($0)) px. Upgrade to Pro for full resolution." }
         let sheet = UIAlertController(title: "Export size", message: message, preferredStyle: .actionSheet)
@@ -275,12 +542,12 @@ class ExportVC: UIViewController {
             })
         }
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        sheet.popoverPresentationController?.sourceView = sender
-        sheet.popoverPresentationController?.sourceRect = sender.bounds
+        sheet.popoverPresentationController?.sourceView = sizeButton
+        sheet.popoverPresentationController?.sourceRect = sizeButton.bounds
         present(sheet, animated: true)
     }
 
-    @IBAction func btnBackground(_ sender: UIButton) {
+    @objc private func backgroundTapped() {
         let sheet = UIAlertController(title: "Background", message: nil, preferredStyle: .actionSheet)
         for option in BackgroundOption.allCases {
             let base = option == .edited ? "As edited (\(backgroundTitle(.edited)))" : backgroundTitle(option)
@@ -290,28 +557,75 @@ class ExportVC: UIViewController {
             })
         }
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        sheet.popoverPresentationController?.sourceView = sender
-        sheet.popoverPresentationController?.sourceRect = sender.bounds
+        sheet.popoverPresentationController?.sourceView = backgroundButton
+        sheet.popoverPresentationController?.sourceRect = backgroundButton.bounds
         present(sheet, animated: true)
     }
 
-    @IBAction func btnHD(_ sender: UIButton) {
+    @objc private func hdTapped() {
         guard !UserDefaults.isPremiumUser else { return }
-        let vc = ProUpgradeVC.fatchInstance()
-        present(vc, animated: true)
+        present(ProUpgradeVC.fatchInstance(), animated: true)
     }
 
-    @IBAction func btnSave(_ sender: UIButton) {
+    private func saveProject() {
+        if let textBehind, let id = item?.id {
+            viewModel.setTextBehind(textBehind.document, for: id)
+        }
+        viewModel.save()
+        showToast(message: "Project saved – find it in Projects")
+    }
+
+    private func setBusy(_ busy: Bool) {
+        [saveButton, shareButton, projectButton, formatControl, scopeControl, sizeButton, backgroundButton]
+            .forEach { ($0 as UIControl).isEnabled = !busy }
+    }
+
+    // MARK: - Save / Share
+
+    /// Renders the export files: the text design, or the cutout(s) of this image / all images.
+    private func renderFiles(progress: @escaping (Double) -> Void) async throws -> [(name: String, data: Data)] {
+        if textBehind != nil {
+            let output = try await renderTextBehind()
+            return [(output.fileName, output.data)]
+        }
+        let outputs = try await ImageExportService.shared.renderOutputs(for: exportItems, in: viewModel, quality: quality,
+                                                                        options: options, progress: progress)
+        if exportAll {
+            // Archive entries are numbered in project order: Image_001.png, Image_002.jpg…
+            return outputs.enumerated().map { index, output in
+                (name: String(format: "Image_%03d.%@", index + 1, output.isPNG ? "png" : "jpg"), data: output.data)
+            }
+        }
+        return outputs.map { (name: $0.fileName, data: $0.data) }
+    }
+
+    private func save() {
         let items = exportItems
-        guard exportTask == nil, !items.isEmpty, !ImageExportService.shared.isBusy else { return }
-        let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Saving \(items.count) images…" : "Saving…")
+        guard task == nil, !ImageExportService.shared.isBusy, isTextBehind || !items.isEmpty else { return }
+        setBusy(true)
+        let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
+                                    (items.count > 1 ? "Saving \(items.count) images…" : "Saving…"))
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         let options = self.options
-        exportTask = Task { [weak self] in
-            defer { self?.exportTask = nil }
+        task = Task { [weak self] in
+            defer {
+                self?.task = nil
+                self?.setBusy(false)
+            }
             do {
-                let count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel, options: options) { value in
-                    hud.update(progress: value)
+                guard let self else { return }
+                let count: Int
+                if self.isTextBehind {
+                    let output = try await self.renderTextBehind()
+                    hud.update(progress: 0.7, message: "Saving to Photos…")
+                    try await ImageExportService.shared.savePhotoData(output.data, fileName: output.fileName)
+                    viewModel.recordExport(quality: self.quality)
+                    count = 1
+                } else {
+                    count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel,
+                                                                             options: options) { value in
+                        hud.update(progress: value)
+                    }
                 }
                 hud.dismiss()
                 if count > 0 {
@@ -320,64 +634,94 @@ class ExportVC: UIViewController {
                 }
             } catch ImageExportError.photosAccessDenied {
                 hud.dismiss()
-                self?.showPhotosSettingsAlert(message: ImageExportError.photosAccessDenied.errorDescription ?? "")
+                self?.showPhotosSettingsAlert(message: "Allow \"Add Photos Only\" access in Settings, or use Share › Save Image / Save to Files instead.")
             } catch is CancellationError {
                 hud.dismiss()
             } catch {
                 hud.dismiss()
                 self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
-                                        retry: { self?.btnSave(sender) })
+                                        retry: { self?.save() })
             }
         }
     }
 
-    @IBAction func btnShare(_ sender: UIButton) {
+    private func share() {
         let items = exportItems
-        guard exportTask == nil, !items.isEmpty else { return }
-        let hud = ProgressHUD.show(in: view, message: items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…")
+        guard task == nil, isTextBehind || !items.isEmpty else { return }
+        setBusy(true)
+        let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
+                                    (items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…"))
         let viewModel: BackgroundRemovalViewModel = self.viewModel
-        let options = self.options
         let quality = self.quality
-        let zip = exportAll
-        exportTask = Task { [weak self] in
-            defer { self?.exportTask = nil }
+        let zip = exportAll && !isTextBehind
+        task = Task { [weak self] in
+            defer {
+                self?.task = nil
+                self?.setBusy(false)
+            }
             do {
-                let outputs = try await ImageExportService.shared.renderOutputs(for: items, in: viewModel, quality: quality,
-                                                                                options: options) { value in
-                    hud.update(progress: value * 0.9)
-                }
-                let fileURL: URL
-                if !zip, let output = outputs.first {
-                    let name = output.fileName
-                    let data = output.data
-                    fileURL = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
+                guard let self else { return }
+                let files = try await self.renderFiles { value in hud.update(progress: value * 0.9) }
+                let url: URL
+                if !zip, let file = files.first {
+                    let name = file.name
+                    let data = file.data
+                    url = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
                 } else {
-                    // Archive entries are numbered in project order: Image_001.png, Image_002.jpg…
-                    let files = outputs.enumerated().map { index, output in
-                        (name: String(format: "Image_%03d.%@", index + 1, output.isPNG ? "png" : "jpg"), data: output.data)
-                    }
-                    fileURL = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
+                    url = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
                 }
                 hud.dismiss()
                 viewModel.recordExport(quality: quality)
-                self?.share(fileURL, sourceView: sender)
+                let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                activity.popoverPresentationController?.sourceView = self.shareButton
+                activity.popoverPresentationController?.sourceRect = self.shareButton.bounds
+                activity.completionWithItemsHandler = { _, _, _, _ in ZIPExportService.shared.cleanUp(url) }
+                self.present(activity, animated: true)
             } catch is CancellationError {
                 hud.dismiss()
             } catch {
                 hud.dismiss()
                 self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
-                                        retry: { self?.btnShare(sender) })
+                                        retry: { self?.share() })
             }
         }
     }
 
-    private func share(_ url: URL, sourceView: UIView) {
-        let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        activity.popoverPresentationController?.sourceView = sourceView
-        activity.popoverPresentationController?.sourceRect = sourceView.bounds
-        activity.completionWithItemsHandler = { _, _, _, _ in
-            ZIPExportService.shared.cleanUp(url)
+    /// Text Behind Subject: full-size render (the same renderer as the preview) and encoded data.
+    private func renderTextBehind() async throws -> (data: Data, fileName: String) {
+        guard let textBehind, let id = item?.id else { throw ImageExportError.nothingToExport }
+        let viewModel: BackgroundRemovalViewModel = self.viewModel
+        let document = textBehind.document
+        guard let original = await viewModel.fullOriginal(for: id),
+              let originalCG = original.cgImage,
+              let mask = await viewModel.subjectMask(for: id, settings: document.mask) else {
+            throw ImageExportError.renderFailed("The photo")
         }
-        present(activity, animated: true)
+        var background: UIImage?
+        if case .image(let selection, _) = document.background,
+           case .image(let image) = try await viewModel.resolveBackground(selection) {
+            background = image
+        }
+        let backgroundImage = background
+        let format = self.format
+        let jpegQuality = self.jpegQuality
+        let maxDimension = quality.maxPixelDimension
+        let photo = CGSize(width: originalCG.width, height: originalCG.height)
+        let data = await Task.detached(priority: .userInitiated) { () -> Data? in
+            autoreleasepool { () -> Data? in
+                let scale = CGFloat(originalCG.width) / 1000
+                let cutout = MaskRefineService.subjectCutout(original: originalCG, mask: mask,
+                                                             feather: CGFloat(document.mask.feather) * scale,
+                                                             smoothing: CGFloat(document.mask.edgeSmoothing) * scale)
+                    .map { UIImage(cgImage: $0, scale: 1, orientation: .up) }
+                let sources = TBRenderSources(original: UIImage(cgImage: originalCG, scale: 1, orientation: .up),
+                                              cutout: cutout, backgroundImage: backgroundImage, mask: nil)
+                let size = TextBehindGeometry.outputSize(photo: photo, canvas: document.canvas, maxDimension: maxDimension)
+                let image = TextBehindSubjectRenderer.render(document, sources: sources, size: size, opaque: format == .jpg)
+                return TextBehindSubjectRenderer.encode(image, format: format, jpegQuality: jpegQuality)
+            }
+        }.value
+        guard let data else { throw ImageExportError.renderFailed("The image") }
+        return (data, textBehindFileName(format: format))
     }
 }

@@ -61,11 +61,15 @@ nonisolated struct ExportOptions: Equatable {
     var maxDimension: CGFloat?
     /// Replaces each item's own background (e.g. "Transparent" or "White").
     var backgroundOverride: BackgroundSelection?
+    /// JPEG compression chosen on the Export screen (nil = the quality's default).
+    var jpegQuality: CGFloat?
 
-    init(format: ExportFormat? = nil, maxDimension: CGFloat? = nil, backgroundOverride: BackgroundSelection? = nil) {
+    init(format: ExportFormat? = nil, maxDimension: CGFloat? = nil, backgroundOverride: BackgroundSelection? = nil,
+         jpegQuality: CGFloat? = nil) {
         self.format = format
         self.maxDimension = maxDimension
         self.backgroundOverride = backgroundOverride
+        self.jpegQuality = jpegQuality
     }
 
     /// Effective long-side limit for a quality.

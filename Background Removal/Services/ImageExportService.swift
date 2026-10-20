@@ -57,7 +57,7 @@ final class ImageExportService {
             }
             let background = try await viewModel.resolveBackground(options.background(for: item))
             let maxDimension = options.maxDimension(for: quality)
-            let jpegQuality = quality.jpegQuality
+            let jpegQuality = options.jpegQuality ?? quality.jpegQuality
             let edits = item.edits
             let asPNG = options.format(for: item) == .png
             let rendered = await Task.detached(priority: .userInitiated) { () -> (Data, Bool)? in

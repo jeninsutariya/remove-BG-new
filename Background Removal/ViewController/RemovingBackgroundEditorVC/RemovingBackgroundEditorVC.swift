@@ -572,7 +572,7 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     @IBAction func btnExport(_ sender: UIButton) {
         guard !isPanelOpen else { return }
-        let vc = ExportVC.fatchEditorInstance()
+        let vc = ExportVC()
         vc.viewModel = viewModel
         vc.itemID = currentItem?.isCompleted == true ? currentItemID : viewModel.project.completedItems.first?.id
         navigationController?.pushViewController(vc, animated: true)

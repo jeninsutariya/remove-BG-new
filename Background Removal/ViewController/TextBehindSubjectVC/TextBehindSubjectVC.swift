@@ -805,19 +805,18 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
         session.commit()
         if activePanel != nil { closePanel(revert: false) }
         viewModel.setTextBehind(session.document, for: itemID)
-        let export = TextBehindExportVC()
+        let export = ExportVC()
         export.viewModel = viewModel
         export.itemID = itemID
-        export.document = session.document
-        export.previewImage = imageView.image
-        export.photoSize = fullPhotoSize
-        export.onFormatChange = { [weak self] format, quality in
-            self?.session.change {
-                $0.exportFormat = format
-                $0.jpegQuality = quality
-            }
-        }
-        // Pushed like the other Export screen (same design and navigation).
+        export.textBehind = ExportVC.TextBehindExport(
+            document: session.document, previewImage: imageView.image, photoSize: fullPhotoSize,
+            onFormatChange: { [weak self] format, quality in
+                self?.session.change {
+                    $0.exportFormat = format
+                    $0.jpegQuality = quality
+                }
+            })
+        // The shared Export screen (same as every other feature).
         navigationController?.pushViewController(export, animated: true)
     }
 
