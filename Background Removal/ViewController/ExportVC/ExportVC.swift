@@ -205,7 +205,7 @@ class ExportVC: UIViewController {
         } else {
             lblNote.text = effective.isTransparent ? "PNG keeps the transparent background." : "PNG keeps full quality."
         }
-        let premium = UserDefaults.isPremiumUser
+        let premium = PaywallManager.shared.isPremium
         vwProBadge.isHidden = premium
         imgHDChevron.isHidden = premium
         lblHDSubtitle.text = premium ? "Full resolution is on" :
@@ -296,7 +296,7 @@ class ExportVC: UIViewController {
     }
 
     @IBAction func btnHD(_ sender: UIButton) {
-        guard !UserDefaults.isPremiumUser else { return }
+        guard !PaywallManager.shared.isPremium else { return }
         let vc = ProUpgradeVC.fatchInstance()
         present(vc, animated: true)
     }

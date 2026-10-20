@@ -49,12 +49,13 @@ final class BackgroundRemovalViewModel {
     // MARK: - Creation
 
     /// Creates a project from picked photos. Photos are decoded and stored one at a time.
-    static func create(from picked: [PickedImage], mode: EditorMode = .removeBackground) async throws -> BackgroundRemovalViewModel {
+    static func create(from picked: [PickedImage], mode: EditorMode = .removeBackground,
+                       isBatch: Bool = false) async throws -> BackgroundRemovalViewModel {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, HH:mm"
         let name = picked.count > 1 ? "Batch · \(formatter.string(from: Date()))"
                                     : (picked.first?.suggestedName ?? "Cutout · \(formatter.string(from: Date()))")
-        var project = BackgroundRemovalProject(name: name, mode: mode)
+        var project = BackgroundRemovalProject(name: name, mode: mode, isBatch: isBatch)
         let storage = ProjectStorageService.shared
         let projectID = project.id
 
@@ -141,7 +142,32 @@ final class BackgroundRemovalViewModel {
         NotificationCenter.default.post(name: Self.queueDidFinishNotification, object: self)
     }
 
+    /// Daily-limit feature this project's removals count against (nil: not counted here).
+    var usageFeature: PaywallFeature? {
+        PaywallFeature.backgroundRemoval(for: project.mode, isBatch: project.isBatch)
+    }
+
     private func process(_ item: BackgroundRemovalItem) async {
+        // A use is reserved up front and only counted when the removal succeeds.
+        let feature = usageFeature
+        if let feature, !PaywallManager.shared.reserve(feature) {
+            update(item.id) {
+                $0.status = .failed
+                $0.errorMessage = PaywallManager.limitReachedMessage
+            }
+            return
+        }
+        var succeeded = false
+        defer {
+            if let feature {
+                if succeeded {
+                    PaywallManager.shared.confirmReservation(feature)
+                } else {
+                    PaywallManager.shared.releaseReservation(feature)
+                }
+            }
+        }
+
         currentItemID = item.id
         update(item.id) { $0.status = .processing; $0.errorMessage = nil }
 
@@ -161,6 +187,7 @@ final class BackgroundRemovalViewModel {
             }.value
             foregroundCache.setObject(foreground, forKey: item.id as NSUUID)
             invalidateImages(for: item.id)
+            succeeded = true
             update(item.id) {
                 $0.foregroundFileName = fileName
                 $0.status = .completed

@@ -29,18 +29,49 @@ extension Notification.Name {
     
 }
 
+/// Result of a purchase, reported only after the App Store receipt was verified.
+enum PurchaseOutcome {
+    /// Verified: the subscription is active.
+    case purchased
+    /// Waiting for approval (Ask to Buy / SCA). Premium unlocks when the transaction completes.
+    case pending
+    case cancelled
+    /// The App Store reported success but the receipt doesn't show an active subscription (yet).
+    case notVerified
+    case failed(message: String)
+}
+
 class PurchaseConnector {
     
     static let shared = PurchaseConnector()
     
     var productIds: Set<String> = [PurchaseKeys.oneMonth,PurchaseKeys.sixMonth, PurchaseKeys.oneYear]
     var retrievedProducts = [SKProduct]()
+
+    private static let expiryDateKey = "premiumVerifiedExpiryDate"
+    /// Expiry date of the active subscription from the last successful receipt verification.
+    private(set) var verifiedExpiryDate: Date? {
+        get { UserDefaults.standard.object(forKey: Self.expiryDateKey) as? Date }
+        set { UserDefaults.standard.set(newValue, forKey: Self.expiryDateKey) }
+    }
+    private var isLoadingProducts = false
+    private var productCompletions: [(Bool) -> Void] = []
+
+    func product(for productId: String) -> SKProduct? {
+        retrievedProducts.first { $0.productIdentifier == productId }
+    }
     
     // MARK: - GET PRODUCT INFO
-    func retrievedProductsInfo() {
+    /// Loads the products from the App Store. `completion(true)` when at least one product was
+    /// returned. Calls made while a request is running wait for that request.
+    func retrievedProductsInfo(completion: ((Bool) -> Void)? = nil) {
+        if let completion { productCompletions.append(completion) }
+        guard !isLoadingProducts else { return }
+        isLoadingProducts = true
         SwiftyStoreKit.retrieveProductsInfo(self.productIds) { [weak self] (result) in
-            self?.retrievedProducts.removeAll()
             guard let self = self else { return }
+            self.isLoadingProducts = false
+            self.retrievedProducts.removeAll()
             for product in result.retrievedProducts {
                 print("Product Name: \(product.localizedTitle)")
                 print("Product Price: \(product.localizedPrice ?? "")")
@@ -52,11 +83,14 @@ class PurchaseConnector {
             print(">>>> PREMIUM PLANS COUNT: ", result.retrievedProducts.count)
             print(self.retrievedProducts.map({ $0.productIdentifier }))
             print(">>>> END <<<<")
+            let completions = self.productCompletions
+            self.productCompletions = []
+            completions.forEach { $0(!self.retrievedProducts.isEmpty) }
             PurchaseConnector.shared.checkPremiumStatus()
         }
     }
     
-    func purchaseProduct(productId: SKProduct, completion: @escaping (_ result: Bool) -> Void) {
+    func purchaseProduct(productId: SKProduct, completion: @escaping (_ result: PurchaseOutcome) -> Void) {
         
         let purchaseId = productId.productIdentifier
         
@@ -65,11 +99,11 @@ class PurchaseConnector {
             case .success(let purchase):
 //                GAEventsTracker.logEvents("purchase", ["success": true,"restore_purchases": purchase])
                 print(">>>> Purchase Success: \(purchase.productId)")
-                NotificationCenter.default.post(name: .refreshPremiumLog, object: nil)
-
-                UserDefaults.isPremiumUser = true
-                print("Purchase successful ??????????????????????????????????")
-                completion(true)
+                // Premium is unlocked by the verified receipt only (checkPremiumStatus sets the
+                // flag and posts .refreshPremiumLog).
+                self.checkPremiumStatus {
+                    completion(UserDefaults.isPremiumUser ? .purchased : .notVerified)
+                }
 
             case .error(let error):
                 switch error.code {
@@ -95,9 +129,13 @@ class PurchaseConnector {
                     print("Purchase failed: An unknown or unhandled error occurred.")
                 }
 
-                completion(false)
-            case .deferred(purchase: let purchase):
-                completion(false)
+                if error.code == .paymentCancelled {
+                    completion(.cancelled)
+                } else {
+                    completion(.failed(message: error.localizedDescription))
+                }
+            case .deferred(purchase: _):
+                completion(.pending)
             }
         }
     }
@@ -110,6 +148,8 @@ class PurchaseConnector {
                     if purchase.needsFinishTransaction {
                         SwiftyStoreKit.finishTransaction(purchase.transaction)
                     }
+                    // E.g. an approved Ask to Buy purchase: verify and unlock.
+                    self.checkPremiumStatus()
                 case .failed, .purchasing, .deferred:
                     break
                 @unknown default:
@@ -128,20 +168,30 @@ class PurchaseConnector {
                 case .purchased(let expiryDate, let receiptItems):
                     print(receiptItems)
                     print(">>>> Product is valid until \(expiryDate)")
+                    self.verifiedExpiryDate = expiryDate
                     UserDefaults.isPremiumUser = true
                     complition?()
                 case .expired(let expiryDate, _):
                     print(">>>> Product is expired since \(expiryDate)")
+                    self.verifiedExpiryDate = nil
                     UserDefaults.isPremiumUser = false
                     complition?()
                 case .notPurchased:
                     print(">>>> This product has never been purchased")
+                    self.verifiedExpiryDate = nil
                     UserDefaults.isPremiumUser = false
                     complition?()
                 }
             case .error(let error):
                 print(">>>> Receipt verification failed: \(error)")
-                UserDefaults.isPremiumUser = false
+                switch error {
+                case .networkError, .noRemoteData:
+                    // Offline: keep the last verified subscription until its verified expiry date.
+                    UserDefaults.isPremiumUser = (self.verifiedExpiryDate ?? .distantPast) > Date()
+                default:
+                    self.verifiedExpiryDate = nil
+                    UserDefaults.isPremiumUser = false
+                }
                 complition?()
                 
             }
@@ -158,17 +208,18 @@ class PurchaseConnector {
             } else if results.restoredPurchases.count > 0 {
                 print(">>>> Restore Success: \(results.restoredPurchases)")
 //                GAEventsTracker.logEvents("restore_purchases", ["success": true,"restore_purchases": results.restoredPurchases])
-                // Verify the restored purchases
-                self.verifyReceiptAfterRestore { success in
-                    if success {
+                // Verify the restored purchases (sets the premium flag from the receipt).
+                self.checkPremiumStatus {
+                    LoaderView.shared.hide()
+                    if UserDefaults.isPremiumUser {
                         showToast(message: "Purchase restored successfully!")
-                        UserDefaults.isPremiumUser = true
                         complition(true)
                     } else {
-                        showToast(message: "Restore verification failed")
+                        showToast(message: "No active subscription found to restore")
                         complition(false)
                     }
                 }
+                return
             } else {
                 showToast(message: "No previous purchases found to restore")
                 complition(false)
@@ -177,28 +228,6 @@ class PurchaseConnector {
         }
     }
 
-    private func verifyReceiptAfterRestore(completion: @escaping (Bool) -> Void) {
-        SwiftyStoreKit.verifyReceipt(using: PurchaseKeys.appleValidator) { result in
-            switch result {
-            case .success(let receipt):
-                let purchaseResult = SwiftyStoreKit.verifySubscriptions(
-                    ofType: .autoRenewable,
-                    productIds: self.productIds,
-                    inReceipt: receipt
-                )
-                
-                switch purchaseResult {
-                case .purchased:
-                    completion(true)
-                case .expired, .notPurchased:
-                    completion(false)
-                }
-            case .error:
-                completion(false)
-            }
-        }
-    }
-    
     func switchRootViewController(to viewController: UIViewController = MainTabVC.fatchInstance(), animated: Bool = true) {
         guard let window = UIApplication.shared.windows.first else {
             return

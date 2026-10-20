@@ -198,15 +198,14 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
         case .saveToPhotos:
             break
         case .hdExport:
-//            if UserDefaults.isPremiumUser {
-//                showToast(message: "Full-quality export is active")
-//            } else {
-//                let vc = ProUpgradeVC.fatchInstance()
-//                self.present(vc, animated: true, completion: nil)
-//            }
-            break
+            if PaywallManager.shared.isPremium {
+                showToast(message: "Full-quality export is active")
+            } else {
+                PaywallManager.shared.presentPaywall(from: self)
+            }
         case .restorePurchases:
-            break
+            // Shows a loader and the result; premium follows the verified receipt.
+            PurchaseConnector.shared.restorePurchase { _ in }
         case .rateApp:
             print("Rate App")
         case .shareApp:

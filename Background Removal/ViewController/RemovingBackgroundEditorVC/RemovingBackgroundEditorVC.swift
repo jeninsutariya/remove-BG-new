@@ -57,7 +57,8 @@ class RemovingBackgroundEditorVC: UIViewController {
                                                            alsoHidden: [clvThumbnails], followsKeyboard: false)
     private var activeTool: EditorTool?
     /// Applies the open panel's draft (used by ✓ and when switching tools).
-    private var activeApply: (() -> Void)?
+    /// Commits the open panel's draft. false = blocked (daily limit), the panel stays open.
+    private var activeApply: (() -> Bool)?
     private var draftBackground: BackgroundSelection?
     private var draftEdits: ItemEdits?
     private var didAutoOpenBackground = false
@@ -360,15 +361,35 @@ class RemovingBackgroundEditorVC: UIViewController {
         updateUndoButtons()
     }
 
-    /// Saves a change of the current item and records it for undo.
-    private func commit(background: BackgroundSelection? = nil, edits: ItemEdits? = nil) {
-        guard let id = currentItemID, let before = viewModel.snapshot(of: id) else { return }
+    /// Saves a change of the current item and records it for undo. false = nothing changed.
+    @discardableResult
+    private func commit(background: BackgroundSelection? = nil, edits: ItemEdits? = nil) -> Bool {
+        guard let id = currentItemID, let before = viewModel.snapshot(of: id) else { return false }
         let newBackground = background ?? before.background
         let newEdits = edits ?? before.edits
-        guard newBackground != before.background || newEdits != before.edits else { return }
+        guard newBackground != before.background || newEdits != before.edits else { return false }
         pushUndo(before)
         viewModel.setBackground(newBackground, for: id)
         viewModel.setEdits(newEdits, for: id)
+        return true
+    }
+
+    /// Commits a new background – one Change Background use. When today's free uses are gone
+    /// the paywall is shown and the panel (with its draft) stays open; after a verified
+    /// purchase the change is applied. false = not applied (yet).
+    private func commitBackground(_ selection: BackgroundSelection) -> Bool {
+        guard let current = currentItem?.background, selection != current else { return true }   // no change: free
+        guard PaywallManager.shared.canUse(.changeBackground) else {
+            let panel = activePanel
+            PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
+                guard unlocked, let self, let panel, self.activePanel === panel,
+                      let draft = self.draftBackground else { return }
+                if self.commitBackground(draft) { self.closePanel(animated: true) }
+            }
+            return false
+        }
+        if commit(background: selection) { PaywallManager.shared.recordUse(.changeBackground) }
+        return true
     }
 
     private func updateUndoButtons() {
@@ -409,7 +430,7 @@ class RemovingBackgroundEditorVC: UIViewController {
             guard tool != activeTool else { return }
             // Switching tools keeps the current edit; the new panel replaces this one and the
             // tool bar stays hidden.
-            activeApply?()
+            if activeApply?() == false { return }
             if tool == .refine {
                 closePanel(animated: false)
             } else {
@@ -431,8 +452,8 @@ class RemovingBackgroundEditorVC: UIViewController {
             panel.onAddPhoto = { [weak self] in self?.pickBackgroundPhoto() }
             panel.onPickColor = { [weak self] color in self?.pickCustomColor(color) }
             present(panel: panel, apply: { [weak self] in
-                guard let self, let selection = self.draftBackground else { return }
-                self.commit(background: selection)
+                guard let self, let selection = self.draftBackground else { return true }
+                return self.commitBackground(selection)
             }, tool: .background)
         case .shadow:
             let panel = EditorToolPanel.loadFromNib(ShadowToolView.self)
@@ -445,8 +466,9 @@ class RemovingBackgroundEditorVC: UIViewController {
                 self.renderPreview(fast: true)
             }
             present(panel: panel, apply: { [weak self] in
-                guard let self, let edits = self.draftEdits else { return }
+                guard let self, let edits = self.draftEdits else { return true }
                 self.commit(edits: edits)
+                return true
             }, tool: .shadow)
         case .resize:
             let panel = EditorToolPanel.loadFromNib(ResizeToolView.self)
@@ -460,8 +482,9 @@ class RemovingBackgroundEditorVC: UIViewController {
                 self.renderPreview(fast: true)
             }
             present(panel: panel, apply: { [weak self] in
-                guard let self, let edits = self.draftEdits else { return }
+                guard let self, let edits = self.draftEdits else { return true }
                 self.commit(edits: edits)
+                return true
             }, tool: .resize)
         }
     }
@@ -469,7 +492,7 @@ class RemovingBackgroundEditorVC: UIViewController {
     /// Shows a tool panel in the editor area above the tool bar (the tool bar stays visible).
     /// The panel never reaches the home-indicator area, so its height doesn't depend on
     /// safe-area insets and stays the same while it is open.
-    private func present(panel: EditorToolPanel, apply: @escaping () -> Void, tool: EditorTool) {
+    private func present(panel: EditorToolPanel, apply: @escaping () -> Bool, tool: EditorTool) {
         draftBackground = nil
         draftEdits = nil
         activePanel = panel
@@ -477,7 +500,7 @@ class RemovingBackgroundEditorVC: UIViewController {
         activeApply = apply
         panel.onCancel = { [weak self] in self?.closePanel(animated: true) }
         panel.onApply = { [weak self] in
-            apply()
+            guard apply() else { return }
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             self?.closePanel(animated: true)
         }
@@ -580,12 +603,23 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     @IBAction func btnStatus(_ sender: UIButton) {
         guard let item = currentItem, item.status == .failed else { return }
-        if let message = item.errorMessage {
+        if let message = item.errorMessage, message != PaywallManager.limitReachedMessage {
             presentErrorAlert(title: "Background removal failed", message: message,
-                              retry: { [weak self] in self?.viewModel.retry(item.id) })
+                              retry: { [weak self] in self?.retryRemoval(item.id) })
         } else {
-            viewModel.retry(item.id)
+            retryRemoval(item.id)
         }
+    }
+
+    /// Retries a failed removal; shows the paywall first when today's free removals are used.
+    private func retryRemoval(_ id: UUID) {
+        if let feature = viewModel.usageFeature, !PaywallManager.shared.canUse(feature) {
+            PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
+                if unlocked { self?.viewModel.retry(id) }
+            }
+            return
+        }
+        viewModel.retry(id)
     }
 
     @IBAction func btnCompareDown(_ sender: UIButton) {
@@ -658,7 +692,7 @@ extension RemovingBackgroundEditorVC: UICollectionViewDataSource, UICollectionVi
         guard !isPanelOpen else { return }
         let item = viewModel.items[indexPath.item]
         guard item.id != currentItemID else {
-            if item.status == .failed { viewModel.retry(item.id) }
+            if item.status == .failed { retryRemoval(item.id) }
             return
         }
         currentItemID = item.id

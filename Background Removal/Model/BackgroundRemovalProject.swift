@@ -19,24 +19,28 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
     var exportSettings: ProjectExportSettings
     /// Flow that created the project (decides the editor tools).
     var mode: EditorMode
+    /// Created with Bulk Background Removal (decides which daily free limit applies).
+    var isBatch: Bool
     /// Small flattened preview of the edited result (Recents / Projects). Never replaces the
     /// original or the editable state; regenerated when the composition changes.
     var thumbnailFileName: String?
     var createdAt: Date
     var modifiedAt: Date
 
-    init(id: UUID = UUID(), name: String, items: [BackgroundRemovalItem] = [], mode: EditorMode = .removeBackground) {
+    init(id: UUID = UUID(), name: String, items: [BackgroundRemovalItem] = [], mode: EditorMode = .removeBackground,
+         isBatch: Bool = false) {
         self.id = id
         self.name = name
         self.items = items
         self.exportSettings = ProjectExportSettings()
         self.mode = mode
+        self.isBatch = isBatch
         self.createdAt = Date()
         self.modifiedAt = Date()
     }
 
     nonisolated private enum CodingKeys: String, CodingKey {
-        case id, name, items, exportSettings, mode, thumbnailFileName, createdAt, modifiedAt
+        case id, name, items, exportSettings, mode, isBatch, thumbnailFileName, createdAt, modifiedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -46,6 +50,8 @@ nonisolated struct BackgroundRemovalProject: Codable, Identifiable, Equatable {
         items = try c.decode([BackgroundRemovalItem].self, forKey: .items)
         exportSettings = (try? c.decode(ProjectExportSettings.self, forKey: .exportSettings)) ?? ProjectExportSettings()
         mode = (try? c.decode(EditorMode.self, forKey: .mode)) ?? .removeBackground
+        // Projects saved before this flag existed: several photos = batch.
+        isBatch = (try? c.decode(Bool.self, forKey: .isBatch)) ?? (items.count > 1)
         thumbnailFileName = try? c.decodeIfPresent(String.self, forKey: .thumbnailFileName)
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
         modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()

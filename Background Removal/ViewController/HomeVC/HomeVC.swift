@@ -48,6 +48,7 @@ class HomeVC: UIViewController {
     var recentProjects: [BackgroundRemovalProject] = []
     /// What the next picked photos are for.
     var pendingDestination: RemovingBackgroundVC.Destination = .editor
+    var pendingSelectionMode: ImageSelectionMode = .single
     private var storageObserver: NSObjectProtocol?
     static let batchSelectionLimit = 20
     var homeCardData: [HomeCardModel] = [
@@ -190,6 +191,7 @@ class HomeVC: UIViewController {
     
     func openImagePicker(mode: ImageSelectionMode, destination: RemovingBackgroundVC.Destination) {
         pendingDestination = destination
+        pendingSelectionMode = mode
         let sheetVC = ImageSourcePickerVC.fatchInstance()
         sheetVC.delegate = self
         sheetVC.selectionMode = mode
@@ -291,10 +293,33 @@ extension HomeVC: ImageSourcePickerDelegate{
     func imageSourcePicker(_ picker: ImageSourcePickerVC, didPick images: [PickedImage]) {
         print("Selected images: \(images.count)")
         guard !images.isEmpty else { return }
-        
-        let vc = RemovingBackgroundVC.fatchInstance()
-        vc.pickedImages = images
-        vc.destination = pendingDestination
-        self.navigationController?.pushViewController(vc, animated: true)
+        let destination = pendingDestination
+        let isBatch = pendingSelectionMode == .multiple
+        let open: ([PickedImage]) -> Void = { [weak self] photos in
+            guard let self else { return photos.forEach { $0.discardTemporaryFile() } }
+            let vc = RemovingBackgroundVC.fatchInstance()
+            vc.pickedImages = photos
+            vc.destination = destination
+            vc.isBatch = isBatch
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        // Change Background / Text Behind count their committed edits in the editor instead.
+        guard destination == .editor,
+              let feature = PaywallFeature.backgroundRemoval(for: .removeBackground, isBatch: isBatch) else {
+            return open(images)
+        }
+        // Only what today's free uses allow is processed (all of it after a verified purchase).
+        // Next run loop: the picker sheet has started closing (it closes after this call).
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return images.forEach { $0.discardTemporaryFile() } }
+            PaywallManager.shared.requestAccess(feature, count: images.count, from: self) { allowed in
+                images.dropFirst(allowed).forEach { $0.discardTemporaryFile() }
+                guard allowed > 0 else { return }
+                if allowed < images.count {
+                    showToast(message: "Free plan: removing the background of \(allowed) of \(images.count) photos today")
+                }
+                open(Array(images.prefix(allowed)))
+            }
+        }
     }
 }
