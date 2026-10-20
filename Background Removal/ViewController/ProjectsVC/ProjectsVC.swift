@@ -119,14 +119,12 @@ class ProjectsVC: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmDelete(_ project: BackgroundRemovalProject) {
-        let alert = UIAlertController(title: "Delete project?",
-                                      message: "\"\(project.name)\" and its images will be removed from this app. Photos you already saved stay in your library.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+      
+        showAlert(title: "Delete project?", msg: """
+\"\(project.name)\" and its images will be removed from this app. Photos you already saved stay in your library.
+""", okayTitle: "Delete", cancelTitle: "Cancel", doneAction: {
             ProjectStorageService.shared.deleteProject(id: project.id)
         })
-        present(alert, animated: true)
     }
     @IBAction func btnSearch(_ sender: UIButton) {
         let vc = SearchVC.fatchInstance()

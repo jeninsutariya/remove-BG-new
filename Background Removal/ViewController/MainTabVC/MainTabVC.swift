@@ -21,6 +21,12 @@ class MainTabVC: UITabBarController,UITabBarControllerDelegate {
             items[2].image = proImage
             items[2].selectedImage = proImage
         }
+        // Premium users don't need the Pro tab, so remove it from the tab bar
+        if UserDefaults.isPremiumUser, var controllers = viewControllers, controllers.count > 2 {
+            controllers.remove(at: 2)
+            setViewControllers(controllers, animated: false)
+        }
+
       }
 
       // 2. This method dictates whether the tab bar should switch to the selected tab

@@ -28,7 +28,9 @@ class RatingManager {
         
         // 3 times not show, 1 time show
         if count % 4 == 0 {
-            requestReview()
+            showAlert(title: "Enjoying Remove BG?", msg: "We’d love to hear your feedback! If you enjoy using our app, please take a moment to rate us and help us improve.", okayTitle: "Rate Us", cancelTitle: "Maybe Later", doneAction: {
+                requestReview()
+            })
         }
     }
     
@@ -42,7 +44,7 @@ class RatingManager {
     
     static func requestReviewManually() {
         // TODO: replace xxxxxxxxxx in the following URL with your Apps Apple ID
-        let url = "https://apps.apple.com/app/id\(/*appData.appID ?? ""*/0)?action=write-review"
+        let url = "https://apps.apple.com/app/id\(appData.appId ?? "")?action=write-review"
         guard let writeReviewURL = URL(string: url)
         else { fatalError("Expected a valid URL") }
         UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)

@@ -35,21 +35,15 @@ extension UIViewController {
     }
 
     func presentErrorAlert(title: String, message: String, retryTitle: String? = nil, retry: (() -> Void)? = nil) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        if let retry {
-            alert.addAction(UIAlertAction(title: retryTitle ?? "Retry", style: .default) { _ in retry() })
-        }
-        alert.addAction(UIAlertAction(title: retry == nil ? "OK" : "Cancel", style: .cancel))
-        present(alert, animated: true)
+        showAlert(title: title,msg: message, okayTitle: retryTitle ?? "Retry", cancelTitle: retry == nil ? "OK" : "Cancel", doneAction: {
+            retry?()
+        })
     }
 
     func showPhotosSettingsAlert(message: String) {
-        let alert = UIAlertController(title: "Photos access needed", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+        showAlert(title: "Photos access needed",msg: message, okayTitle: "Settings", cancelTitle: "Cancel", doneAction: {
             if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
         })
-        present(alert, animated: true)
     }
 }
 

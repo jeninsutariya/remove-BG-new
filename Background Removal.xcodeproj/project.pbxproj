@@ -121,6 +121,7 @@
 		DE7986AB3087C9F8000A2560 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986AA3087C9F8000A2560 /* FacebookBasics */; };
 		DE7986AD3087C9F8000A2560 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986AC3087C9F8000A2560 /* FacebookCore */; };
 		DE7986AF3087D0D3000A2560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE7986AE3087D0D3000A2560 /* GoogleService-Info.plist */; };
+		DE7986B23087EDB1000A2560 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986B13087EDB1000A2560 /* AlertVC.swift */; };
 		DE7FAE1530777201001E7D59 /* ProjectsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE1430777201001E7D59 /* ProjectsVC.swift */; };
 		DE7FAE19307772B7001E7D59 /* ProjectClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */; };
 		DE7FAE1A307772B7001E7D59 /* ProjectClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */; };
@@ -250,6 +251,7 @@
 		DE79867F3087C6EC000A2560 /* AppOpenAdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpenAdManager.swift; sourceTree = "<group>"; };
 		DE7986813087C6EC000A2560 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
 		DE7986AE3087D0D3000A2560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DE7986B13087EDB1000A2560 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		DE7FAE1430777201001E7D59 /* ProjectsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsVC.swift; sourceTree = "<group>"; };
 		DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectClvCell.swift; sourceTree = "<group>"; };
 		DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectClvCell.xib; sourceTree = "<group>"; };
@@ -624,6 +626,14 @@
 			path = RemoteConfigManager;
 			sourceTree = "<group>";
 		};
+		DE7986B03087EDA2000A2560 /* AlertVC */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986B13087EDB1000A2560 /* AlertVC.swift */,
+			);
+			path = AlertVC;
+			sourceTree = "<group>";
+		};
 		DE7FAE13307771EB001E7D59 /* ProjectsVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -833,6 +843,7 @@
 		DEF0DFDC3073AE66004B8CA8 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				DE7986B03087EDA2000A2560 /* AlertVC */,
 				C0DE0000000000000000007D /* TextBehindSubjectVC */,
 				C0DE0000000000000000005D /* ExportVC */,
 				C0DE0000000000000000005A /* RefineEdgesVC */,
@@ -1050,6 +1061,7 @@
 				DEF0DFD23073786D004B8CA8 /* AppDelegate.swift in Sources */,
 				DEF0DFD33073786D004B8CA8 /* SceneDelegate.swift in Sources */,
 				DE971B8230740D89006631C7 /* UIViewController+Extension.swift in Sources */,
+				DE7986B23087EDB1000A2560 /* AlertVC.swift in Sources */,
 				DE971B96307410B2006631C7 /* SplashVC.swift in Sources */,
 				DEC228043074D68000DCE0C8 /* OnboardingThardVC.swift in Sources */,
 				DE4921F7308249FD003E4794 /* RemovingBackgroundVC.swift in Sources */,

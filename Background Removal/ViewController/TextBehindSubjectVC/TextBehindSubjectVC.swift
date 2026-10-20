@@ -710,10 +710,10 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     }
 
     func confirm(_ title: String, _ message: String, action: String, completion: @escaping () -> Void) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: action, style: .destructive) { _ in completion() })
-        present(alert, animated: true)
+        
+        showAlert(title: title, msg: message, okayTitle: action, cancelTitle: "Cancel", doneAction: {
+            completion()
+        })
     }
 
     func promptText(_ title: String, initial: String, completion: @escaping (String) -> Void) {

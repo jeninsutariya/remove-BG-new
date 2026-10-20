@@ -345,14 +345,10 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
     }
 
     private func showLoadError() {
-        loading.stopAnimating()
-        let alert = UIAlertController(title: "Refine unavailable",
-                                      message: "This image couldn't be prepared for refining. Please try again.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+      
+        showAlert(title: "Refine unavailable", msg: "This image couldn't be prepared for refining. Please try again.", okayTitle: "OK", doneAction: {
+            self.navigationController?.popViewController(animated: true)
         })
-        present(alert, animated: true)
     }
 
     private func setControlsEnabled(_ enabled: Bool) {
@@ -586,13 +582,9 @@ class RefineEdgesVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizer
             navigationController?.popViewController(animated: true)
             return
         }
-        let alert = UIAlertController(title: "Discard changes?", message: "Your refine edits will be lost.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Keep editing", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Discard", style: .destructive) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+        showAlert(title: "Discard changes?", msg: "Your refine edits will be lost.", okayTitle: "Keep editing", cancelTitle: "Discard", cancleAction: {
+            self.navigationController?.popViewController(animated: true)
         })
-        present(alert, animated: true)
     }
 
     // MARK: - Actions

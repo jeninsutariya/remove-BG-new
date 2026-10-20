@@ -123,6 +123,12 @@ class ProUpgradeVC: UIViewController {
         self.dismiss(animated: true)
     }
 
+    @IBAction func btnPrivacy(_ sender: UIButton) {
+        openConfiguredURL(appData.privacyPolicy, missingMessage: "Add your privacy policy URL in SettingViewController.")
+    }
+    @IBAction func btnTerms(_ sender: UIButton) {
+        openConfiguredURL(appData.terms, missingMessage: "Add your terms URL in SettingViewController.")
+    }
     /// Starts a real StoreKit purchase. Premium unlocks only after the App Store verifies it.
     @IBAction func btnContinue(_ sender: UIButton) {
         guard !isWorking else { return }
@@ -171,7 +177,19 @@ class ProUpgradeVC: UIViewController {
         working ? LoaderView.shared.show() : LoaderView.shared.hide()
         updatePremiumState()
     }
+    private func openConfiguredURL(_ urlString: String, missingMessage: String) {
+        guard !urlString.isEmpty,
+              let url = URL(string: urlString) else {
+            showAlertWithOneOption(msg: missingMessage)
+            return
+        }
 
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:])
+        } else {
+            showAlertWithOneOption(msg: "Unable to open the link.")
+        }
+    }
 
 
 }

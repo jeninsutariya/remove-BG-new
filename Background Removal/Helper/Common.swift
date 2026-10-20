@@ -55,6 +55,25 @@ func calculateContentHeight(for viewController: ImageSourcePickerVC) -> CGFloat 
 
     return size.height
 }
+
+func calculateAlertContentHeight(for viewController: AlertVC) -> CGFloat {
+    viewController.view.layoutIfNeeded()
+    viewController.contentView.layoutIfNeeded()
+
+    let fittingSize = CGSize(
+        width: viewController.contentView.bounds.width,
+        height: UIView.layoutFittingCompressedSize.height
+    )
+
+    let size = viewController.contentView.systemLayoutSizeFitting(
+        fittingSize,
+        withHorizontalFittingPriority: .required,
+        verticalFittingPriority: .fittingSizeLevel
+    )
+
+    return size.height
+}
+
 func showImageSourcePicker(from viewController: UIViewController, vc: UIViewController, contentHeight: CGFloat) {
     let sheetVC = vc
 
@@ -130,4 +149,42 @@ class BaseCustomView: UIView {
 }
 func topMostViewController() -> UIViewController {
     return (UIApplication.shared.delegate as! AppDelegate).visibleViewController ?? UIViewController()
+}
+
+func showAlert(title: String = "Alert", msg: String = "", okayTitle: String = "Okay", cancelTitle: String = "", doneAction: (() -> ())? = nil, cancleAction: (() -> ())? = nil) {
+//    let alertView = ShowAlertView()
+//    alertView.frame = UIScreen.main.bounds
+//    alertView.setView(title: title,message: msg, cancelTitle: cancelTitle, submitTitle: okayTitle)
+//    alertView.onCancel = {
+//        cancleAction?()
+//    }
+//    alertView.onSubmit = {
+//        doneAction?()
+//    }
+//    topMostViewController().view.addSubview(alertView)
+    let sheetVC = AlertVC.fatchInstance()
+    let contentHeight = calculateAlertContentHeight(for: sheetVC)
+    sheetVC.lblTitle.text = title
+    sheetVC.lblSubtitle.text = msg
+    sheetVC.btnOkey.setTitle(okayTitle, for: .normal)
+    sheetVC.btnCancel.setTitle(cancelTitle, for: .normal)
+    sheetVC.onCancel = {
+        cancleAction?()
+    }
+    sheetVC.onSubmit = {
+        doneAction?()
+    }
+    sheetVC.btnCancel.isHidden = cancelTitle == ""
+    sheetVC.btnCancel.isHidden = okayTitle == ""
+    DispatchQueue.main.async {
+        showImageSourcePicker(from: topMostViewController(),vc: sheetVC,contentHeight: contentHeight)
+    }
+    
+    
+}
+
+func showAlertWithOneOption(msg: String = "", doneAction: (() -> ())? = nil) {
+    showAlert(title: "Alert", msg: msg, okayTitle: "Okay", doneAction:  {
+        doneAction?()
+    })
 }

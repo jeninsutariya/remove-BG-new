@@ -82,6 +82,9 @@ class HomeVC: UIViewController {
             MainActor.assumeIsolated { self?.reloadRecents() }
         }
         reloadRecents()
+        RatingManager.appDidOpen()
+        
+        
     }
     func isRecentsShow(_ isShow :Bool){
         btnRecents.isHidden = isShow

@@ -107,7 +107,7 @@ class ImageSourcePickerVC: UIViewController {
     @IBAction func btnCamera(_ sender: UIButton) {
         
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            showAlert(
+            showAlertView(
                 title: "Camera Unavailable",
                 message: "The camera is not available on this device."
             )
@@ -141,7 +141,7 @@ class ImageSourcePickerVC: UIViewController {
             showCameraSettingsAlert()
             
         @unknown default:
-            showAlert(
+            showAlertView(
                 title: "Camera Error",
                 message: "Unable to access the camera."
             )
@@ -172,56 +172,22 @@ class ImageSourcePickerVC: UIViewController {
         dismiss(animated: true)
     }
     
-    private func showAlert(title: String,message: String) {
+    private func showAlertView(title: String,message: String) {
+        showAlert(title: title, msg: message, okayTitle: "OK")
         
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "OK",
-                style: .default
-            )
-        )
-        
-        present(alert, animated: true)
     }
     
     private func showCameraSettingsAlert() {
         
-        let alert = UIAlertController(
-            title: "Camera Permission Required",
-            message: "Allow camera access in Settings to take a photo.",
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "Cancel",
-                style: .cancel
-            )
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "Settings",
-                style: .default
-            ) { _ in
-                
-                guard let url = URL(
-                    string: UIApplication.openSettingsURLString
-                ) else {
-                    return
-                }
-                
-                UIApplication.shared.open(url)
+        showAlert(title: "Camera Permission Required", msg: "Allow camera access in Settings to take a photo.", okayTitle: "Settings", cancelTitle: "Cancel", doneAction: {
+            guard let url = URL(
+                string: UIApplication.openSettingsURLString
+            ) else {
+                return
             }
-        )
-        
-        present(alert, animated: true)
+            
+            UIApplication.shared.open(url)
+        })
     }
 }
 
@@ -247,7 +213,7 @@ extension ImageSourcePickerVC: PHPickerViewControllerDelegate {
             }
             
             guard !images.isEmpty else {
-                self.showAlert(
+                self.showAlertView(
                     title: "Couldn't Open Photo",
                     message: "The selected photos couldn't be loaded. Please try again."
                 )

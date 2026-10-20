@@ -58,6 +58,9 @@ struct SettingsItem {
 
 
 class SettingsVC: UIViewController {
+    @IBOutlet weak var btnPro: UIButton!
+    @IBOutlet weak var vwProHeight: NSLayoutConstraint!
+    @IBOutlet weak var vwPro: UIView!
     @IBOutlet weak var veBanner: UIView!
     @IBOutlet weak var adsBase: AdsBaseView!
     @IBOutlet weak var bannerView: BannerView!
@@ -78,14 +81,14 @@ class SettingsVC: UIViewController {
     private let arrAppearance: [SettingsItem] = [
         SettingsItem(id: .theme, title: "Theme", icon: "ic_theme", type: .theme)
     ]
-    
+ 
     private let arrExport: [SettingsItem] = [
         SettingsItem(id: .defaultFormat, title: "Default format", icon: "ic_format", type: .value),
         SettingsItem(id: .saveToPhotos, title: "Save to Photos", icon: "ic_save", type: .toggle),
         SettingsItem(id: .hdExport, title: "HD export", icon: "ic_export", type: .pro)
     ]
     
-    private let arrSupport: [SettingsItem] = [
+    private var arrSupport: [SettingsItem] = [
         SettingsItem(id: .restorePurchases, title: "Restore purchases", icon: "ic_restore", type: .arrow),
         SettingsItem(id: .rateApp, title: "Rate Cutout", icon: "ic_rate", type: .arrow),
         SettingsItem(id: .shareApp, title: "Share app", icon: "ic_share", type: .arrow),
@@ -103,7 +106,13 @@ class SettingsVC: UIViewController {
         setBootonView(self.vwAppaerance)
         setBootonView(self.vwExport)
         setBootonView(self.vwSupport)
-        self.lblAppInfo.text = "Cutout · Version 1.0"
+        self.lblAppInfo.text = "\(appName ?? "") · Version \(appVersion ?? "1.0")"
+        if UserDefaults.isPremiumUser{
+            self.vwProHeight.constant = 0
+            self.vwPro.isHidden = true
+            self.btnPro.isEnabled = false
+            self.arrSupport.remove(at: 0)
+        }
     }
     func setTableView(){
         self.tblAppaerance.dataSource = self
@@ -215,17 +224,79 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             // Shows a loader and the result; premium follows the verified receipt.
             PurchaseConnector.shared.restorePurchase { _ in }
         case .rateApp:
+            RatingManager.requestReviewManually()
             print("Rate App")
         case .shareApp:
+            shareApplication()
             print("Share App")
         case .privacyPolicy:
+            openConfiguredURL(appData.privacyPolicy, missingMessage: "Add your privacy policy URL in SettingViewController.")
             print("Privacy Policy")
         case .terms:
+            openConfiguredURL(appData.terms, missingMessage: "Add your terms URL in SettingViewController.")
             print("Terms")
         case nil:
             break
         }
     }
+    private func openConfiguredURL(_ urlString: String, missingMessage: String) {
+        guard !urlString.isEmpty,
+              let url = URL(string: urlString) else {
+            showAlertWithOneOption(msg: missingMessage)
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:])
+        } else {
+            showAlertWithOneOption(msg: "Unable to open the link.")
+        }
+    }
+    private func shareApplication() {
+        let shareMessage: String
+
+        if let appStoreURL = URL(string: "https://apps.apple.com/app/id\(appData.appId ?? "000")") {
+            shareMessage = """
+            ✨ Remove BG – Background Remover
+
+            Remove image backgrounds in seconds! 🖼️✂️ Create clean, professional photos with just one tap.
+
+            🔗 Try it now:  \(appStoreURL.absoluteString)
+
+            Download now and make your photos stand out! 🚀
+            """
+        } else {
+            shareMessage = """
+            ✨ Remove BG – Background Remover
+
+            Remove image backgrounds in seconds! 🖼️✂️ Create clean, professional photos with just one tap.
+
+            🔗 Try it now: https://apps.apple.com/app/id\(appData.appId ?? "000")
+
+            Download now and make your photos stand out! 🚀
+            """
+        }
+
+        let activityVC = UIActivityViewController(
+            activityItems: [shareMessage],
+            applicationActivities: nil
+        )
+
+        // iPad Support
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(
+                x: view.bounds.midX,
+                y: view.bounds.midY,
+                width: 0,
+                height: 0
+            )
+            popover.permittedArrowDirections = []
+        }
+
+        present(activityVC, animated: true)
+    }
+    
     func bannerAd(){
         if UserDefaults.isPremiumUser {
             bannerView.isHidden = true

@@ -2487,6 +2487,7 @@ Remove</string>
                     <connections>
                         <outlet property="adsBase" destination="xPN-TX-5Pa" id="BGK-Zc-nT3"/>
                         <outlet property="bannerView" destination="XlO-uR-mNp" id="Smx-wb-2X2"/>
+                        <outlet property="btnPro" destination="KqW-mH-70O" id="0iV-wD-fEX"/>
                         <outlet property="lblAppInfo" destination="5nj-4D-us4" id="Dzx-Un-Cij"/>
                         <outlet property="lodingAds" destination="IWJ-uW-dce" id="U6E-qm-b5M"/>
                         <outlet property="tblAppaerance" destination="Zbp-Sl-w4q" id="DqG-YB-gJZ"/>
@@ -2498,6 +2499,8 @@ Remove</string>
                         <outlet property="veBanner" destination="kwf-sX-kbz" id="nuz-OB-NZw"/>
                         <outlet property="vwAppaerance" destination="P5X-Az-hr4" id="Fe3-jr-yRX"/>
                         <outlet property="vwExport" destination="6DG-WL-duK" id="TuF-YG-qLX"/>
+                        <outlet property="vwPro" destination="agu-Cy-ieM" id="vTL-XB-6Fw"/>
+                        <outlet property="vwProHeight" destination="MnV-ve-aQa" id="Us1-4c-lxg"/>
                         <outlet property="vwSupport" destination="9G0-SY-VA0" id="rQZ-EF-GFc"/>
                     </connections>
                 </viewController>
@@ -2883,6 +2886,9 @@ Remove</string>
                                                         <state key="normal" title="Terms">
                                                             <color key="titleColor" name="Link Color"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="btnTerms:" destination="HuN-WE-KLc" eventType="touchUpInside" id="wfp-qm-bf3"/>
+                                                        </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="·" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJz-mb-QLt">
                                                         <rect key="frame" x="36" y="0.0" width="4.3333333333333357" height="20"/>
@@ -2897,6 +2903,9 @@ Remove</string>
                                                         <state key="normal" title="Privacy">
                                                             <color key="titleColor" name="Link Color"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="btnPrivacy:" destination="HuN-WE-KLc" eventType="touchUpInside" id="EhQ-RU-YJn"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <constraints>
@@ -3261,6 +3270,98 @@ Remove</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EOE-Ya-tUQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1798" y="2104"/>
+        </scene>
+        <!--AlertVC-->
+        <scene sceneID="h9x-Z1-Sls">
+            <objects>
+                <viewController storyboardIdentifier="AlertVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A72-Dn-5bE" customClass="AlertVC" customModule="Background_Removal" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jPO-Tz-zoF">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Add Your Image" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqR-6v-9Iz">
+                                <rect key="frame" x="20" y="138" width="353" height="27.666666666666657"/>
+                                <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="23"/>
+                                <color key="textColor" name="PrimaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="We'd love to hear your feedback! If you enjoy using our app, please take a moment to rate us and help us improve." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AKJ-d4-FLe">
+                                <rect key="frame" x="20" y="171" width="353" height="71"/>
+                                <fontDescription key="fontDescription" name="Figtree-Medium" family="Figtree" pointSize="16"/>
+                                <color key="textColor" name="SecondaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1m3-Sw-KjK">
+                                <rect key="frame" x="20" y="644" width="353" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vPF-qA-yo3">
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="55"/>
+                                        <color key="backgroundColor" name="AccentColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="aik-He-6se"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Okey">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isCircleOn" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="btnOkey:" destination="A72-Dn-5bE" eventType="touchUpInside" id="5NX-2W-QdJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QuI-Fe-g0S">
+                                        <rect key="frame" x="0.0" y="65" width="353" height="55"/>
+                                        <color key="backgroundColor" name="Surface Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="Dev-4l-QMC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" name="PrimaryText"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isCircleOn" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="btnCancel:" destination="A72-Dn-5bE" eventType="touchUpInside" id="G1v-sL-Jsn"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="3o4-T5-v9n"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="EqR-6v-9Iz" firstAttribute="leading" secondItem="jPO-Tz-zoF" secondAttribute="leading" constant="20" id="5Cr-R5-cCW"/>
+                            <constraint firstItem="1m3-Sw-KjK" firstAttribute="leading" secondItem="3o4-T5-v9n" secondAttribute="leading" constant="20" id="6eP-3Y-sh6"/>
+                            <constraint firstItem="AKJ-d4-FLe" firstAttribute="top" secondItem="EqR-6v-9Iz" secondAttribute="bottom" constant="5" id="Bv8-dY-aoC"/>
+                            <constraint firstItem="1m3-Sw-KjK" firstAttribute="top" secondItem="AKJ-d4-FLe" secondAttribute="bottom" constant="20" id="J9r-xN-cxg"/>
+                            <constraint firstItem="AKJ-d4-FLe" firstAttribute="leading" secondItem="3o4-T5-v9n" secondAttribute="leading" constant="20" id="K1B-Eb-5cB"/>
+                            <constraint firstItem="3o4-T5-v9n" firstAttribute="trailing" secondItem="1m3-Sw-KjK" secondAttribute="trailing" constant="20" id="Lls-iQ-4Ay"/>
+                            <constraint firstItem="3o4-T5-v9n" firstAttribute="trailing" secondItem="EqR-6v-9Iz" secondAttribute="trailing" constant="20" id="WyK-MS-O6J"/>
+                            <constraint firstItem="EqR-6v-9Iz" firstAttribute="top" secondItem="3o4-T5-v9n" secondAttribute="top" constant="20" id="aFu-x5-4h2"/>
+                            <constraint firstItem="3o4-T5-v9n" firstAttribute="bottom" secondItem="1m3-Sw-KjK" secondAttribute="bottom" constant="20" id="il8-kd-ker"/>
+                            <constraint firstItem="3o4-T5-v9n" firstAttribute="trailing" secondItem="AKJ-d4-FLe" secondAttribute="trailing" constant="20" id="tB3-vB-kQu"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnCancel" destination="QuI-Fe-g0S" id="rBd-Hv-va6"/>
+                        <outlet property="btnOkey" destination="vPF-qA-yo3" id="7l7-S9-cTo"/>
+                        <outlet property="contentView" destination="jPO-Tz-zoF" id="tJN-dH-3wc"/>
+                        <outlet property="lblSubtitle" destination="AKJ-d4-FLe" id="P6w-mi-IK2"/>
+                        <outlet property="lblTitle" destination="EqR-6v-9Iz" id="BeD-8b-753"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IaO-fb-610" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2458.7786259541986" y="2103.5211267605637"/>
         </scene>
     </scenes>
     <resources>
