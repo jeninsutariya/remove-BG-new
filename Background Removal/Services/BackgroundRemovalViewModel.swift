@@ -147,6 +147,21 @@ final class BackgroundRemovalViewModel {
         PaywallFeature.backgroundRemoval(for: project.mode, isBatch: project.isBatch)
     }
 
+    /// Daily-limit feature this project's edits and exports count against.
+    var editFeature: PaywallFeature? {
+        switch project.mode {
+        case .changeBackground: return .changeBackground
+        case .textBehind: return .textBehindSubject
+        default: return nil
+        }
+    }
+
+    func markUsageCounted(_ ids: [UUID]) {
+        for id in ids where item(id)?.usageCounted == false {
+            update(id) { $0.usageCounted = true }
+        }
+    }
+
     private func process(_ item: BackgroundRemovalItem) async {
         // A use is reserved up front and only counted when the removal succeeds.
         let feature = usageFeature

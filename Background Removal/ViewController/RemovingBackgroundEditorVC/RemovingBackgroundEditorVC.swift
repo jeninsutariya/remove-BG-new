@@ -388,7 +388,10 @@ class RemovingBackgroundEditorVC: UIViewController {
             }
             return false
         }
-        if commit(background: selection) { PaywallManager.shared.recordUse(.changeBackground) }
+        if let id = currentItemID, commit(background: selection) {
+            PaywallManager.shared.recordUse(.changeBackground)
+            viewModel.markUsageCounted([id])
+        }
         return true
     }
 

@@ -185,12 +185,16 @@ class PurchaseConnector {
             case .error(let error):
                 print(">>>> Receipt verification failed: \(error)")
                 switch error {
-                case .networkError, .noRemoteData:
-                    // Offline: keep the last verified subscription until its verified expiry date.
-                    UserDefaults.isPremiumUser = (self.verifiedExpiryDate ?? .distantPast) > Date()
-                default:
+                case .noReceiptData,
+                     .receiptInvalid(_, .malformedOrMissingData),
+                     .receiptInvalid(_, .receiptCouldNotBeAuthenticated):
+                    // The receipt itself is missing or not genuine.
                     self.verifiedExpiryDate = nil
                     UserDefaults.isPremiumUser = false
+                default:
+                    // Offline or the App Store is unavailable: keep the last verified
+                    // subscription until its verified expiry date.
+                    UserDefaults.isPremiumUser = (self.verifiedExpiryDate ?? .distantPast) > Date()
                 }
                 complition?()
                 

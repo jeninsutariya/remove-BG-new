@@ -137,15 +137,41 @@ final class PaywallManager {
         }
     }
 
+    // MARK: - Exports (Change Background / Text Behind Subject)
+
+    /// Exporting an item of a Change Background / Text Behind project whose use was never
+    /// counted (nothing committed) costs one use, so the result can't be taken without one.
+    /// `completion(true)` = the export may run; call `recordExport` after it succeeded.
+    func requestExportAccess(for ids: [UUID], in viewModel: BackgroundRemovalViewModel, from vc: UIViewController,
+                             completion: @escaping (_ allowed: Bool) -> Void) {
+        let uncounted = ids.filter { viewModel.item($0)?.usageCounted == false }
+        guard let feature = viewModel.editFeature, !uncounted.isEmpty else { return completion(true) }
+        requestAccess(feature, count: uncounted.count, from: vc) { allowed in
+            completion(allowed == uncounted.count)
+        }
+    }
+
+    func recordExport(of ids: [UUID], in viewModel: BackgroundRemovalViewModel) {
+        let uncounted = ids.filter { viewModel.item($0)?.usageCounted == false }
+        guard let feature = viewModel.editFeature, !uncounted.isEmpty else { return }
+        recordUse(feature, count: uncounted.count)
+        viewModel.markUsageCounted(uncounted)
+    }
+
     /// Shows the In-App Purchase screen. `completion(true)` only when premium was verified
     /// (purchase or restore) by the time the screen closed.
     func presentPaywall(from vc: UIViewController, completion: ((_ unlocked: Bool) -> Void)? = nil) {
         var top = vc
         while let presented = top.presentedViewController, !presented.isBeingDismissed { top = presented }
-        if let closing = top.presentedViewController, let coordinator = closing.transitionCoordinator {
+        if top.presentedViewController != nil {
             // A sheet is still closing (e.g. the photo picker): present once it is gone.
-            coordinator.animate(alongsideTransition: nil) { [weak self] _ in
-                self?.presentPaywall(from: top, completion: completion)
+            let retry = { [weak self] in
+                DispatchQueue.main.async { self?.presentPaywall(from: top, completion: completion) }
+            }
+            if let coordinator = top.presentedViewController?.transitionCoordinator {
+                coordinator.animate(alongsideTransition: nil) { _ in retry() }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { retry() }
             }
             return
         }

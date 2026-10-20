@@ -203,7 +203,7 @@ final class TextBehindExportVC: UIViewController {
         saveButton.tintColor = .white
         saveButton.backgroundColor = TBStyle.accent
         saveButton.layer.cornerRadius = 29
-        saveButton.addAction(UIAction { [weak self] _ in self?.save() }, for: .touchUpInside)
+        saveButton.addAction(UIAction { [weak self] _ in self?.withExportAccess { $0.save() } }, for: .touchUpInside)
         shareButton.setTitle("  Share", for: .normal)
         shareButton.setSymbol("square.and.arrow.up", size: 16, weight: .bold)
         shareButton.titleLabel?.font = TBStyle.font(17, .bold)
@@ -213,7 +213,7 @@ final class TextBehindExportVC: UIViewController {
         shareButton.layer.cornerRadius = 27
         shareButton.layer.borderWidth = 1
         shareButton.layer.borderColor = (UIColor(named: "BrandPrimary") ?? TBStyle.border).cgColor
-        shareButton.addAction(UIAction { [weak self] _ in self?.share() }, for: .touchUpInside)
+        shareButton.addAction(UIAction { [weak self] _ in self?.withExportAccess { $0.share() } }, for: .touchUpInside)
 
         [backButton, title, scrollView, saveButton, shareButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -340,6 +340,14 @@ final class TextBehindExportVC: UIViewController {
         [saveButton, shareButton, projectButton, formatControl].forEach { ($0 as UIControl).isEnabled = !busy }
     }
 
+    /// A design whose Text Behind use was never counted costs one use on its first export.
+    private func withExportAccess(_ export: @escaping (TextBehindExportVC) -> Void) {
+        guard task == nil else { return }
+        PaywallManager.shared.requestExportAccess(for: [itemID], in: viewModel, from: self) { [weak self] allowed in
+            if allowed, let self { export(self) }
+        }
+    }
+
     private func save() {
         guard task == nil else { return }
         setBusy(true)
@@ -356,6 +364,7 @@ final class TextBehindExportVC: UIViewController {
                 try await ImageExportService.shared.savePhotoData(output.data, fileName: output.fileName)
                 hud.dismiss()
                 self.viewModel.recordExport(quality: self.quality)
+                PaywallManager.shared.recordExport(of: [self.itemID], in: self.viewModel)
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                 showToast(message: "Saved to Photos")
             } catch ImageExportError.photosAccessDenied {
@@ -366,7 +375,7 @@ final class TextBehindExportVC: UIViewController {
             } catch {
                 hud.dismiss()
                 self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
-                                        retry: { self?.save() })
+                                        retry: { self?.withExportAccess { $0.save() } })
             }
         }
     }
@@ -387,6 +396,7 @@ final class TextBehindExportVC: UIViewController {
                 let data = output.data
                 let url = try await Task.detached { try ZIPExportService.shared.writeSingleFile(name: name, data: data) }.value
                 hud.dismiss()
+                PaywallManager.shared.recordExport(of: [self.itemID], in: self.viewModel)
                 let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 activity.popoverPresentationController?.sourceView = self.shareButton
                 activity.completionWithItemsHandler = { _, _, _, _ in ZIPExportService.shared.cleanUp(url) }
@@ -396,7 +406,7 @@ final class TextBehindExportVC: UIViewController {
             } catch {
                 hud.dismiss()
                 self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
-                                        retry: { self?.share() })
+                                        retry: { self?.withExportAccess { $0.share() } })
             }
         }
     }

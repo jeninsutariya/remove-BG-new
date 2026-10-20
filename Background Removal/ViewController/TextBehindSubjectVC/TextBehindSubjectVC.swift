@@ -571,6 +571,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     private func openTool(_ tool: Tool) {
         guard sourcesReady else { return }
         if activeTool == tool, activePanel != nil { return }
+        // Text edits are counted when applied; with no free use left, show the paywall
+        // before any typing (nothing is counted here).
+        if tool == .text, !PaywallManager.shared.canUse(.textBehindSubject) {
+            PaywallManager.shared.presentPaywall(from: self) { [weak self] unlocked in
+                if unlocked { self?.openTool(.text) }
+            }
+            return
+        }
         if activePanel != nil {
             // Switching tools keeps the current edit and replaces the panel.
             guard commitOpenPanel(retry: { [weak self] in self?.openTool(tool) }) else { return }
@@ -623,6 +631,7 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
             return false
         }
         PaywallManager.shared.recordUse(.textBehindSubject)
+        viewModel.markUsageCounted([itemID])
         return true
     }
 

@@ -58,6 +58,9 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
     var edits: ItemEdits
     /// Text Behind Subject composition (only for Text Behind projects).
     var textBehind: TextBehindDocument?
+    /// A Change Background / Text Behind Subject daily use was spent on this item (by a commit
+    /// or its first export), so exporting it again is free.
+    var usageCounted: Bool
     var createdAt: Date
     var modifiedAt: Date
 
@@ -71,12 +74,13 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         self.background = .none
         self.edits = .unedited
         self.textBehind = nil
+        self.usageCounted = false
         self.createdAt = Date()
         self.modifiedAt = Date()
     }
 
     nonisolated private enum CodingKeys: String, CodingKey {
-        case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, textBehind, createdAt, modifiedAt
+        case id, sourceName, originalFileName, foregroundFileName, status, errorMessage, background, edits, textBehind, usageCounted, createdAt, modifiedAt
     }
 
     /// Tolerant decoding so projects saved by older versions still open.
@@ -91,6 +95,8 @@ nonisolated struct BackgroundRemovalItem: Codable, Identifiable, Equatable {
         background = (try? c.decode(BackgroundSelection.self, forKey: .background)) ?? BackgroundSelection.none
         edits = (try? c.decode(ItemEdits.self, forKey: .edits)) ?? ItemEdits.unedited
         textBehind = try? c.decodeIfPresent(TextBehindDocument.self, forKey: .textBehind)
+        // Items saved before daily limits existed are not charged.
+        usageCounted = (try? c.decode(Bool.self, forKey: .usageCounted)) ?? true
         createdAt = (try? c.decode(Date.self, forKey: .createdAt)) ?? Date()
         modifiedAt = (try? c.decode(Date.self, forKey: .modifiedAt)) ?? Date()
     }
