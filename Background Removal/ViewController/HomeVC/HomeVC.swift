@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import UIView_Shimmer
+import GoogleMobileAds
 
 struct HomeCardModel: Codable {
     let title: String
@@ -24,7 +26,10 @@ struct HomeCardModel: Codable {
 }
 
 class HomeVC: UIViewController {
-    
+    @IBOutlet weak var veBanner: UIView!
+    @IBOutlet weak var adsBase: AdsBaseView!
+    @IBOutlet weak var bannerView: BannerView!
+    @IBOutlet weak var lodingAds: UILabel!
     @IBOutlet weak var btnRecents: UIButton!
     @IBOutlet weak var lblRecents: UILabel!
     @IBOutlet weak var vwRemoveBGImage: UIView!
@@ -61,7 +66,7 @@ class HomeVC: UIViewController {
         setupCollectionView()
         startAutoScrollTimer()
         setPageViewAnimate()
-        
+        bannerAd()
         setBootonView(self.vwRemoveBackground)
         setBootonView(self.vwChangeBG)
         setBootonView(self.vwTextBehind)
@@ -81,6 +86,68 @@ class HomeVC: UIViewController {
     func isRecentsShow(_ isShow :Bool){
         btnRecents.isHidden = isShow
         lblRecents.isHidden = isShow
+    }
+    func bannerAd(){
+        if UserDefaults.isPremiumUser {
+            bannerView.isHidden = true
+            lodingAds.isHidden = true
+            self.adsBase.isHidden = true
+            bannerView.translatesAutoresizingMaskIntoConstraints = false
+            bannerView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            
+            self.view.setTemplateWithSubviews(false)
+            return
+        }
+        let adsType = appData.homeVC.adType ?? ""
+        let adsSize = appData.homeVC.adSize ?? 50
+        
+        let adSize = getAdSize(type: adsType, size: adsSize)
+        if adsType == "NETIVE" || adsType == "BIG_NETIVE"{
+            self.veBanner.isHidden = true
+            self.adsBase.isHidden = false
+            self.lodingAds.isHidden = true
+            self.adsBase.setupAdsView(data: adsType == "NETIVE" ? .smallNative : .bigNative)
+        }else if adsType == "BANNER" || adsType == "LARGE_BANNER" || adsType == "MEDIUM_RECTANGLE"{
+            self.veBanner.isHidden = false
+            self.adsBase.isHidden = true
+            self.lodingAds.isHidden = false
+            bannerView.translatesAutoresizingMaskIntoConstraints = false
+            bannerView.heightAnchor.constraint(equalToConstant: adSize.size.height).isActive = true
+        }else{
+            self.bannerView.isHidden = false
+            self.adsBase.isHidden = true
+            self.lodingAds.isHidden = false
+            bannerView.translatesAutoresizingMaskIntoConstraints = false
+            bannerView.heightAnchor.constraint(equalToConstant: adSize.size.height).isActive = true
+            bannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            bannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        }
+        if adsType != "NETIVE" || adsType != "BIG_NETIVE"{
+            self.view.layoutIfNeeded()
+            self.bannerView.setTemplateWithSubviews(true, viewBackgroundColor: .white)
+            self.lodingAds.isHidden = false
+            bannerView.adUnitID = appData.bannerAdsId
+            bannerView.rootViewController = self
+            bannerView.delegate = self
+            bannerView.adSize = adSize
+            
+            let request = Request()
+            bannerView.load(request)
+        }
+    }
+    
+    func getAdSize(type: String, size: Int) -> AdSize {
+        switch type {
+        case "BANNER":
+            return AdSizeBanner
+        case "LARGE_BANNER":
+            return AdSizeLargeBanner
+        case "MEDIUM_RECTANGLE":
+            return AdSizeMediumRectangle
+        default:
+            let screenWidth = UIScreen.main.bounds.width
+            return adSizeFor(cgSize: CGSize(width: screenWidth, height: CGFloat(size)))
+        }
     }
     func reloadRecents() {
         Task { [weak self] in
@@ -297,5 +364,18 @@ extension HomeVC: ImageSourcePickerDelegate{
         vc.pickedImages = images
         vc.destination = pendingDestination
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+extension HomeVC: BannerViewDelegate {
+    
+    func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+        print("Ad loaded successfully")
+        self.lodingAds.isHidden = true
+        self.view.setTemplateWithSubviews(false)
+    }
+    
+    func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+        print("Ad failed to load: \(error.localizedDescription)")
+        // Stop the shimmer even on failure so the user doesn't see a loading state forever
     }
 }

@@ -97,6 +97,30 @@
 		DE79866D3087371A000A2560 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986673087371A000A2560 /* IAPManager.swift */; };
 		DE7986703087374D000A2560 /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = DE79866F3087374D000A2560 /* SwiftyStoreKit */; };
 		DE79867230877018000A2560 /* stack_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = DE79867130877018000A2560 /* stack_animation.json */; };
+		DE7986833087C6EC000A2560 /* AdsBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986793087C6EC000A2560 /* AdsBaseView.swift */; };
+		DE7986843087C6EC000A2560 /* RemoteConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986813087C6EC000A2560 /* RemoteConfigManager.swift */; };
+		DE7986853087C6EC000A2560 /* NativeAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986733087C6EC000A2560 /* NativeAdsView.swift */; };
+		DE7986863087C6EC000A2560 /* GoogleMobileAdsConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE79867E3087C6EC000A2560 /* GoogleMobileAdsConsentManager.swift */; };
+		DE7986873087C6EC000A2560 /* SmallNativeAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7986763087C6EC000A2560 /* SmallNativeAdsView.swift */; };
+		DE7986883087C6EC000A2560 /* GoogleAds.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE79867D3087C6EC000A2560 /* GoogleAds.swift */; };
+		DE7986893087C6EC000A2560 /* AppOpenAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE79867F3087C6EC000A2560 /* AppOpenAdManager.swift */; };
+		DE79868A3087C6EC000A2560 /* SmallNativeAdsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE7986773087C6EC000A2560 /* SmallNativeAdsView.xib */; };
+		DE79868B3087C6EC000A2560 /* AdsBaseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE79867A3087C6EC000A2560 /* AdsBaseView.xib */; };
+		DE79868C3087C6EC000A2560 /* NativeAdsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE7986743087C6EC000A2560 /* NativeAdsView.xib */; };
+		DE79868F3087C74D000A2560 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DE79868E3087C74D000A2560 /* FirebaseAnalytics */; };
+		DE7986913087C74D000A2560 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986903087C74D000A2560 /* FirebaseCore */; };
+		DE7986933087C74D000A2560 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986923087C74D000A2560 /* FirebaseCrashlytics */; };
+		DE7986953087C74D000A2560 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986943087C74D000A2560 /* FirebaseFirestore */; };
+		DE7986973087C74D000A2560 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986963087C74D000A2560 /* FirebaseFunctions */; };
+		DE7986993087C74D000A2560 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986983087C74D000A2560 /* FirebaseRemoteConfig */; };
+		DE79869C3087C794000A2560 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = DE79869B3087C794000A2560 /* GoogleUserMessagingPlatform */; };
+		DE79869F3087C7A4000A2560 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = DE79869E3087C7A4000A2560 /* GoogleMobileAds */; };
+		DE7986A23087C98C000A2560 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986A13087C98C000A2560 /* Shimmer */; };
+		DE7986A53087C99B000A2560 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986A43087C99B000A2560 /* SwiftyJSON */; };
+		DE7986A83087C9A7000A2560 /* UIView-Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986A73087C9A7000A2560 /* UIView-Shimmer */; };
+		DE7986AB3087C9F8000A2560 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986AA3087C9F8000A2560 /* FacebookBasics */; };
+		DE7986AD3087C9F8000A2560 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = DE7986AC3087C9F8000A2560 /* FacebookCore */; };
+		DE7986AF3087D0D3000A2560 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE7986AE3087D0D3000A2560 /* GoogleService-Info.plist */; };
 		DE7FAE1530777201001E7D59 /* ProjectsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE1430777201001E7D59 /* ProjectsVC.swift */; };
 		DE7FAE19307772B7001E7D59 /* ProjectClvCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */; };
 		DE7FAE1A307772B7001E7D59 /* ProjectClvCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */; };
@@ -215,6 +239,17 @@
 		DE7986683087371A000A2560 /* PaywallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallManager.swift; sourceTree = "<group>"; };
 		DE7986693087371A000A2560 /* RatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManager.swift; sourceTree = "<group>"; };
 		DE79867130877018000A2560 /* stack_animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stack_animation.json; sourceTree = "<group>"; };
+		DE7986733087C6EC000A2560 /* NativeAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAdsView.swift; sourceTree = "<group>"; };
+		DE7986743087C6EC000A2560 /* NativeAdsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NativeAdsView.xib; sourceTree = "<group>"; };
+		DE7986763087C6EC000A2560 /* SmallNativeAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallNativeAdsView.swift; sourceTree = "<group>"; };
+		DE7986773087C6EC000A2560 /* SmallNativeAdsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallNativeAdsView.xib; sourceTree = "<group>"; };
+		DE7986793087C6EC000A2560 /* AdsBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsBaseView.swift; sourceTree = "<group>"; };
+		DE79867A3087C6EC000A2560 /* AdsBaseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdsBaseView.xib; sourceTree = "<group>"; };
+		DE79867D3087C6EC000A2560 /* GoogleAds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAds.swift; sourceTree = "<group>"; };
+		DE79867E3087C6EC000A2560 /* GoogleMobileAdsConsentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMobileAdsConsentManager.swift; sourceTree = "<group>"; };
+		DE79867F3087C6EC000A2560 /* AppOpenAdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOpenAdManager.swift; sourceTree = "<group>"; };
+		DE7986813087C6EC000A2560 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
+		DE7986AE3087D0D3000A2560 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DE7FAE1430777201001E7D59 /* ProjectsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsVC.swift; sourceTree = "<group>"; };
 		DE7FAE17307772B7001E7D59 /* ProjectClvCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectClvCell.swift; sourceTree = "<group>"; };
 		DE7FAE18307772B7001E7D59 /* ProjectClvCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectClvCell.xib; sourceTree = "<group>"; };
@@ -249,9 +284,22 @@
 		DE1D493A3072B28300E35E44 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				DE7986A53087C99B000A2560 /* SwiftyJSON in Frameworks */,
+				DE7986A23087C98C000A2560 /* Shimmer in Frameworks */,
+				DE7986993087C74D000A2560 /* FirebaseRemoteConfig in Frameworks */,
 				DE7986703087374D000A2560 /* SwiftyStoreKit in Frameworks */,
+				DE7986913087C74D000A2560 /* FirebaseCore in Frameworks */,
 				DE13340B3083728500441C3F /* Lottie in Frameworks */,
+				DE7986973087C74D000A2560 /* FirebaseFunctions in Frameworks */,
+				DE79869F3087C7A4000A2560 /* GoogleMobileAds in Frameworks */,
+				DE7986933087C74D000A2560 /* FirebaseCrashlytics in Frameworks */,
+				DE7986A83087C9A7000A2560 /* UIView-Shimmer in Frameworks */,
+				DE79869C3087C794000A2560 /* GoogleUserMessagingPlatform in Frameworks */,
+				DE79868F3087C74D000A2560 /* FirebaseAnalytics in Frameworks */,
+				DE7986AB3087C9F8000A2560 /* FacebookBasics in Frameworks */,
 				C0DE0000000000000000003E /* SDWebImage in Frameworks */,
+				DE7986953087C74D000A2560 /* FirebaseFirestore in Frameworks */,
+				DE7986AD3087C9F8000A2560 /* FacebookCore in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -520,6 +568,62 @@
 			path = PaywallManager;
 			sourceTree = "<group>";
 		};
+		DE7986753087C6EC000A2560 /* Native Ads */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986733087C6EC000A2560 /* NativeAdsView.swift */,
+				DE7986743087C6EC000A2560 /* NativeAdsView.xib */,
+			);
+			path = "Native Ads";
+			sourceTree = "<group>";
+		};
+		DE7986783087C6EC000A2560 /* Small Native Ads */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986763087C6EC000A2560 /* SmallNativeAdsView.swift */,
+				DE7986773087C6EC000A2560 /* SmallNativeAdsView.xib */,
+			);
+			path = "Small Native Ads";
+			sourceTree = "<group>";
+		};
+		DE79867B3087C6EC000A2560 /* AdsView */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986793087C6EC000A2560 /* AdsBaseView.swift */,
+				DE79867A3087C6EC000A2560 /* AdsBaseView.xib */,
+			);
+			path = AdsView;
+			sourceTree = "<group>";
+		};
+		DE79867C3087C6EC000A2560 /* AdsView */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986753087C6EC000A2560 /* Native Ads */,
+				DE7986783087C6EC000A2560 /* Small Native Ads */,
+				DE79867B3087C6EC000A2560 /* AdsView */,
+			);
+			path = AdsView;
+			sourceTree = "<group>";
+		};
+		DE7986803087C6EC000A2560 /* GoogleAds */ = {
+			isa = PBXGroup;
+			children = (
+				DE79867C3087C6EC000A2560 /* AdsView */,
+				DE79867D3087C6EC000A2560 /* GoogleAds.swift */,
+				DE79867E3087C6EC000A2560 /* GoogleMobileAdsConsentManager.swift */,
+				DE79867F3087C6EC000A2560 /* AppOpenAdManager.swift */,
+			);
+			path = GoogleAds;
+			sourceTree = "<group>";
+		};
+		DE7986823087C6EC000A2560 /* RemoteConfigManager */ = {
+			isa = PBXGroup;
+			children = (
+				DE7986813087C6EC000A2560 /* RemoteConfigManager.swift */,
+			);
+			path = RemoteConfigManager;
+			sourceTree = "<group>";
+		};
 		DE7FAE13307771EB001E7D59 /* ProjectsVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -690,6 +794,7 @@
 			isa = PBXGroup;
 			children = (
 				DEF0DFCA3073786D004B8CA8 /* Info.plist */,
+				DE7986AE3087D0D3000A2560 /* GoogleService-Info.plist */,
 				DEF0DFC83073786D004B8CA8 /* AppDelegate.swift */,
 				DEF0DFCF3073786D004B8CA8 /* SceneDelegate.swift */,
 			);
@@ -709,6 +814,8 @@
 		DEF0DFDB3073AE5B004B8CA8 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				DE7986803087C6EC000A2560 /* GoogleAds */,
+				DE7986823087C6EC000A2560 /* RemoteConfigManager */,
 				DE971B8130740D89006631C7 /* UIViewController+Extension */,
 				DE971B7E30740D85006631C7 /* IBInspectable+Extension */,
 				DE971B8F30740DC7006631C7 /* UserDefaults+Extension */,
@@ -765,6 +872,19 @@
 				DE13340A3083728500441C3F /* Lottie */,
 				C0DE0000000000000000003D /* SDWebImage */,
 				DE79866F3087374D000A2560 /* SwiftyStoreKit */,
+				DE79868E3087C74D000A2560 /* FirebaseAnalytics */,
+				DE7986903087C74D000A2560 /* FirebaseCore */,
+				DE7986923087C74D000A2560 /* FirebaseCrashlytics */,
+				DE7986943087C74D000A2560 /* FirebaseFirestore */,
+				DE7986963087C74D000A2560 /* FirebaseFunctions */,
+				DE7986983087C74D000A2560 /* FirebaseRemoteConfig */,
+				DE79869B3087C794000A2560 /* GoogleUserMessagingPlatform */,
+				DE79869E3087C7A4000A2560 /* GoogleMobileAds */,
+				DE7986A13087C98C000A2560 /* Shimmer */,
+				DE7986A43087C99B000A2560 /* SwiftyJSON */,
+				DE7986A73087C9A7000A2560 /* UIView-Shimmer */,
+				DE7986AA3087C9F8000A2560 /* FacebookBasics */,
+				DE7986AC3087C9F8000A2560 /* FacebookCore */,
 			);
 			productName = "Background Removal";
 			productReference = DE1D493D3072B28300E35E44 /* Background Removal.app */;
@@ -798,6 +918,13 @@
 				DE1334093083728500441C3F /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				C0DE0000000000000000003C /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				DE79866E3087374D000A2560 /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */,
+				DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				DE79869A3087C794000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+				DE79869D3087C7A4000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				DE7986A03087C98C000A2560 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
+				DE7986A33087C99B000A2560 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				DE7986A63087C9A7000A2560 /* XCRemoteSwiftPackageReference "UIView-Shimmer" */,
+				DE7986A93087C9F8000A2560 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DE1D493E3072B28300E35E44 /* Products */;
@@ -813,6 +940,9 @@
 		DE1D493B3072B28300E35E44 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				DE79868A3087C6EC000A2560 /* SmallNativeAdsView.xib in Resources */,
+				DE79868B3087C6EC000A2560 /* AdsBaseView.xib in Resources */,
+				DE79868C3087C6EC000A2560 /* NativeAdsView.xib in Resources */,
 				C0DE00000000000000000048 /* EditorToolClvCell.xib in Resources */,
 				C0DE0000000000000000004C /* BackgroundToolView.xib in Resources */,
 				C0DE00000000000000000050 /* ShadowToolView.xib in Resources */,
@@ -836,6 +966,7 @@
 				DE0C509D307A604D007992F3 /* SettingsTVCCell.xib in Resources */,
 				DE4A61663073DA5B005A8635 /* Figtree-Bold.ttf in Resources */,
 				DE37A2AA307EACF60001A092 /* ProUpgradeTVC.xib in Resources */,
+				DE7986AF3087D0D3000A2560 /* GoogleService-Info.plist in Resources */,
 				DE4A61673073DA5B005A8635 /* Figtree-BlackItalic.ttf in Resources */,
 				DE4A61683073DA5B005A8635 /* Figtree-ExtraBold.ttf in Resources */,
 				DE4F67413078C98A00B5114E /* RecentsSearchClvCell.xib in Resources */,
@@ -932,6 +1063,13 @@
 				DE4C632930766947009CFA25 /* RecentsClvCell.swift in Sources */,
 				DEA2B14430814793001EBD36 /* ImageSourcePickerVC.swift in Sources */,
 				DE79866B3087371A000A2560 /* RatingManager.swift in Sources */,
+				DE7986833087C6EC000A2560 /* AdsBaseView.swift in Sources */,
+				DE7986843087C6EC000A2560 /* RemoteConfigManager.swift in Sources */,
+				DE7986853087C6EC000A2560 /* NativeAdsView.swift in Sources */,
+				DE7986863087C6EC000A2560 /* GoogleMobileAdsConsentManager.swift in Sources */,
+				DE7986873087C6EC000A2560 /* SmallNativeAdsView.swift in Sources */,
+				DE7986883087C6EC000A2560 /* GoogleAds.swift in Sources */,
+				DE7986893087C6EC000A2560 /* AppOpenAdManager.swift in Sources */,
 				DE79866C3087371A000A2560 /* PaywallManager.swift in Sources */,
 				DE79866D3087371A000A2560 /* IAPManager.swift in Sources */,
 				DEC228013074D67F00DCE0C8 /* OnboardingForthVC.swift in Sources */,
@@ -972,6 +1110,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Remove BG";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is required to capture photos for background removal";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving your cutouts to your photo library";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1008,6 +1147,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Remove BG";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is required to capture photos for background removal";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Allow saving your cutouts to your photo library";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1198,6 +1338,62 @@
 				minimumVersion = 0.16.4;
 			};
 		};
+		DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.0.1;
+			};
+		};
+		DE79869A3087C794000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
+		DE79869D3087C7A4000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.11.0;
+			};
+		};
+		DE7986A03087C98C000A2560 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
+		DE7986A33087C99B000A2560 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		DE7986A63087C9A7000A2560 /* XCRemoteSwiftPackageReference "UIView-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/omerfarukozturk/UIView-Shimmer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
+		DE7986A93087C9F8000A2560 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1215,6 +1411,71 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DE79866E3087374D000A2560 /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */;
 			productName = SwiftyStoreKit;
+		};
+		DE79868E3087C74D000A2560 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		DE7986903087C74D000A2560 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		DE7986923087C74D000A2560 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		DE7986943087C74D000A2560 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		DE7986963087C74D000A2560 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		DE7986983087C74D000A2560 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79868D3087C74D000A2560 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		DE79869B3087C794000A2560 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79869A3087C794000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
+		};
+		DE79869E3087C7A4000A2560 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE79869D3087C7A4000A2560 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		DE7986A13087C98C000A2560 /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE7986A03087C98C000A2560 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
+		};
+		DE7986A43087C99B000A2560 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE7986A33087C99B000A2560 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		DE7986A73087C9A7000A2560 /* UIView-Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE7986A63087C9A7000A2560 /* XCRemoteSwiftPackageReference "UIView-Shimmer" */;
+			productName = "UIView-Shimmer";
+		};
+		DE7986AA3087C9F8000A2560 /* FacebookBasics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE7986A93087C9F8000A2560 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookBasics;
+		};
+		DE7986AC3087C9F8000A2560 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE7986A93087C9F8000A2560 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

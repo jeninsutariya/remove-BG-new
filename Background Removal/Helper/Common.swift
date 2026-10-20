@@ -84,3 +84,50 @@ func showImageSourcePicker(from viewController: UIViewController, vc: UIViewCont
 
     viewController.present(sheetVC, animated: true)
 }
+class BaseCustomView: UIView {
+
+    // ----------------------------------------------------
+    // MARK:
+    // MARK: - Variables
+    // ----------------------------------------------------
+    public var nibName: String {
+        return String(describing: Self.self) // defaults to the name of the class implementing this protocol.
+    }
+    var contentView: UIView?
+
+    // ----------------------------------------------------
+    // MARK:
+    // MARK: - Override Functions
+    // ----------------------------------------------------
+    override init(frame fem: CGRect) {
+        super.init(frame: fem)
+        
+        self.loadNIB()
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.loadNIB()
+    }
+
+    func loadNIB(){
+        guard let view = loadViewFromNib() else { return }
+        view.frame = self.bounds
+        self.addSubview(view)
+        contentView = view
+    }
+    
+    // ----------------------------------------------------
+    // MARK:
+    // MARK: - Custome Functions
+    // ----------------------------------------------------
+    func loadViewFromNib() -> UIView? {
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName: nibName, bundle: bundle)
+        return nib.instantiate(withOwner: self, options: nil).first as? UIView
+    }
+}
+func topMostViewController() -> UIViewController {
+    return (UIApplication.shared.delegate as! AppDelegate).visibleViewController ?? UIViewController()
+}

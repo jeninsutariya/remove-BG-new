@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AdsBaseView" customModule="Live_Football_TV_HD_2026" customModuleProvider="target">
+            <connections>
+                <outlet property="nativeAdsView" destination="tTX-e1-Qf5" id="WsD-5I-dcA"/>
+                <outlet property="smallNativeAdsView" destination="CCP-B0-gAF" id="Xff-Mx-2Pi"/>
+                <outlet property="stackView" destination="SRW-gU-d0K" id="64f-QT-tx0"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="400"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="SRW-gU-d0K">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="366"/>
+                    <subviews>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tTX-e1-Qf5" customClass="NativeAdsView" customModule="Live_Football_TV_HD_2026" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="264"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="264" id="VNx-85-JyR"/>
+                            </constraints>
+                        </view>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CCP-B0-gAF" customClass="SmallNativeAdsView" customModule="Live_Football_TV_HD_2026" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="120"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="120" id="Vts-sX-jS0"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="250" id="X7h-j9-AlF"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="SRW-gU-d0K" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="FVW-Dy-76f"/>
+                <constraint firstItem="SRW-gU-d0K" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="nAg-Hy-rrG"/>
+                <constraint firstAttribute="trailing" secondItem="SRW-gU-d0K" secondAttribute="trailing" id="qFZ-WN-qQA"/>
+                <constraint firstItem="SRW-gU-d0K" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="uRM-Vr-sLf"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="83" y="20"/>
+        </view>
+    </objects>
+</document>

@@ -12,9 +12,6 @@
         <array key="Figtree-Bold.ttf">
             <string>Figtree-Bold</string>
         </array>
-        <array key="Figtree-ExtraBold.ttf">
-            <string>Figtree-ExtraBold</string>
-        </array>
         <array key="Figtree-Regular.ttf">
             <string>Figtree-Regular</string>
         </array>
@@ -134,19 +131,19 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Ya-047">
-                                <rect key="frame" x="0.0" y="230" width="393" height="376"/>
+                                <rect key="frame" x="0.0" y="230" width="393" height="381"/>
                                 <subviews>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Za-048">
-                                        <rect key="frame" x="46.666666666666657" y="0.0" width="300" height="376"/>
+                                        <rect key="frame" x="46.666666666666657" y="0.0" width="300" height="381"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-4a-051" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="300" height="376"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="381"/>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-5a-052">
-                                                <rect key="frame" x="0.0" y="0.0" width="300" height="376"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="381"/>
                                             </imageView>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-6a-053">
-                                                <rect key="frame" x="131.33333333333334" y="169.66666666666669" width="37" height="37"/>
+                                                <rect key="frame" x="131.33333333333334" y="172" width="37" height="37"/>
                                                 <color key="color" name="AccentColor"/>
                                             </activityIndicatorView>
                                         </subviews>
@@ -175,7 +172,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-mb-068">
-                                <rect key="frame" x="329" y="554" width="48" height="48"/>
+                                <rect key="frame" x="329" y="559" width="48" height="48"/>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="rbe-nb-069"/>
@@ -194,7 +191,7 @@
                                 </connections>
                             </button>
                             <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-tb-075">
-                                <rect key="frame" x="0.0" y="614" width="393" height="64"/>
+                                <rect key="frame" x="0.0" y="619" width="393" height="64"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="rbe-ub-076"/>
@@ -229,10 +226,56 @@
                                     <constraint firstItem="rbe-xb-079" firstAttribute="leading" secondItem="rbe-vb-077" secondAttribute="leading" constant="8" id="rbe-zb-081"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="7R7-sM-w6r">
+                                <rect key="frame" x="0.0" y="175" width="393" height="2"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okl-po-TgB">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="0.0"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-rK-Y3S" customClass="GADBannerView">
+                                                <rect key="frame" x="36.666666666666657" y="0.0" width="320" height="0.0"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="c0h-rK-Y3S" firstAttribute="centerX" secondItem="okl-po-TgB" secondAttribute="centerX" id="BwA-p1-q7B"/>
+                                            <constraint firstItem="c0h-rK-Y3S" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="okl-po-TgB" secondAttribute="leading" id="JRn-lu-1AS"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="c0h-rK-Y3S" secondAttribute="trailing" id="RQk-LK-doP"/>
+                                            <constraint firstAttribute="bottom" secondItem="c0h-rK-Y3S" secondAttribute="bottom" id="SHc-Yh-xdr"/>
+                                            <constraint firstItem="c0h-rK-Y3S" firstAttribute="top" secondItem="okl-po-TgB" secondAttribute="top" id="ra1-9A-1Cr"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MkP-jX-6Is" customClass="AdsBaseView" customModule="Poster_Maker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="2" width="393" height="0.0"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="250" id="7Gk-Rq-fzx"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loding Ads..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIT-ox-arX">
+                                <rect key="frame" x="36.666666666666657" y="175" width="320" height="0.0"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                <color key="textColor" name="SecondaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rbe-da-003"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
+                            <constraint firstItem="7R7-sM-w6r" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" id="5cH-xt-5uy"/>
+                            <constraint firstItem="hIT-ox-arX" firstAttribute="bottom" secondItem="c0h-rK-Y3S" secondAttribute="bottom" id="623-x8-LCZ"/>
+                            <constraint firstItem="hIT-ox-arX" firstAttribute="leading" secondItem="c0h-rK-Y3S" secondAttribute="leading" id="6gY-Fo-w57"/>
+                            <constraint firstItem="rbe-Da-028" firstAttribute="top" secondItem="7R7-sM-w6r" secondAttribute="bottom" constant="5" id="8Jq-a1-PkI"/>
+                            <constraint firstItem="7R7-sM-w6r" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" id="97e-Mw-F2I"/>
+                            <constraint firstItem="7R7-sM-w6r" firstAttribute="top" secondItem="rbe-ea-004" secondAttribute="bottom" constant="5" id="EPm-Vl-Yy1"/>
+                            <constraint firstAttribute="trailing" secondItem="7R7-sM-w6r" secondAttribute="trailing" id="MCK-LL-1EX"/>
+                            <constraint firstItem="hIT-ox-arX" firstAttribute="trailing" secondItem="c0h-rK-Y3S" secondAttribute="trailing" id="P3t-am-8TD"/>
+                            <constraint firstItem="rbe-vb-077" firstAttribute="top" secondItem="rbe-tb-075" secondAttribute="bottom" constant="5" id="WLy-Xh-4UF"/>
+                            <constraint firstItem="hIT-ox-arX" firstAttribute="top" secondItem="c0h-rK-Y3S" secondAttribute="top" id="aPU-CU-jwX"/>
+                            <constraint firstItem="7R7-sM-w6r" firstAttribute="trailing" secondItem="rbe-da-003" secondAttribute="trailing" id="c1o-yh-SvP"/>
                             <constraint firstItem="rbe-da-003" firstAttribute="trailing" secondItem="rbe-xa-022" secondAttribute="trailing" constant="16" id="rbe-Ba-026"/>
                             <constraint firstItem="rbe-xa-022" firstAttribute="centerY" secondItem="rbe-ea-004" secondAttribute="centerY" id="rbe-Ca-027"/>
                             <constraint firstItem="rbe-Ya-047" firstAttribute="top" secondItem="rbe-Da-028" secondAttribute="bottom" constant="8" id="rbe-Cb-084"/>
@@ -241,14 +284,12 @@
                             <constraint firstItem="rbe-tb-075" firstAttribute="top" secondItem="rbe-Ya-047" secondAttribute="bottom" constant="8" id="rbe-Fb-087"/>
                             <constraint firstItem="rbe-tb-075" firstAttribute="leading" secondItem="rbe-ca-002" secondAttribute="leading" id="rbe-Gb-088"/>
                             <constraint firstAttribute="trailing" secondItem="rbe-tb-075" secondAttribute="trailing" id="rbe-Hb-089"/>
-                            <constraint firstItem="rbe-vb-077" firstAttribute="top" secondItem="rbe-tb-075" secondAttribute="bottom" constant="10" id="rbe-Jb-090"/>
                             <constraint firstItem="rbe-vb-077" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" constant="16" id="rbe-Kb-091"/>
                             <constraint firstItem="rbe-da-003" firstAttribute="trailing" secondItem="rbe-vb-077" secondAttribute="trailing" constant="16" id="rbe-Lb-092"/>
                             <constraint firstItem="rbe-da-003" firstAttribute="bottom" secondItem="rbe-vb-077" secondAttribute="bottom" constant="8" id="rbe-Mb-093"/>
                             <constraint firstItem="rbe-da-003" firstAttribute="trailing" secondItem="rbe-mb-068" secondAttribute="trailing" constant="16" id="rbe-Nb-094"/>
                             <constraint firstItem="rbe-Ja-033" firstAttribute="leading" secondItem="rbe-Fa-030" secondAttribute="trailing" constant="8" id="rbe-Pa-038"/>
                             <constraint firstItem="rbe-Ya-047" firstAttribute="bottom" secondItem="rbe-mb-068" secondAttribute="bottom" constant="4" id="rbe-Pb-095"/>
-                            <constraint firstItem="rbe-Da-028" firstAttribute="top" secondItem="rbe-ea-004" secondAttribute="bottom" constant="12" id="rbe-Wa-045"/>
                             <constraint firstItem="rbe-Da-028" firstAttribute="centerX" secondItem="rbe-ca-002" secondAttribute="centerX" id="rbe-Xa-046"/>
                             <constraint firstItem="rbe-ea-004" firstAttribute="top" secondItem="rbe-da-003" secondAttribute="top" constant="8" id="rbe-ia-008"/>
                             <constraint firstItem="rbe-ea-004" firstAttribute="leading" secondItem="rbe-da-003" secondAttribute="leading" constant="16" id="rbe-ja-009"/>
@@ -259,6 +300,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="adsBase" destination="MkP-jX-6Is" id="ne7-rH-PD6"/>
+                        <outlet property="bannerView" destination="c0h-rK-Y3S" id="Cgx-b8-Y6D"/>
                         <outlet property="btnBack" destination="rbe-ea-004" id="rbe-Qb-096"/>
                         <outlet property="btnCompare" destination="rbe-mb-068" id="rbe-7b-111"/>
                         <outlet property="btnExport" destination="rbe-xa-022" id="rbe-Tb-099"/>
@@ -273,8 +316,10 @@
                         <outlet property="imgPreview" destination="rbe-5a-052" id="rbe-5b-109"/>
                         <outlet property="imgStatusIcon" destination="rbe-Fa-030" id="rbe-Vb-101"/>
                         <outlet property="lblStatus" destination="rbe-Ja-033" id="rbe-Wb-102"/>
+                        <outlet property="lodingAds" destination="hIT-ox-arX" id="ti9-19-ScI"/>
                         <outlet property="spinner" destination="rbe-6a-053" id="rbe-6b-110"/>
                         <outlet property="thumbnailsHeight" destination="rbe-ub-076" id="rbe-9b-113"/>
+                        <outlet property="veBanner" destination="okl-po-TgB" id="Pxt-Vl-bmH"/>
                         <outlet property="vwCanvasCard" destination="rbe-Za-048" id="rbe-Zb-105"/>
                         <outlet property="vwCanvasContainer" destination="rbe-Ya-047" id="rbe-Yb-104"/>
                         <outlet property="vwChecker" destination="rbe-4a-051" id="rbe-4b-108"/>
@@ -284,7 +329,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-gc-120" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-160" y="0.0"/>
+            <point key="canvasLocation" x="-161.06870229007632" y="0.0"/>
         </scene>
         <!--Text Behind SubjectVC-->
         <scene sceneID="rbe-Fd-201">
@@ -371,23 +416,23 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Rc-154">
-                                <rect key="frame" x="0.0" y="180" width="393" height="500"/>
+                                <rect key="frame" x="0.0" y="180" width="393" height="308"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-Zc-162">
-                                <rect key="frame" x="32" y="351.66666666666669" width="329" height="157"/>
+                                <rect key="frame" x="32" y="255.66666666666663" width="329" height="157"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-2c-163">
-                                        <rect key="frame" x="146" y="20" width="37" height="37"/>
+                                        <rect key="frame" x="146" y="20.000000000000028" width="37" height="37"/>
                                         <color key="color" name="AccentColor"/>
                                     </activityIndicatorView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Preparing…" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-3c-164">
-                                        <rect key="frame" x="20" y="69" width="289" height="18"/>
+                                        <rect key="frame" x="20" y="69.000000000000028" width="289" height="18"/>
                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-4c-165">
-                                        <rect key="frame" x="109.66666666666666" y="101" width="110" height="36"/>
+                                        <rect key="frame" x="109.66666666666666" y="101.00000000000003" width="110" height="36"/>
                                         <color key="backgroundColor" name="AccentColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="110" id="rbe-5c-166"/>
@@ -435,10 +480,52 @@
                                     <constraint firstAttribute="bottom" secondItem="rbe-Uc-157" secondAttribute="bottom" constant="8" id="rbe-Yc-161"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="wgt-sG-jAF">
+                                <rect key="frame" x="0.0" y="493" width="393" height="190"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lyJ-K1-4LH">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="140"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="0L2-r2-YIi" customClass="GADBannerView">
+                                                <rect key="frame" x="36.666666666666657" y="0.0" width="320" height="140"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="0L2-r2-YIi" secondAttribute="bottom" id="Bj9-qA-2DG"/>
+                                            <constraint firstItem="0L2-r2-YIi" firstAttribute="top" secondItem="lyJ-K1-4LH" secondAttribute="top" id="CTH-Np-sIO"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0L2-r2-YIi" secondAttribute="trailing" id="Rsg-S9-Lm3"/>
+                                            <constraint firstItem="0L2-r2-YIi" firstAttribute="centerX" secondItem="lyJ-K1-4LH" secondAttribute="centerX" id="bQ6-a3-2KW"/>
+                                            <constraint firstItem="0L2-r2-YIi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lyJ-K1-4LH" secondAttribute="leading" id="tV2-65-Are"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PgW-Lq-P1k" customClass="AdsBaseView" customModule="Poster_Maker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="140" width="393" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="250" id="lkm-Gg-L2w"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loding Ads..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNG-6V-uM8">
+                                <rect key="frame" x="36.666666666666657" y="493" width="320" height="140"/>
+                                <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                <color key="textColor" name="SecondaryText"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rbe-jc-123"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="wgt-sG-jAF" secondAttribute="trailing" id="3h0-S8-yrZ"/>
+                            <constraint firstItem="tNG-6V-uM8" firstAttribute="bottom" secondItem="0L2-r2-YIi" secondAttribute="bottom" id="OCx-XI-7UI"/>
+                            <constraint firstItem="wgt-sG-jAF" firstAttribute="top" secondItem="rbe-Rc-154" secondAttribute="bottom" constant="5" id="TNV-Z4-9Wl"/>
+                            <constraint firstItem="tNG-6V-uM8" firstAttribute="top" secondItem="0L2-r2-YIi" secondAttribute="top" id="XNh-48-h7a"/>
+                            <constraint firstItem="rbe-Sc-155" firstAttribute="top" secondItem="wgt-sG-jAF" secondAttribute="bottom" constant="5" id="aDA-o4-Pxi"/>
+                            <constraint firstItem="wgt-sG-jAF" firstAttribute="leading" secondItem="rbe-jc-123" secondAttribute="leading" id="h9o-bt-mbt"/>
+                            <constraint firstItem="tNG-6V-uM8" firstAttribute="leading" secondItem="0L2-r2-YIi" secondAttribute="leading" id="m0R-Xl-kJn"/>
                             <constraint firstItem="rbe-uc-133" firstAttribute="centerY" secondItem="rbe-kc-124" secondAttribute="centerY" id="rbe-Ac-139"/>
                             <constraint firstItem="rbe-rc-130" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" constant="-24" id="rbe-Bc-140"/>
                             <constraint firstItem="rbe-uc-133" firstAttribute="centerX" secondItem="rbe-ic-122" secondAttribute="centerX" constant="24" id="rbe-Cc-141"/>
@@ -451,7 +538,6 @@
                             <constraint firstItem="rbe-Rc-154" firstAttribute="top" secondItem="rbe-kc-124" secondAttribute="bottom" constant="10" id="rbe-gd-177"/>
                             <constraint firstItem="rbe-Rc-154" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" id="rbe-hd-178"/>
                             <constraint firstAttribute="trailing" secondItem="rbe-Rc-154" secondAttribute="trailing" id="rbe-id-179"/>
-                            <constraint firstItem="rbe-Sc-155" firstAttribute="top" secondItem="rbe-Rc-154" secondAttribute="bottom" constant="8" id="rbe-jd-180"/>
                             <constraint firstItem="rbe-Sc-155" firstAttribute="leading" secondItem="rbe-jc-123" secondAttribute="leading" constant="16" id="rbe-kd-181"/>
                             <constraint firstItem="rbe-jc-123" firstAttribute="trailing" secondItem="rbe-Sc-155" secondAttribute="trailing" constant="16" id="rbe-md-182"/>
                             <constraint firstItem="rbe-jc-123" firstAttribute="bottom" secondItem="rbe-Sc-155" secondAttribute="bottom" constant="8" id="rbe-nd-183"/>
@@ -462,19 +548,24 @@
                             <constraint firstItem="rbe-Zc-162" firstAttribute="leading" secondItem="rbe-ic-122" secondAttribute="leading" constant="32" id="rbe-qd-186"/>
                             <constraint firstAttribute="trailing" secondItem="rbe-Zc-162" secondAttribute="trailing" constant="32" id="rbe-rd-187"/>
                             <constraint firstItem="rbe-rc-130" firstAttribute="centerY" secondItem="rbe-kc-124" secondAttribute="centerY" id="rbe-zc-138"/>
+                            <constraint firstItem="tNG-6V-uM8" firstAttribute="trailing" secondItem="0L2-r2-YIi" secondAttribute="trailing" id="tFM-aE-SY0"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="adsBase" destination="PgW-Lq-P1k" id="N4r-XO-oas"/>
+                        <outlet property="bannerView" destination="0L2-r2-YIi" id="Kwt-do-brb"/>
                         <outlet property="btnBack" destination="rbe-kc-124" id="rbe-sd-188"/>
                         <outlet property="btnExport" destination="rbe-Dc-142" id="rbe-wd-192"/>
                         <outlet property="btnPreview" destination="rbe-Hc-146" id="rbe-vd-191"/>
                         <outlet property="btnRedo" destination="rbe-uc-133" id="rbe-ud-190"/>
                         <outlet property="btnRetry" destination="rbe-4c-165" id="rbe-Bd-197"/>
                         <outlet property="btnUndo" destination="rbe-rc-130" id="rbe-td-189"/>
-                        <outlet property="canvasBottom" destination="rbe-jd-180" id="rbe-Ed-200"/>
+                        <outlet property="canvasBottom" destination="TNV-Z4-9Wl" id="OfA-sE-WdU"/>
                         <outlet property="clvTools" destination="rbe-Uc-157" id="rbe-Dd-199"/>
                         <outlet property="lblStatus" destination="rbe-3c-164" id="rbe-Ad-196"/>
+                        <outlet property="lodingAds" destination="tNG-6V-uM8" id="0gz-gk-6Q2"/>
                         <outlet property="spinner" destination="rbe-2c-163" id="rbe-zd-195"/>
+                        <outlet property="veBanner" destination="lyJ-K1-4LH" id="cwi-Nz-YxT"/>
                         <outlet property="vwCanvasArea" destination="rbe-Rc-154" id="rbe-xd-193"/>
                         <outlet property="vwStatus" destination="rbe-Zc-162" id="rbe-yd-194"/>
                         <outlet property="vwToolbar" destination="rbe-Sc-155" id="rbe-Cd-198"/>
@@ -539,10 +630,10 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-7d-225" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="178" width="393" height="361"/>
+                                <rect key="frame" x="0.0" y="178" width="393" height="165"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8d-226">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="361"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="165"/>
                                     </scrollView>
                                 </subviews>
                                 <constraints>
@@ -553,7 +644,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-6e-281">
-                                <rect key="frame" x="94" y="447" width="205" height="34"/>
+                                <rect key="frame" x="94" y="251" width="205" height="34"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag to erase · Pinch to zoom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-8e-283">
                                         <rect key="frame" x="16" y="9.3333333333333144" width="173" height="15.666666666666664"/>
@@ -571,7 +662,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-de-231">
-                                <rect key="frame" x="0.0" y="503" width="393" height="349"/>
+                                <rect key="frame" x="0.0" y="307" width="393" height="545"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-ee-232">
                                         <rect key="frame" x="178.66666666666666" y="8" width="36" height="5"/>
@@ -598,7 +689,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine edges" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-me-239">
-                                        <rect key="frame" x="142.66666666666666" y="36.333333333333371" width="108" height="21.666666666666671"/>
+                                        <rect key="frame" x="142.66666666666666" y="36.333333333333314" width="108" height="21.666666666666671"/>
                                         <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
                                         <color key="textColor" name="PrimaryText"/>
                                         <nil key="highlightedColor"/>
@@ -672,9 +763,51 @@
                                             <action selector="sliderSoftnessChanged:" destination="rbe-Jd-204" eventType="valueChanged" id="rbe-Be-254"/>
                                         </connections>
                                     </slider>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XkH-X0-RzH">
+                                        <rect key="frame" x="0.0" y="272" width="393" height="263"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uwe-Ly-4fM">
+                                                <rect key="frame" x="0.0" y="0.0" width="393" height="213"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="mT6-zA-QDU" customClass="GADBannerView">
+                                                        <rect key="frame" x="36.666666666666657" y="0.0" width="320" height="213"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mT6-zA-QDU" secondAttribute="trailing" id="7Yk-nP-N3b"/>
+                                                    <constraint firstItem="mT6-zA-QDU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uwe-Ly-4fM" secondAttribute="leading" id="A5Q-Pr-HC3"/>
+                                                    <constraint firstItem="mT6-zA-QDU" firstAttribute="top" secondItem="uwe-Ly-4fM" secondAttribute="top" id="hhC-hv-huJ"/>
+                                                    <constraint firstItem="mT6-zA-QDU" firstAttribute="centerX" secondItem="uwe-Ly-4fM" secondAttribute="centerX" id="sFp-YP-bAE"/>
+                                                    <constraint firstAttribute="bottom" secondItem="mT6-zA-QDU" secondAttribute="bottom" id="y9w-GI-Hpd"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c59-Oh-y06" customClass="AdsBaseView" customModule="Poster_Maker" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="213" width="393" height="50"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="250" id="Bhu-Ej-3p1"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loding Ads..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NpO-p8-63l">
+                                        <rect key="frame" x="36.666666666666657" y="272" width="320" height="213"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="SecondaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" name="Surface Color"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="XkH-X0-RzH" secondAttribute="bottom" constant="10" id="1aT-Q9-tsm"/>
+                                    <constraint firstItem="NpO-p8-63l" firstAttribute="leading" secondItem="mT6-zA-QDU" secondAttribute="leading" id="3oe-zL-Urj"/>
+                                    <constraint firstItem="NpO-p8-63l" firstAttribute="bottom" secondItem="mT6-zA-QDU" secondAttribute="bottom" id="Aq6-Oa-U1t"/>
+                                    <constraint firstAttribute="trailing" secondItem="XkH-X0-RzH" secondAttribute="trailing" id="Ski-XE-01p"/>
+                                    <constraint firstItem="NpO-p8-63l" firstAttribute="trailing" secondItem="mT6-zA-QDU" secondAttribute="trailing" id="g8R-Dn-YYs"/>
+                                    <constraint firstItem="XkH-X0-RzH" firstAttribute="top" secondItem="rbe-Ae-253" secondAttribute="bottom" constant="5" id="jqs-zg-Unj"/>
+                                    <constraint firstItem="NpO-p8-63l" firstAttribute="top" secondItem="mT6-zA-QDU" secondAttribute="top" id="lsv-vE-uSe"/>
                                     <constraint firstItem="rbe-Ae-253" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-3e-278"/>
                                     <constraint firstAttribute="trailing" secondItem="rbe-Ae-253" secondAttribute="trailing" constant="20" id="rbe-4e-279"/>
                                     <constraint firstItem="rbe-ee-232" firstAttribute="top" secondItem="rbe-de-231" secondAttribute="top" constant="8" id="rbe-Ce-255"/>
@@ -691,6 +824,7 @@
                                     <constraint firstAttribute="trailing" secondItem="rbe-we-249" secondAttribute="trailing" constant="20" id="rbe-Ve-272"/>
                                     <constraint firstItem="rbe-ye-251" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" constant="20" id="rbe-Xe-274"/>
                                     <constraint firstAttribute="trailing" secondItem="rbe-ze-252" secondAttribute="trailing" constant="20" id="rbe-Ye-275"/>
+                                    <constraint firstItem="XkH-X0-RzH" firstAttribute="leading" secondItem="rbe-de-231" secondAttribute="leading" id="tQr-Wm-AYn"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -701,7 +835,6 @@
                             <constraint firstItem="rbe-Td-213" firstAttribute="centerY" secondItem="rbe-Md-207" secondAttribute="centerY" id="rbe-3d-221"/>
                             <constraint firstItem="rbe-Wd-216" firstAttribute="centerY" secondItem="rbe-Md-207" secondAttribute="centerY" id="rbe-4d-222"/>
                             <constraint firstItem="rbe-Td-213" firstAttribute="centerX" secondItem="rbe-Kd-205" secondAttribute="centerX" constant="-24" id="rbe-5d-223"/>
-                            <constraint firstItem="rbe-Ld-206" firstAttribute="bottom" secondItem="rbe-Ae-253" secondAttribute="bottom" constant="14" id="rbe-5e-280"/>
                             <constraint firstItem="rbe-Wd-216" firstAttribute="centerX" secondItem="rbe-Kd-205" secondAttribute="centerX" constant="24" id="rbe-6d-224"/>
                             <constraint firstItem="rbe-ne-240" firstAttribute="centerY" secondItem="rbe-he-235" secondAttribute="centerY" id="rbe-He-260"/>
                             <constraint firstItem="rbe-me-239" firstAttribute="centerY" secondItem="rbe-he-235" secondAttribute="centerY" id="rbe-Je-261"/>
@@ -725,6 +858,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="adsBase" destination="c59-Oh-y06" id="cJ9-Tc-FUR"/>
+                        <outlet property="bannerView" destination="mT6-zA-QDU" id="kt6-9I-LQP"/>
                         <outlet property="btnBack" destination="rbe-Md-207" id="rbe-mf-296"/>
                         <outlet property="btnPanelApply" destination="rbe-ne-240" id="rbe-wf-306"/>
                         <outlet property="btnPanelCancel" destination="rbe-he-235" id="rbe-vf-305"/>
@@ -733,10 +868,12 @@
                         <outlet property="lblBrushValue" destination="rbe-ve-248" id="rbe-zf-309"/>
                         <outlet property="lblHint" destination="rbe-8e-283" id="rbe-sf-302"/>
                         <outlet property="lblSoftnessValue" destination="rbe-ze-252" id="rbe-Bf-311"/>
+                        <outlet property="lodingAds" destination="NpO-p8-63l" id="vwh-tm-Z3f"/>
                         <outlet property="scrollView" destination="rbe-8d-226" id="rbe-qf-300"/>
                         <outlet property="segMode" destination="rbe-re-244" id="rbe-xf-307"/>
                         <outlet property="sliderBrush" destination="rbe-we-249" id="rbe-yf-308"/>
                         <outlet property="sliderSoftness" destination="rbe-Ae-253" id="rbe-Af-310"/>
+                        <outlet property="veBanner" destination="uwe-Ly-4fM" id="2T7-83-LfX"/>
                         <outlet property="vwCanvasArea" destination="rbe-7d-225" id="rbe-pf-299"/>
                         <outlet property="vwGrabber" destination="rbe-ee-232" id="rbe-uf-304"/>
                         <outlet property="vwHint" destination="rbe-6e-281" id="rbe-rf-301"/>
@@ -745,7 +882,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rbe-Df-313" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="500" y="0.0"/>
+            <point key="canvasLocation" x="570" y="0.0"/>
         </scene>
         <!--ExportVC-->
         <scene sceneID="exp-3c-164">
@@ -756,93 +893,145 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ea-004">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <rect key="frame" x="16" y="126" width="44" height="44"/>
                                 <color key="backgroundColor" name="Surface Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="exp-fa-005"/>
+                                    <constraint firstAttribute="height" constant="44" id="exp-ga-006"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
                                 <color key="tintColor" name="PrimaryText"/>
                                 <state key="normal" title="">
                                     <color key="titleColor" name="PrimaryText"/>
                                 </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="exp-fa-005"/>
-                                    <constraint firstAttribute="height" constant="44" id="exp-ga-006"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="22"/></userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="22"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="btnBackTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ha-007"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ia-008">
-                                <rect key="frame" x="0.0" y="0.0" width="60" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ia-008">
+                                <rect key="frame" x="168.66666666666666" y="137.33333333333334" width="55.666666666666657" height="21.666666666666657"/>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
                                 <color key="textColor" name="PrimaryText"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-6b-110">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="600"/>
+                                <rect key="frame" x="0.0" y="178" width="393" height="464"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="exp-7b-111">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="800"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-oa-013">
+                                        <rect key="frame" x="16" y="10" width="361" height="200"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-oa-013">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="200"/>
-                                                <subviews>
-                                                    <view contentMode="scaleToFill" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qa-015">
-                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="26"/></userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cellSize"><real key="value" value="12.5"/></userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </view>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" clipsSubviews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ra-016">
-                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="200"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="26"/></userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </imageView>
-                                                </subviews>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qa-015" customClass="CheckerboardView" customModule="Background_Removal" customModuleProvider="target">
+                                                <rect key="frame" x="105.66666666666669" y="0.0" width="150" height="200"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <real key="value" value="26"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cellSize">
+                                                        <real key="value" value="12.5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ra-016">
+                                                <rect key="frame" x="105.66666666666669" y="0.0" width="150" height="200"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="200" id="exp-pa-014"/>
+                                                    <constraint firstAttribute="width" secondItem="exp-ra-016" secondAttribute="height" multiplier="3:4" id="exp-xa-022"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <real key="value" value="26"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="200" id="exp-pa-014"/>
+                                            <constraint firstItem="exp-ra-016" firstAttribute="centerX" secondItem="exp-oa-013" secondAttribute="centerX" id="exp-sa-017"/>
+                                            <constraint firstItem="exp-ra-016" firstAttribute="centerY" secondItem="exp-oa-013" secondAttribute="centerY" id="exp-ta-018"/>
+                                            <constraint firstItem="exp-ra-016" firstAttribute="height" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="height" id="exp-ua-019"/>
+                                            <constraint firstItem="exp-ra-016" firstAttribute="width" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="width" id="exp-va-020"/>
+                                            <constraint firstItem="exp-ra-016" firstAttribute="height" secondItem="exp-oa-013" secondAttribute="height" priority="750" id="exp-wa-021"/>
+                                        </constraints>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="qbY-4Q-FGu">
+                                        <rect key="frame" x="0.0" y="215" width="393" height="107"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="21S-3g-CoA">
+                                                <rect key="frame" x="0.0" y="0.0" width="393" height="50"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="sdu-o3-bNj" customClass="GADBannerView">
+                                                        <rect key="frame" x="36.666666666666657" y="0.0" width="320" height="50"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="sdu-o3-bNj" firstAttribute="centerX" secondItem="21S-3g-CoA" secondAttribute="centerX" id="4qk-kx-3dR"/>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="sdu-o3-bNj" secondAttribute="trailing" id="6OZ-5D-oQx"/>
+                                                    <constraint firstAttribute="bottom" secondItem="sdu-o3-bNj" secondAttribute="bottom" id="ndk-1l-UcF"/>
+                                                    <constraint firstItem="sdu-o3-bNj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="21S-3g-CoA" secondAttribute="leading" id="rjy-ER-hO1"/>
+                                                    <constraint firstItem="sdu-o3-bNj" firstAttribute="top" secondItem="21S-3g-CoA" secondAttribute="top" id="umX-cU-NMR"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image.png" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ca-027">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="20"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8r9-5E-EfZ" customClass="AdsBaseView" customModule="Poster_Maker" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="57" width="393" height="50"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="250" id="EcR-VC-0yQ"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loding Ads..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gPx-5N-LST">
+                                        <rect key="frame" x="36.666666666666657" y="247" width="320" height="18"/>
+                                        <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
+                                        <color key="textColor" name="SecondaryText"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="exp-7b-111">
+                                        <rect key="frame" x="16" y="327" width="361" height="530"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image.png" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ca-027">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="18"/>
                                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="15"/>
                                                 <color key="textColor" name="PrimaryText"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2048 × 2048 px" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Da-028">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="16"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2048 × 2048 px" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Da-028">
+                                                <rect key="frame" x="0.0" y="18" width="361" height="15.666666666666664"/>
                                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                                 <color key="textColor" name="SecondaryText"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ea-029">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="40"/>
+                                                <rect key="frame" x="0.0" y="33.666666666666629" width="361" height="41"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="40" id="exp-Fa-030"/>
+                                                </constraints>
                                                 <segments>
                                                     <segment title="This image"/>
                                                     <segment title="All images"/>
                                                 </segments>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" priority="999" id="exp-Fa-030"/>
-                                                </constraints>
                                                 <connections>
                                                     <action selector="scopeChanged:" destination="exp-ba-001" eventType="valueChanged" id="exp-Ga-031"/>
                                                 </connections>
                                             </segmentedControl>
-                                            <view contentMode="scaleToFill" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ha-032">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ha-032">
+                                                <rect key="frame" x="0.0" y="73.666666666666629" width="361" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Free users can save up to 3 images per day. Get Premium to save all images." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ja-033">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
                                                         <color key="textColor" name="AccentColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ka-034">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="34"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
                                                         <state key="normal" title="">
                                                             <color key="titleColor" name="PrimaryText"/>
@@ -852,35 +1041,45 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="exp-Ja-033" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ma-036"/>
+                                                    <constraint firstItem="exp-Ja-033" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Na-037"/>
+                                                    <constraint firstAttribute="trailing" secondItem="exp-Ja-033" secondAttribute="trailing" id="exp-Pa-038"/>
+                                                    <constraint firstAttribute="bottom" secondItem="exp-Ja-033" secondAttribute="bottom" id="exp-Qa-039"/>
+                                                    <constraint firstItem="exp-Ka-034" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ra-040"/>
+                                                    <constraint firstItem="exp-Ka-034" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Sa-041"/>
+                                                    <constraint firstAttribute="trailing" secondItem="exp-Ka-034" secondAttribute="trailing" id="exp-Ta-042"/>
+                                                    <constraint firstAttribute="bottom" secondItem="exp-Ka-034" secondAttribute="bottom" id="exp-Ua-043"/>
+                                                </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Va-044">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="260"/>
+                                                <rect key="frame" x="0.0" y="73.666666666666629" width="361" height="337"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Wa-045">
-                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="234"/>
+                                                        <rect key="frame" x="18" y="12" width="329" height="311"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Xa-046">
-                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="40"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="50"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-4a-051">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="20"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-4a-051">
+                                                                        <rect key="frame" x="0.0" y="15.333333333333369" width="51" height="19.333333333333329"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                                                         <color key="textColor" name="PrimaryText"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-5a-052">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="129" height="40"/>
+                                                                        <rect key="frame" x="59" y="0.0" width="130" height="50"/>
                                                                     </view>
                                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Ya-047">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="132" height="40"/>
+                                                                        <rect key="frame" x="197" y="5" width="132" height="41"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="40" id="exp-2a-049"/>
+                                                                            <constraint firstAttribute="width" constant="132" id="exp-Za-048"/>
+                                                                        </constraints>
                                                                         <segments>
                                                                             <segment title="PNG"/>
                                                                             <segment title="JPG"/>
                                                                         </segments>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="132" id="exp-Za-048"/>
-                                                                            <constraint firstAttribute="height" constant="40" id="exp-2a-049"/>
-                                                                        </constraints>
                                                                         <connections>
                                                                             <action selector="formatChanged:" destination="exp-ba-001" eventType="valueChanged" id="exp-3a-050"/>
                                                                         </connections>
@@ -888,26 +1087,26 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-6a-053">
-                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <rect key="frame" x="0.0" y="62" width="329" height="1"/>
                                                                 <color key="backgroundColor" name="Border Color"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="exp-7a-054"/>
                                                                 </constraints>
                                                             </view>
                                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-8a-055">
-                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34"/>
+                                                                <rect key="frame" x="0.0" y="75" width="329" height="50"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-bb-058">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="20"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-bb-058">
+                                                                        <rect key="frame" x="0.0" y="15.333333333333369" width="27.333333333333332" height="19.333333333333329"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                                                         <color key="textColor" name="PrimaryText"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-cb-059">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="133" height="34"/>
+                                                                        <rect key="frame" x="35.333333333333329" y="0.0" width="218.66666666666669" height="50"/>
                                                                     </view>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-9a-056">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="34"/>
+                                                                        <rect key="frame" x="262" y="10" width="67" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
                                                                         <state key="normal" title="Original  ›">
                                                                             <color key="titleColor" name="AccentColor"/>
@@ -919,26 +1118,26 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-db-060">
-                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <rect key="frame" x="0.0" y="137" width="329" height="1"/>
                                                                 <color key="backgroundColor" name="Border Color"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="exp-eb-061"/>
                                                                 </constraints>
                                                             </view>
                                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-fb-062">
-                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34"/>
+                                                                <rect key="frame" x="0.0" y="150" width="329" height="50"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ib-065">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="100" height="20"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ib-065">
+                                                                        <rect key="frame" x="0.0" y="15.333333333333369" width="85.333333333333329" height="19.333333333333329"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                                                         <color key="textColor" name="PrimaryText"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-jb-066">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                        <rect key="frame" x="93.333333333333329" y="0.0" width="149.66666666666669" height="50"/>
                                                                     </view>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-gb-063">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="34"/>
+                                                                        <rect key="frame" x="251" y="10" width="78" height="30"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="15"/>
                                                                         <state key="normal" title="As edited  ›">
                                                                             <color key="titleColor" name="AccentColor"/>
@@ -950,29 +1149,29 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-kb-067">
-                                                                <rect key="frame" x="0.0" y="0.0" width="326" height="1"/>
+                                                                <rect key="frame" x="0.0" y="212" width="329" height="1"/>
                                                                 <color key="backgroundColor" name="Border Color"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="exp-mb-068"/>
                                                                 </constraints>
                                                             </view>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="exp-nb-069">
-                                                                <rect key="frame" x="0.0" y="0.0" width="329" height="50"/>
+                                                                <rect key="frame" x="0.0" y="225" width="329" height="86"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="exp-ob-070">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="18"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="50"/>
                                                                         <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JPEG quality" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qb-072">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="90" height="16"/>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JPEG quality" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-qb-072">
+                                                                                <rect key="frame" x="0.0" y="17.333333333333371" width="76" height="15.666666666666664"/>
                                                                                 <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="13"/>
                                                                                 <color key="textColor" name="PrimaryText"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-rb-073">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="183" height="16"/>
+                                                                                <rect key="frame" x="84" y="0.0" width="211" height="50"/>
                                                                             </view>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="85%" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-pb-071">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="40" height="16"/>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="85%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-pb-071">
+                                                                                <rect key="frame" x="303" y="17.333333333333371" width="26" height="15.666666666666664"/>
                                                                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                                                                 <color key="textColor" name="SecondaryText"/>
                                                                                 <nil key="highlightedColor"/>
@@ -980,7 +1179,7 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="85" minValue="50" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="exp-sb-074">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="31"/>
+                                                                        <rect key="frame" x="0.0" y="52" width="329" height="34"/>
                                                                         <color key="minimumTrackTintColor" name="AccentColor"/>
                                                                         <color key="maximumTrackTintColor" name="Border Color"/>
                                                                         <connections>
@@ -996,33 +1195,41 @@
                                                     </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Surface Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="exp-Wa-045" secondAttribute="bottom" constant="14" id="exp-Ab-082"/>
+                                                    <constraint firstItem="exp-Wa-045" firstAttribute="top" secondItem="exp-Va-044" secondAttribute="top" constant="12" id="exp-xb-079"/>
+                                                    <constraint firstItem="exp-Wa-045" firstAttribute="leading" secondItem="exp-Va-044" secondAttribute="leading" constant="18" id="exp-yb-080"/>
+                                                    <constraint firstAttribute="trailing" secondItem="exp-Wa-045" secondAttribute="trailing" constant="14" id="exp-zb-081"/>
+                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="24"/></userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <real key="value" value="24"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PNG keeps the transparent background." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Bb-083">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="20"/>
+                                                <rect key="frame" x="0.0" y="410.66666666666663" width="361" height="15.666666666666686"/>
                                                 <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                                 <color key="textColor" name="SecondaryText"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Cb-084">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="66"/>
+                                                <rect key="frame" x="0.0" y="426.33333333333337" width="361" height="74.666666666666686"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Db-085">
-                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                                                        <rect key="frame" x="18" y="10.999999999999996" width="329" height="52.666666666666657"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Eb-086">
-                                                                <rect key="frame" x="0.0" y="0.0" width="230" height="44"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="191.33333333333334" height="52.666666666666664"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Gb-088">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="20"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HD export" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Gb-088">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="191.33333333333334" height="19.333333333333332"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="16"/>
                                                                         <color key="textColor" name="PrimaryText"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Free exports up to 2048 px · Full resolution with Pro" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Fb-087">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="32"/>
+                                                                        <rect key="frame" x="0.0" y="21.333333333333258" width="191.33333333333334" height="31.333333333333329"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-Regular" family="Figtree" pointSize="13"/>
                                                                         <color key="textColor" name="SecondaryText"/>
                                                                         <nil key="highlightedColor"/>
@@ -1030,13 +1237,13 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Rb-097">
-                                                                <rect key="frame" x="0.0" y="0.0" width="17" height="44"/>
+                                                                <rect key="frame" x="197.33333333333334" y="1.3333333333332575" width="55.666666666666657" height="50"/>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Hb-089">
-                                                                <rect key="frame" x="0.0" y="0.0" width="48" height="24"/>
+                                                                <rect key="frame" x="259" y="14.333333333333258" width="50" height="24"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Kb-091">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="28" height="15"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Kb-091">
+                                                                        <rect key="frame" x="10" y="4.6666666666667416" width="30" height="14.666666666666664"/>
                                                                         <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="12"/>
                                                                         <color key="textColor" name="Link Color"/>
                                                                         <nil key="highlightedColor"/>
@@ -1045,13 +1252,18 @@
                                                                 <color key="backgroundColor" name="Badge Color"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="24" id="exp-Jb-090"/>
+                                                                    <constraint firstItem="exp-Kb-091" firstAttribute="leading" secondItem="exp-Hb-089" secondAttribute="leading" constant="10" id="exp-Lb-092"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="exp-Kb-091" secondAttribute="trailing" constant="10" id="exp-Mb-093"/>
+                                                                    <constraint firstItem="exp-Kb-091" firstAttribute="centerY" secondItem="exp-Hb-089" secondAttribute="centerY" id="exp-Nb-094"/>
                                                                 </constraints>
                                                                 <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="12"/></userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <real key="value" value="12"/>
+                                                                    </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Pb-095">
-                                                                <rect key="frame" x="0.0" y="0.0" width="14" height="20"/>
+                                                                <rect key="frame" x="315" y="1.3333333333332575" width="14" height="50"/>
                                                                 <color key="tintColor" name="PrimaryText"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="14" id="exp-Qb-096"/>
@@ -1060,7 +1272,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-Sb-098">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="66"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="74.666666666666671"/>
                                                         <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="16"/>
                                                         <state key="normal" title="">
                                                             <color key="titleColor" name="PrimaryText"/>
@@ -1071,12 +1283,24 @@
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Surface Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="exp-Sb-098" secondAttribute="trailing" id="exp-2b-106"/>
+                                                    <constraint firstAttribute="bottom" secondItem="exp-Sb-098" secondAttribute="bottom" id="exp-3b-107"/>
+                                                    <constraint firstItem="exp-Db-085" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" constant="11" id="exp-Ub-100"/>
+                                                    <constraint firstItem="exp-Db-085" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" constant="18" id="exp-Vb-101"/>
+                                                    <constraint firstAttribute="trailing" secondItem="exp-Db-085" secondAttribute="trailing" constant="14" id="exp-Wb-102"/>
+                                                    <constraint firstAttribute="bottom" secondItem="exp-Db-085" secondAttribute="bottom" constant="11" id="exp-Xb-103"/>
+                                                    <constraint firstItem="exp-Sb-098" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" id="exp-Yb-104"/>
+                                                    <constraint firstItem="exp-Sb-098" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" id="exp-Zb-105"/>
+                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="24"/></userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <real key="value" value="24"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-4b-108">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="30"/>
+                                                <rect key="frame" x="0.0" y="501" width="361" height="29"/>
                                                 <fontDescription key="fontDescription" name="Figtree-SemiBold" family="Figtree" pointSize="14"/>
                                                 <state key="normal" title="Save project for later">
                                                     <color key="titleColor" name="AccentColor"/>
@@ -1088,38 +1312,58 @@
                                         </subviews>
                                     </stackView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="qbY-4Q-FGu" firstAttribute="leading" secondItem="exp-6b-110" secondAttribute="leading" id="6LR-V4-v5u"/>
+                                    <constraint firstItem="exp-oa-013" firstAttribute="leading" secondItem="exp-6b-110" secondAttribute="leading" constant="16" id="DsT-aT-U29"/>
+                                    <constraint firstAttribute="trailing" secondItem="exp-oa-013" secondAttribute="trailing" constant="16" id="Fl3-8L-Xeh"/>
+                                    <constraint firstItem="gPx-5N-LST" firstAttribute="bottom" secondItem="sdu-o3-bNj" secondAttribute="bottom" id="YBx-6b-vjo"/>
+                                    <constraint firstItem="gPx-5N-LST" firstAttribute="trailing" secondItem="sdu-o3-bNj" secondAttribute="trailing" id="Z92-9j-Qb0"/>
+                                    <constraint firstItem="qbY-4Q-FGu" firstAttribute="top" secondItem="exp-oa-013" secondAttribute="bottom" constant="5" id="aa7-Ku-Hxv"/>
+                                    <constraint firstItem="exp-7b-111" firstAttribute="leading" secondItem="exp-6b-110" secondAttribute="leading" constant="16" id="exp-9b-113"/>
+                                    <constraint firstAttribute="trailing" secondItem="exp-7b-111" secondAttribute="trailing" constant="16" id="exp-ac-114"/>
+                                    <constraint firstAttribute="bottom" secondItem="exp-7b-111" secondAttribute="bottom" constant="8" id="exp-bc-115"/>
+                                    <constraint firstItem="exp-7b-111" firstAttribute="width" secondItem="exp-6b-110" secondAttribute="width" constant="-32" id="exp-cc-116"/>
+                                    <constraint firstItem="gPx-5N-LST" firstAttribute="leading" secondItem="sdu-o3-bNj" secondAttribute="leading" id="gxa-F5-pc5"/>
+                                    <constraint firstItem="exp-7b-111" firstAttribute="top" secondItem="qbY-4Q-FGu" secondAttribute="bottom" constant="5" id="oAu-Z9-aDl"/>
+                                    <constraint firstItem="exp-oa-013" firstAttribute="top" secondItem="exp-6b-110" secondAttribute="top" constant="10" id="pmt-v6-xlT"/>
+                                    <constraint firstAttribute="trailing" secondItem="qbY-4Q-FGu" secondAttribute="trailing" id="yhG-rV-Fwc"/>
+                                </constraints>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-dc-117">
-                                <rect key="frame" x="0.0" y="0.0" width="361" height="58"/>
+                                <rect key="frame" x="16" y="654" width="361" height="58"/>
                                 <color key="backgroundColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="exp-ec-118"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="18"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="  Save to Photos">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="exp-ec-118"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="29"/></userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="29"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="saveTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-fc-119"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exp-gc-120">
-                                <rect key="frame" x="0.0" y="0.0" width="361" height="54"/>
+                                <rect key="frame" x="16" y="722" width="361" height="54"/>
                                 <color key="backgroundColor" name="Surface Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="exp-hc-121"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Figtree-Bold" family="Figtree" pointSize="17"/>
                                 <color key="tintColor" name="AccentColor"/>
                                 <state key="normal" title="  Share">
                                     <color key="titleColor" name="AccentColor"/>
                                 </state>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="exp-hc-121"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius"><real key="value" value="27"/></userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="27"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="shareTapped:" destination="exp-ba-001" eventType="touchUpInside" id="exp-ic-122"/>
@@ -1130,50 +1374,12 @@
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="exp-ea-004" firstAttribute="top" secondItem="exp-da-003" secondAttribute="top" constant="8" id="exp-ja-009"/>
-                            <constraint firstItem="exp-ea-004" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-ka-010"/>
-                            <constraint firstItem="exp-ia-008" firstAttribute="centerX" secondItem="exp-ca-002" secondAttribute="centerX" id="exp-ma-011"/>
-                            <constraint firstItem="exp-ia-008" firstAttribute="centerY" secondItem="exp-ea-004" secondAttribute="centerY" id="exp-na-012"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="centerX" secondItem="exp-oa-013" secondAttribute="centerX" id="exp-sa-017"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="centerY" secondItem="exp-oa-013" secondAttribute="centerY" id="exp-ta-018"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="height" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="height" id="exp-ua-019"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="width" relation="lessThanOrEqual" secondItem="exp-oa-013" secondAttribute="width" id="exp-va-020"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="height" secondItem="exp-oa-013" secondAttribute="height" priority="750" id="exp-wa-021"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="width" secondItem="exp-ra-016" secondAttribute="height" multiplier="3:4" id="exp-xa-022"/>
-                            <constraint firstItem="exp-qa-015" firstAttribute="top" secondItem="exp-ra-016" secondAttribute="top" id="exp-ya-023"/>
-                            <constraint firstItem="exp-qa-015" firstAttribute="leading" secondItem="exp-ra-016" secondAttribute="leading" id="exp-za-024"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="trailing" secondItem="exp-qa-015" secondAttribute="trailing" id="exp-Aa-025"/>
-                            <constraint firstItem="exp-ra-016" firstAttribute="bottom" secondItem="exp-qa-015" secondAttribute="bottom" id="exp-Ba-026"/>
-                            <constraint firstItem="exp-Ja-033" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ma-036"/>
-                            <constraint firstItem="exp-Ja-033" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Na-037"/>
-                            <constraint firstItem="exp-Ha-032" firstAttribute="trailing" secondItem="exp-Ja-033" secondAttribute="trailing" id="exp-Pa-038"/>
-                            <constraint firstItem="exp-Ha-032" firstAttribute="bottom" secondItem="exp-Ja-033" secondAttribute="bottom" id="exp-Qa-039"/>
-                            <constraint firstItem="exp-Ka-034" firstAttribute="top" secondItem="exp-Ha-032" secondAttribute="top" id="exp-Ra-040"/>
-                            <constraint firstItem="exp-Ka-034" firstAttribute="leading" secondItem="exp-Ha-032" secondAttribute="leading" id="exp-Sa-041"/>
-                            <constraint firstItem="exp-Ha-032" firstAttribute="trailing" secondItem="exp-Ka-034" secondAttribute="trailing" id="exp-Ta-042"/>
-                            <constraint firstItem="exp-Ha-032" firstAttribute="bottom" secondItem="exp-Ka-034" secondAttribute="bottom" id="exp-Ua-043"/>
-                            <constraint firstItem="exp-Wa-045" firstAttribute="top" secondItem="exp-Va-044" secondAttribute="top" constant="12" id="exp-xb-079"/>
-                            <constraint firstItem="exp-Wa-045" firstAttribute="leading" secondItem="exp-Va-044" secondAttribute="leading" constant="18" id="exp-yb-080"/>
-                            <constraint firstItem="exp-Va-044" firstAttribute="trailing" secondItem="exp-Wa-045" secondAttribute="trailing" constant="14" id="exp-zb-081"/>
-                            <constraint firstItem="exp-Va-044" firstAttribute="bottom" secondItem="exp-Wa-045" secondAttribute="bottom" constant="14" id="exp-Ab-082"/>
-                            <constraint firstItem="exp-Kb-091" firstAttribute="leading" secondItem="exp-Hb-089" secondAttribute="leading" constant="10" id="exp-Lb-092"/>
-                            <constraint firstItem="exp-Hb-089" firstAttribute="trailing" secondItem="exp-Kb-091" secondAttribute="trailing" constant="10" id="exp-Mb-093"/>
-                            <constraint firstItem="exp-Kb-091" firstAttribute="centerY" secondItem="exp-Hb-089" secondAttribute="centerY" id="exp-Nb-094"/>
-                            <constraint firstItem="exp-Db-085" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" constant="11" id="exp-Ub-100"/>
-                            <constraint firstItem="exp-Db-085" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" constant="18" id="exp-Vb-101"/>
-                            <constraint firstItem="exp-Cb-084" firstAttribute="trailing" secondItem="exp-Db-085" secondAttribute="trailing" constant="14" id="exp-Wb-102"/>
-                            <constraint firstItem="exp-Cb-084" firstAttribute="bottom" secondItem="exp-Db-085" secondAttribute="bottom" constant="11" id="exp-Xb-103"/>
-                            <constraint firstItem="exp-Sb-098" firstAttribute="top" secondItem="exp-Cb-084" secondAttribute="top" id="exp-Yb-104"/>
-                            <constraint firstItem="exp-Sb-098" firstAttribute="leading" secondItem="exp-Cb-084" secondAttribute="leading" id="exp-Zb-105"/>
-                            <constraint firstItem="exp-Cb-084" firstAttribute="trailing" secondItem="exp-Sb-098" secondAttribute="trailing" id="exp-2b-106"/>
-                            <constraint firstItem="exp-Cb-084" firstAttribute="bottom" secondItem="exp-Sb-098" secondAttribute="bottom" id="exp-3b-107"/>
-                            <constraint firstItem="exp-7b-111" firstAttribute="top" secondItem="exp-6b-110" secondAttribute="top" constant="8" id="exp-8b-112"/>
-                            <constraint firstItem="exp-7b-111" firstAttribute="leading" secondItem="exp-6b-110" secondAttribute="leading" constant="16" id="exp-9b-113"/>
-                            <constraint firstItem="exp-6b-110" firstAttribute="trailing" secondItem="exp-7b-111" secondAttribute="trailing" constant="16" id="exp-ac-114"/>
-                            <constraint firstItem="exp-6b-110" firstAttribute="bottom" secondItem="exp-7b-111" secondAttribute="bottom" constant="8" id="exp-bc-115"/>
-                            <constraint firstItem="exp-7b-111" firstAttribute="width" secondItem="exp-6b-110" secondAttribute="width" constant="-32" id="exp-cc-116"/>
                             <constraint firstItem="exp-6b-110" firstAttribute="top" secondItem="exp-ea-004" secondAttribute="bottom" constant="8" id="exp-jc-123"/>
+                            <constraint firstItem="exp-ea-004" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-ka-010"/>
                             <constraint firstItem="exp-6b-110" firstAttribute="leading" secondItem="exp-ca-002" secondAttribute="leading" id="exp-kc-124"/>
-                            <constraint firstItem="exp-ca-002" firstAttribute="trailing" secondItem="exp-6b-110" secondAttribute="trailing" id="exp-mc-125"/>
+                            <constraint firstItem="exp-ia-008" firstAttribute="centerX" secondItem="exp-ca-002" secondAttribute="centerX" id="exp-ma-011"/>
+                            <constraint firstAttribute="trailing" secondItem="exp-6b-110" secondAttribute="trailing" id="exp-mc-125"/>
+                            <constraint firstItem="exp-ia-008" firstAttribute="centerY" secondItem="exp-ea-004" secondAttribute="centerY" id="exp-na-012"/>
                             <constraint firstItem="exp-dc-117" firstAttribute="top" secondItem="exp-6b-110" secondAttribute="bottom" constant="12" id="exp-nc-126"/>
                             <constraint firstItem="exp-dc-117" firstAttribute="leading" secondItem="exp-da-003" secondAttribute="leading" constant="16" id="exp-oc-127"/>
                             <constraint firstItem="exp-da-003" firstAttribute="trailing" secondItem="exp-dc-117" secondAttribute="trailing" constant="16" id="exp-pc-128"/>
@@ -1184,42 +1390,46 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="adsBase" destination="8r9-5E-EfZ" id="zKg-09-cj9"/>
                         <outlet property="backButton" destination="exp-ea-004" id="exp-uc-133"/>
-                        <outlet property="scrollView" destination="exp-6b-110" id="exp-vc-134"/>
-                        <outlet property="contentStack" destination="exp-7b-111" id="exp-wc-135"/>
-                        <outlet property="checker" destination="exp-qa-015" id="exp-xc-136"/>
-                        <outlet property="previewView" destination="exp-ra-016" id="exp-yc-137"/>
-                        <outlet property="previewAspect" destination="exp-xa-022" id="exp-zc-138"/>
-                        <outlet property="fileLabel" destination="exp-Ca-027" id="exp-Ac-139"/>
-                        <outlet property="sizeLabel" destination="exp-Da-028" id="exp-Bc-140"/>
-                        <outlet property="scopeControl" destination="exp-Ea-029" id="exp-Cc-141"/>
-                        <outlet property="limitView" destination="exp-Ha-032" id="exp-Dc-142"/>
-                        <outlet property="limitLabel" destination="exp-Ja-033" id="exp-Ec-143"/>
-                        <outlet property="optionsView" destination="exp-Va-044" id="exp-Fc-144"/>
-                        <outlet property="formatControl" destination="exp-Ya-047" id="exp-Gc-145"/>
-                        <outlet property="sizeSeparator" destination="exp-6a-053" id="exp-Hc-146"/>
-                        <outlet property="sizeRow" destination="exp-8a-055" id="exp-Jc-147"/>
-                        <outlet property="sizeButton" destination="exp-9a-056" id="exp-Kc-148"/>
-                        <outlet property="backgroundSeparator" destination="exp-db-060" id="exp-Lc-149"/>
-                        <outlet property="backgroundRow" destination="exp-fb-062" id="exp-Mc-150"/>
                         <outlet property="backgroundButton" destination="exp-gb-063" id="exp-Nc-151"/>
-                        <outlet property="qualityView" destination="exp-nb-069" id="exp-Pc-152"/>
-                        <outlet property="qualityValueLabel" destination="exp-pb-071" id="exp-Qc-153"/>
-                        <outlet property="qualitySlider" destination="exp-sb-074" id="exp-Rc-154"/>
-                        <outlet property="noteLabel" destination="exp-Bb-083" id="exp-Sc-155"/>
-                        <outlet property="hdView" destination="exp-Cb-084" id="exp-Tc-156"/>
+                        <outlet property="backgroundRow" destination="exp-fb-062" id="exp-Mc-150"/>
+                        <outlet property="backgroundSeparator" destination="exp-db-060" id="exp-Lc-149"/>
+                        <outlet property="bannerView" destination="sdu-o3-bNj" id="Mig-vN-Gcj"/>
+                        <outlet property="checker" destination="exp-qa-015" id="exp-xc-136"/>
+                        <outlet property="contentStack" destination="exp-7b-111" id="exp-wc-135"/>
+                        <outlet property="fileLabel" destination="exp-Ca-027" id="exp-Ac-139"/>
+                        <outlet property="formatControl" destination="exp-Ya-047" id="exp-Gc-145"/>
                         <outlet property="hdButton" destination="exp-Sb-098" id="exp-Uc-157"/>
-                        <outlet property="hdSubtitle" destination="exp-Fb-087" id="exp-Vc-158"/>
-                        <outlet property="proBadge" destination="exp-Hb-089" id="exp-Wc-159"/>
                         <outlet property="hdChevron" destination="exp-Pb-095" id="exp-Xc-160"/>
+                        <outlet property="hdSubtitle" destination="exp-Fb-087" id="exp-Vc-158"/>
+                        <outlet property="hdView" destination="exp-Cb-084" id="exp-Tc-156"/>
+                        <outlet property="limitLabel" destination="exp-Ja-033" id="exp-Ec-143"/>
+                        <outlet property="limitView" destination="exp-Ha-032" id="exp-Dc-142"/>
+                        <outlet property="lodingAds" destination="gPx-5N-LST" id="ETZ-5R-8oG"/>
+                        <outlet property="noteLabel" destination="exp-Bb-083" id="exp-Sc-155"/>
+                        <outlet property="optionsView" destination="exp-Va-044" id="exp-Fc-144"/>
+                        <outlet property="previewAspect" destination="exp-xa-022" id="exp-zc-138"/>
+                        <outlet property="previewView" destination="exp-ra-016" id="exp-yc-137"/>
+                        <outlet property="proBadge" destination="exp-Hb-089" id="exp-Wc-159"/>
                         <outlet property="projectButton" destination="exp-4b-108" id="exp-Yc-161"/>
+                        <outlet property="qualitySlider" destination="exp-sb-074" id="exp-Rc-154"/>
+                        <outlet property="qualityValueLabel" destination="exp-pb-071" id="exp-Qc-153"/>
+                        <outlet property="qualityView" destination="exp-nb-069" id="exp-Pc-152"/>
                         <outlet property="saveButton" destination="exp-dc-117" id="exp-Zc-162"/>
+                        <outlet property="scopeControl" destination="exp-Ea-029" id="exp-Cc-141"/>
+                        <outlet property="scrollView" destination="exp-6b-110" id="exp-vc-134"/>
                         <outlet property="shareButton" destination="exp-gc-120" id="exp-2c-163"/>
+                        <outlet property="sizeButton" destination="exp-9a-056" id="exp-Kc-148"/>
+                        <outlet property="sizeLabel" destination="exp-Da-028" id="exp-Bc-140"/>
+                        <outlet property="sizeRow" destination="exp-8a-055" id="exp-Jc-147"/>
+                        <outlet property="sizeSeparator" destination="exp-6a-053" id="exp-Hc-146"/>
+                        <outlet property="veBanner" destination="21S-3g-CoA" id="UB8-fd-qQU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="exp-4c-165" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2000" y="0.0"/>
+            <point key="canvasLocation" x="2467.93893129771" y="0.0"/>
         </scene>
     </scenes>
     <resources>
@@ -1230,7 +1440,7 @@
             <color red="0.96078431372549022" green="0.98039215686274506" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Badge Color">
-            <color red="0.851" green="0.925" blue="1.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.85098039215686272" green="0.92549019607843142" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Border Color">
             <color red="0.86274509803921573" green="0.9137254901960784" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1239,7 +1449,7 @@
             <color red="0.78823529411764703" green="0.86274509803921573" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Link Color">
-            <color red="0.043" green="0.369" blue="0.843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.36862745098039218" blue="0.84313725490196079" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="PrimaryText">
             <color red="0.058823529411764705" green="0.10980392156862745" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

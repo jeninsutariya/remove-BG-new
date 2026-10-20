@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import AppTrackingTransparency
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        requestTrackingPermission()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -42,6 +43,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Re-verify an active subscription (expiry, refund, renewal). Not for free users: without
         // a receipt verification would ask them to sign in to the App Store.
         if UserDefaults.isPremiumUser { PurchaseConnector.shared.checkPremiumStatus() }
+        guard let appData = appData else {
+            return
+        }
+        
+        let appopen = appData.isShowAppOpenAds ?? 0
+        
+        if appopen == 1 {
+            
+            guard let visibleVC = (UIApplication.shared.delegate as? AppDelegate)?.visibleViewController else {
+                return
+            }
+            
+            if !(visibleVC is SplashVC) &&
+                !(visibleVC is ProUpgradeVC) {
+                AppOpenAdManager.shared.showAdIfAvailable()
+            }
+        }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -49,7 +67,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    func requestTrackingPermission() {
+       if #available(iOS 14, *) {
+           ATTrackingManager.requestTrackingAuthorization { status in
+               switch status {
+               case .authorized:
+                   print("✅ Tracking authorized")
+               case .denied:
+                   print("❌ Tracking denied")
+               case .restricted:
+                   print("🚫 Tracking restricted")
+               case .notDetermined:
+                   print("⚠️ Tracking not determined")
+               @unknown default:
+                   break
+               }
+           }
+       }
+   }
 
 }
 
