@@ -7,7 +7,7 @@
 //    background applied → JPEG at the quality's compression. The Export screen can force PNG/JPG.
 //  • Each item's Shadow / Resize edits are rendered by the same compositor as the preview.
 //  • Free users: the ic_watermark asset is drawn once onto each final, fully composed image
-//    right before it is encoded (ExportWatermark). Project files are never watermarked.
+//    (bottom-left corner) right before it is encoded (ExportWatermark). Project files are never watermarked.
 //
 
 import UIKit
@@ -143,15 +143,15 @@ final class ImageExportService {
     }
 }
 
-/// The free-user watermark: the `ic_watermark` asset, centred near the bottom of a final export
+/// The free-user watermark: the `ic_watermark` asset, in the bottom-left corner of a final export
 /// image. Sized from the image's own dimensions (aspect ratio and transparency of the asset kept).
 nonisolated enum ExportWatermark {
 
     /// Watermark width as a share of the image width…
-    static let widthRatio: CGFloat = 0.2
+    static let widthRatio: CGFloat = 0.1
     /// …but never taller than this share of the image height (wide images).
-    static let maxHeightRatio: CGFloat = 0.14
-    /// Gap to the bottom edge as a share of the image's shorter side.
+    static let maxHeightRatio: CGFloat = 0.08
+    /// Gap to the left and bottom edges as a share of the image's shorter side.
     static let bottomPaddingRatio: CGFloat = 0.03
 
     /// The watermark for the current user, nil for premium users (`UserDefaults.isPremiumUser`).
@@ -181,7 +181,8 @@ nonisolated enum ExportWatermark {
             width = height / aspect
         }
         let padding = min(imageSize.width, imageSize.height) * bottomPaddingRatio
-        return CGRect(x: ((imageSize.width - width) / 2).rounded(), y: (imageSize.height - padding - height).rounded(),
+        // Bottom-left corner, the same gap from both edges.
+        return CGRect(x: padding.rounded(), y: (imageSize.height - padding - height).rounded(),
                       width: width.rounded(), height: height.rounded())
     }
 
