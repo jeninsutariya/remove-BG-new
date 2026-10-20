@@ -641,6 +641,20 @@ class ExportVC: UIViewController {
                 do {
                     guard let self else { return }
                     let count: Int
+                    if !ImageExportService.saveToPhotosEnabled {
+                        // Settings › Save to Photos is off: keep the files in the app's folder (Files app).
+                        let files = try await self.renderFiles { value in hud.update(progress: value * 0.8) }
+                        hud.update(progress: 0.9, message: "Saving to Files…")
+                        count = try await ImageExportService.shared.saveToAppFolder(files)
+                        if count > 0 { viewModel.recordExport(quality: self.quality) }
+                        hud.dismiss()
+                        if count > 0 {
+                            if self.isBulk { PaywallManager.shared.recordBulkExport(itemIDs: items.map(\.id)) }
+                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            showToast(message: "Saved to Files › \(appName ?? "app") folder")
+                        }
+                        return
+                    }
                     if self.isTextBehind {
                         let output = try await self.renderTextBehind()
                         hud.update(progress: 0.7, message: "Saving to Photos…")

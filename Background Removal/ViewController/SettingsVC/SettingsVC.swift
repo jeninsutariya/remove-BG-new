@@ -208,7 +208,9 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
         case .pro?:
             cell.setPro()
         case .toggle?:
-            cell.setSwitch()
+            cell.setSwitch(isOn: ImageExportService.saveToPhotosEnabled) { isOn in
+                ImageExportService.saveToPhotosEnabled = isOn
+            }
         case .value?:
             cell.setText("PNG")
         case .theme?:

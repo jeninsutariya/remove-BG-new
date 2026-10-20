@@ -46,6 +46,45 @@ final class ImageExportService {
     /// Prevents duplicate saves from repeated taps.
     private(set) var isBusy = false
 
+    private static let saveToPhotosKey = "saveToPhotosEnabled"
+
+    /// Settings › Save to Photos. On (default): Save goes to the photo library.
+    /// Off: Save goes to the app's folder in the Files app.
+    static var saveToPhotosEnabled: Bool {
+        get { UserDefaults.standard.object(forKey: saveToPhotosKey) as? Bool ?? true }
+        set { UserDefaults.standard.set(newValue, forKey: saveToPhotosKey) }
+    }
+
+    /// Writes the files into the app's Documents folder (shown in Files › On My iPhone › app name).
+    /// Existing files are never overwritten. Returns the number of files written.
+    func saveToAppFolder(_ files: [(name: String, data: Data)]) async throws -> Int {
+        guard !isBusy else { return 0 }
+        isBusy = true
+        defer { isBusy = false }
+        return try await Task.detached(priority: .userInitiated) { () -> Int in
+            let fileManager = FileManager.default
+            guard let folder = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                throw ImageExportError.saveFailed("The app folder is unavailable.")
+            }
+            do {
+                for file in files {
+                    let base = (file.name as NSString).deletingPathExtension
+                    let ext = (file.name as NSString).pathExtension
+                    var url = folder.appendingPathComponent(file.name)
+                    var counter = 2
+                    while fileManager.fileExists(atPath: url.path) {
+                        url = folder.appendingPathComponent("\(base)_\(counter).\(ext)")
+                        counter += 1
+                    }
+                    try file.data.write(to: url, options: .atomic)
+                }
+            } catch {
+                throw ImageExportError.saveFailed(error.localizedDescription)
+            }
+            return files.count
+        }.value
+    }
+
     /// Renders completed items one at a time (bounded memory), reporting progress 0…1.
     func renderOutputs(for items: [BackgroundRemovalItem], in viewModel: BackgroundRemovalViewModel,
                        quality: ExportQuality, options: ExportOptions = ExportOptions(),

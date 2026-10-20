@@ -69,12 +69,25 @@ class SettingsTVCCell: UITableViewCell {
         self.vwPro.isHidden = true
     }
     
-    func setSwitch(){
+    /// Called when the user flips the row's switch.
+    var onSwitchChanged: ((Bool) -> Void)?
+
+    func setSwitch(isOn: Bool = true, onChange: ((Bool) -> Void)? = nil){
         self.vwAppaerance.isHidden = true
         self.vwNextArrow.isHidden = true
         self.vwSwitch.isHidden = false
         self.vwText.isHidden = true
         self.vwPro.isHidden = true
+        // The switch has no outlet in the xib, so it is found inside its container.
+        guard let toggle = vwSwitch.subviews.compactMap({ $0 as? UISwitch }).first else { return }
+        toggle.isOn = isOn
+        onSwitchChanged = onChange
+        toggle.removeTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+        toggle.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+    }
+
+    @objc private func switchChanged(_ sender: UISwitch) {
+        onSwitchChanged?(sender.isOn)
     }
     func setText(_ text: String){
         self.vwAppaerance.isHidden = true
