@@ -23,10 +23,33 @@ class SearchProjectTblCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setData(_ data: SearchProject){
-        self.lblTitle.text = data.title
-        let type = data.format.rawValue
-        self.lblTypes.text = "\(data.dateText) · \(type.uppercased())"
+    /// Project shown by this cell (async thumbnail loads check it).
+    var representedProjectID: UUID?
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        representedProjectID = nil
+        imgProjectthum.image = UIImage(named: "Remove BG Image")
     }
-    
+
+    func setData(_ project: BackgroundRemovalProject) {
+        representedProjectID = project.id
+        lblTitle.text = project.name
+        lblTypes.text = project.subtitle
+        guard let item = project.coverItem else { return }
+        let projectID = project.id
+        let thumbnail = project.thumbnailFileName
+        let fallback = item.foregroundFileName ?? item.originalFileName
+        Task { [weak self] in
+            let image = await Task.detached(priority: .utility) { () -> UIImage? in
+                let storage = ProjectStorageService.shared
+                if let thumbnail, let image = storage.loadImage(thumbnail, projectID: projectID, maxPixel: 200) {
+                    return image
+                }
+                return storage.loadImage(fallback, projectID: projectID, maxPixel: 200)
+            }.value
+            guard let self, self.representedProjectID == projectID else { return }
+            self.imgProjectthum.image = image ?? UIImage(named: "Remove BG Image")
+        }
+    }
 }

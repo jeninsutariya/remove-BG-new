@@ -175,7 +175,7 @@ func showAlert(title: String = "Alert", msg: String = "", okayTitle: String = "O
         doneAction?()
     }
     sheetVC.btnCancel.isHidden = cancelTitle == ""
-    sheetVC.btnCancel.isHidden = okayTitle == ""
+    sheetVC.btnOkey.isHidden = okayTitle == ""
     DispatchQueue.main.async {
         showImageSourcePicker(from: topMostViewController(),vc: sheetVC,contentHeight: contentHeight)
     }

@@ -9,23 +9,6 @@ import UIKit
 import UIView_Shimmer
 import GoogleMobileAds
 
-enum ProjectFormat: String {
-    case png = "PNG"
-    case jpg = "JPG"
-}
-
-struct SearchProject {
-    let id: Int
-    let title: String
-    let dateText: String
-    let format: ProjectFormat
-    let imageName: String
-    
-    /// Subtitle shown under the title, e.g. "Today · PNG"
-    var subtitle: String {
-        return "\(dateText) · \(format.rawValue)"
-    }
-}
 class SearchVC: UIViewController {
     @IBOutlet weak var veBanner: UIView!
     @IBOutlet weak var adsBase: AdsBaseView!
@@ -47,27 +30,39 @@ class SearchVC: UIViewController {
     @IBOutlet weak var vwSearchBG: UIView!
     @IBOutlet weak var txtSearch: UITextField!
      var recentSearches: [String] = []
-     var filteredProjects: [SearchProject] = []
-     let projects: [SearchProject] = [
-        SearchProject(id: 1,  title: "Portrait cutout",      dateText: "Today",     format: .png, imageName: "dummy_portrait_cutout"),
-        SearchProject(id: 2,  title: "Portrait on mint",     dateText: "Mon",       format: .jpg, imageName: "dummy_portrait_mint"),
-        SearchProject(id: 3,  title: "Portrait in denim",    dateText: "Mon",       format: .png, imageName: "dummy_portrait_denim"),
-        SearchProject(id: 4,  title: "Summer beach",         dateText: "Today",     format: .jpg, imageName: "dummy_summer_beach"),
-        SearchProject(id: 5,  title: "Summer sale banner",   dateText: "Yesterday", format: .png, imageName: "dummy_summer_sale"),
-        SearchProject(id: 6,  title: "Peach product shot",   dateText: "Sun",       format: .png, imageName: "dummy_peach_product"),
-        SearchProject(id: 7,  title: "Peach background",     dateText: "Sat",       format: .jpg, imageName: "dummy_peach_bg"),
-        SearchProject(id: 8,  title: "Hello poster",         dateText: "Fri",       format: .png, imageName: "dummy_hello_poster"),
-        SearchProject(id: 9,  title: "Sneaker cutout",       dateText: "Thu",       format: .png, imageName: "dummy_sneaker"),
-        SearchProject(id: 10, title: "Profile photo",        dateText: "Wed",       format: .jpg, imageName: "dummy_profile"),
-        SearchProject(id: 11, title: "Coffee mug mockup",    dateText: "2 Oct",     format: .png, imageName: "dummy_mug"),
-        SearchProject(id: 12, title: "Passport photo",       dateText: "28 Sep",    format: .jpg, imageName: "dummy_passport")
-    ]
+     var filteredProjects: [BackgroundRemovalProject] = []
+    /// Saved projects (same source as ProjectsVC), searched by name.
+    var projects: [BackgroundRemovalProject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setCollectionView()
         setTableView()
         bannerAd()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadProjects()
+    }
+    /// Loads the saved projects and refreshes any search already typed.
+    func reloadProjects() {
+        Task { [weak self] in
+            let loaded = await Task.detached(priority: .utility) {
+                ProjectStorageService.shared.loadAllProjects()
+            }.value
+            guard let self else { return }
+            self.projects = loaded
+            if !self.isSearchTextEmpty { self.performSearch(self.txtSearch.text ?? "") }
+        }
+    }
+    func openProject(_ project: BackgroundRemovalProject) {
+        guard let latest = ProjectStorageService.shared.loadProject(id: project.id) else {
+            showToast(message: "This project is no longer available")
+            reloadProjects()
+            return
+        }
+        let vc = UIViewController.editorScreen(for: BackgroundRemovalViewModel(project: latest))
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -192,12 +187,12 @@ class SearchVC: UIViewController {
         return (txtSearch.text ?? "").isEmpty
     }
     
-     func search(_ text: String) -> [SearchProject] {
+     func search(_ text: String) -> [BackgroundRemovalProject] {
         let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else { return [] }
 
         return projects.filter {
-            $0.title.range(of: query, options: .caseInsensitive) != nil
+            $0.name.range(of: query, options: .caseInsensitive) != nil
         }
     }
 
@@ -334,8 +329,16 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
         cell.setData(self.filteredProjects[indexPath.row])
         return cell
     }
-    
-    
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let project = self.filteredProjects[indexPath.row]
+        addRecentSearch(txtSearch.text ?? "")
+        clvRecent.reloadData()
+        adsManager.showInterstitial {
+            self.openProject(project)
+        }
+    }
 }
 extension SearchVC: BannerViewDelegate {
     

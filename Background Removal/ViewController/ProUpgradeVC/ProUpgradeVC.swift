@@ -144,6 +144,7 @@ class ProUpgradeVC: UIViewController {
             switch outcome {
             case .purchased:
                 showToast(message: "Welcome to Pro!")
+                PurchaseConnector.shared.switchRootViewController(animated: true)
                 self.dismiss(animated: true)
             case .cancelled:
                 break
