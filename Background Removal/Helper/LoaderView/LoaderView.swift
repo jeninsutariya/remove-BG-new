@@ -20,7 +20,7 @@ class LoaderView {
             .first { $0.isKeyWindow }
     }
     
-    func show(isAdsloader: Bool = false) {
+    func show(isTextloader: Bool = false, text: String? = nil) {
         guard let window = keyWindow else { return }
         
         // Prevent duplicate loaders
@@ -40,7 +40,7 @@ class LoaderView {
         
         // 3. Create a Square Container for the content
         let containerView = UIView()
-        containerView.backgroundColor = isAdsloader ? UIColor.black.withAlphaComponent(0.8) : .clear
+        containerView.backgroundColor = isTextloader ? AppColor.surfaceColor.withAlphaComponent(0.8) : .clear
         containerView.layer.cornerRadius = 15
         containerView.translatesAutoresizingMaskIntoConstraints = false
         loadingView.addSubview(containerView)
@@ -68,10 +68,10 @@ class LoaderView {
         ])
         
         // 6. Conditional Label for Ads
-        if isAdsloader {
+        if isTextloader {
             let loadingLabel = UILabel()
-            loadingLabel.text = "Ads Loading...\nPlease Wait"
-            loadingLabel.textColor = .white
+            loadingLabel.text = text
+            loadingLabel.textColor = AppColor.primaryText
             loadingLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
             loadingLabel.textAlignment = .center
             loadingLabel.numberOfLines = 0

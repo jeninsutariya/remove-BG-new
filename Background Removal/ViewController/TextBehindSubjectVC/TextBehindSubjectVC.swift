@@ -659,14 +659,14 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     }
     
     func openMaskBrush() {
-        let hud = ProgressHUD.show(in: view, message: "Preparing mask…")
+        LoaderView.shared.show(isTextloader: true, text: "Preparing mask…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         let id: UUID = itemID
         let settings = session.document.mask
         Task { [weak self] in
             let original = await viewModel.fullOriginal(for: id)
             let mask = await viewModel.subjectMask(for: id, settings: settings)
-            hud.dismiss()
+            LoaderView.shared.hide()
             guard let self else { return }
             guard let original, let mask else {
                 self.showMessage("Mask unavailable", "The subject mask couldn't be opened. Please try again.")
@@ -683,17 +683,17 @@ class TextBehindSubjectVC: UIViewController, TBPanelHost {
     }
     
     private func saveRefinedMask(_ mask: CGImage) {
-        let hud = ProgressHUD.show(in: view, message: "Saving mask…")
+        LoaderView.shared.show(isTextloader: true, text: "Saving mask…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         let id: UUID = itemID
         Task { [weak self] in
             do {
                 let name = try await viewModel.saveRefinedMask(mask, for: id)
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.session.change { $0.mask.refinedMaskFileName = name }
                 self?.activePanel?.refresh()
             } catch {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.showMessage("Couldn't save the mask", error.localizedDescription)
             }
         }
@@ -982,12 +982,12 @@ extension TextBehindSubjectVC: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         guard !results.isEmpty else { return }
-        let hud = ProgressHUD.show(in: view, message: "Adding background…")
+        LoaderView.shared.show(isTextloader: true, text: "Adding background…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         Task { [weak self] in
             let picked = await PhotoPickerLoader.load(results)
             guard let photo = picked.first else {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.showMessage("Couldn't add image", "The selected photo couldn't be read.")
                 return
             }
@@ -999,11 +999,11 @@ extension TextBehindSubjectVC: PHPickerViewControllerDelegate {
                 guard let image else { throw BackgroundRemovalError.invalidImage }
                 // Stored as a decorative background – background removal is not run on it.
                 let selection = try await viewModel.addCustomBackground(image)
-                hud.dismiss()
+                LoaderView.shared.hide()
                 guard let self, let fileName = selection.customFileName else { return }
                 (self.activePanel as? BackgroundPickerView)?.addCustomImage(fileName)
             } catch {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.showMessage("Couldn't add image", error.localizedDescription)
             }
         }

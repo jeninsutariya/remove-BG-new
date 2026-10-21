@@ -636,8 +636,8 @@ class ExportVC: UIViewController {
             let items = exportItems
             guard task == nil, !ImageExportService.shared.isBusy, isTextBehind || !items.isEmpty else { return }
             setBusy(true)
-            let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
-                                        (items.count > 1 ? "Saving \(items.count) images…" : "Saving…"))
+            LoaderView.shared.show(isTextloader: true, text: isTextBehind ? "Rendering…" :
+                                    (items.count > 1 ? "Saving \(items.count) images…" : "Saving…"))
             let viewModel: BackgroundRemovalViewModel = self.viewModel
             let options = self.options
             task = Task { [weak self] in
@@ -650,11 +650,10 @@ class ExportVC: UIViewController {
                     let count: Int
                     if !ImageExportService.saveToPhotosEnabled {
                         // Settings › Save to Photos is off: keep the files in the app's folder (Files app).
-                        let files = try await self.renderFiles { value in hud.update(progress: value * 0.8) }
-                        hud.update(progress: 0.9, message: "Saving to Files…")
+                        let files = try await self.renderFiles { _ in }
                         count = try await ImageExportService.shared.saveToAppFolder(files)
                         if count > 0 { viewModel.recordExport(quality: self.quality) }
-                        hud.dismiss()
+                        LoaderView.shared.hide()
                         if count > 0 {
                             if self.isBulk { PaywallManager.shared.recordBulkExport(itemIDs: items.map(\.id)) }
                             UINotificationFeedbackGenerator().notificationOccurred(.success)
@@ -664,29 +663,26 @@ class ExportVC: UIViewController {
                     }
                     if self.isTextBehind {
                         let output = try await self.renderTextBehind()
-                        hud.update(progress: 0.7, message: "Saving to Photos…")
                         try await ImageExportService.shared.savePhotoData(output.data, fileName: output.fileName)
                         viewModel.recordExport(quality: self.quality)
                         count = 1
                     } else {
                         count = try await ImageExportService.shared.saveToPhotos(items: items, in: viewModel,
-                                                                                 options: options) { value in
-                            hud.update(progress: value)
-                        }
+                                                                                 options: options) { _ in }
                     }
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                     if count > 0 {
                         if self.isBulk { PaywallManager.shared.recordBulkExport(itemIDs: items.map(\.id)) }
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
                         showToast(message: count > 1 ? "\(count) images saved to Photos" : "Saved to Photos")
                     }
                 } catch ImageExportError.photosAccessDenied {
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                     self?.showPhotosSettingsAlert(message: "Allow \"Add Photos Only\" access in Settings, or use Share › Save Image / Save to Files instead.")
                 } catch is CancellationError {
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                 } catch {
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                     self?.presentErrorAlert(title: "Couldn't save", message: error.localizedDescription,
                                             retry: { self?.save() })
                 }
@@ -699,8 +695,8 @@ class ExportVC: UIViewController {
             let items = exportItems
             guard task == nil, isTextBehind || !items.isEmpty else { return }
             setBusy(true)
-            let hud = ProgressHUD.show(in: view, message: isTextBehind ? "Rendering…" :
-                                        (items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…"))
+            LoaderView.shared.show(isTextloader: true, text: isTextBehind ? "Rendering…" :
+                                    (items.count > 1 ? "Preparing \(items.count) images…" : "Preparing…"))
             let viewModel: BackgroundRemovalViewModel = self.viewModel
             let quality = self.quality
             let zip = exportAll && !isTextBehind
@@ -711,7 +707,7 @@ class ExportVC: UIViewController {
                 }
                 do {
                     guard let self else { return }
-                    let files = try await self.renderFiles { value in hud.update(progress: value * 0.9) }
+                    let files = try await self.renderFiles { _ in }
                     let url: URL
                     if !zip, let file = files.first {
                         let name = file.name
@@ -720,7 +716,7 @@ class ExportVC: UIViewController {
                     } else {
                         url = try await Task.detached { try ZIPExportService.shared.createArchive(files: files) }.value
                     }
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                     viewModel.recordExport(quality: quality)
                     let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                     activity.popoverPresentationController?.sourceView = self.shareButton
@@ -733,9 +729,9 @@ class ExportVC: UIViewController {
                     }
                     self.present(activity, animated: true)
                 } catch is CancellationError {
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                 } catch {
-                    hud.dismiss()
+                    LoaderView.shared.hide()
                     self?.presentErrorAlert(title: "Export failed", message: error.localizedDescription,
                                             retry: { self?.share() })
                 }

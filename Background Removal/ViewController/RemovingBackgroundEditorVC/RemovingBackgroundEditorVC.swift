@@ -573,11 +573,11 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     private func openRefine() {
         guard let id = currentItemID else { return }
-        let hud = ProgressHUD.show(in: view, message: "Preparing…")
+        LoaderView.shared.show(isTextloader: true, text: "Preparing…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         Task { [weak self] in
             let inputs = await viewModel.refineInputs(for: id)
-            hud.dismiss()
+            LoaderView.shared.hide()
             guard let self else { return }
             guard let inputs else {
                 self.presentErrorAlert(title: "Refine unavailable", message: "This image couldn't be opened for refining.")
@@ -593,15 +593,15 @@ class RemovingBackgroundEditorVC: UIViewController {
 
     private func applyRefinedMask(_ mask: CGImage, original: UIImage, itemID: UUID) {
         guard let before = viewModel.snapshot(of: itemID) else { return }
-        let hud = ProgressHUD.show(in: view, message: "Applying…")
+        LoaderView.shared.show(isTextloader: true, text: "Applying…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         Task { [weak self] in
             do {
                 try await viewModel.applyRefinedMask(mask, original: original, for: itemID)
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.pushUndo(before)
             } catch {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.presentErrorAlert(title: "Couldn't apply", message: error.localizedDescription)
             }
         }
@@ -755,12 +755,12 @@ extension RemovingBackgroundEditorVC: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         guard !results.isEmpty else { return }
-        let hud = ProgressHUD.show(in: view, message: "Adding background…")
+        LoaderView.shared.show(isTextloader: true, text: "Adding background…")
         let viewModel: BackgroundRemovalViewModel = self.viewModel
         Task { [weak self] in
             let picked = await PhotoPickerLoader.load(results)
             guard let photo = picked.first else {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.presentErrorAlert(title: "Couldn't add image", message: "The selected photo couldn't be read.")
                 return
             }
@@ -771,11 +771,11 @@ extension RemovingBackgroundEditorVC: PHPickerViewControllerDelegate {
             do {
                 guard let image else { throw BackgroundRemovalError.invalidImage }
                 let selection = try await viewModel.addCustomBackground(image)
-                hud.dismiss()
+                LoaderView.shared.hide()
                 guard let self, let fileName = selection.customFileName else { return }
                 (self.activePanel as? BackgroundToolView)?.addCustomFile(fileName)
             } catch {
-                hud.dismiss()
+                LoaderView.shared.hide()
                 self?.presentErrorAlert(title: "Couldn't add image", message: error.localizedDescription)
             }
         }

@@ -60,7 +60,7 @@ class GoogleAdds: NSObject, FullScreenContentDelegate {
     
         
         if isLoaderShown {
-            LoaderView.shared.show(isAdsloader: true)
+            LoaderView.shared.show(isTextloader: true, text: "Ads Loading...\nPlease Wait")
         }
         
         let request = Request()
