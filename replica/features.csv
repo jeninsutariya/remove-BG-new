@@ -1,0 +1,47 @@
+feature,area,priority,original,clone,notes
+Breathe intro on first launch,onboarding,should,yes,no,S01; sources 9 10
+Goals quiz (multi-select),onboarding,must,yes,no,S02; drives Home rows
+Experience level question,onboarding,could,yes,no,S03
+Sign in with Apple,onboarding,must,yes,no,S04; Apple requires it if any other social login is offered
+Email sign up and log in,onboarding,should,yes,no,S04
+Use free content without an account,onboarding,should,yes,no,guess; check on device
+Paywall with yearly free trial and monthly plan,payments,must,yes,no,S05; StoreKit 2
+Restore purchases,payments,must,yes,no,S05 S19; App Review requires it
+Lifetime purchase,payments,could,yes,no,source 8
+Family plan,payments,could,yes,no,source 8; Apple Family Sharing can cover this
+Locked badge on premium content opens paywall,payments,must,yes,no,S08 to S11
+Home with daily session hero card,home,must,yes,no,S07; sources 1 11
+Personalised rows from goals,home,should,yes,no,S07; inferred
+Sleep tab with sleep stories,browse,must,yes,no,S08
+Meditate tab with topics,browse,must,yes,no,S09
+Music and soundscapes tab,browse,should,yes,no,S10
+Content detail with series episodes,browse,must,yes,no,S11
+Search,browse,should,yes,no,guess; not in sources
+Audio player with play pause skip and scrubber,player,must,yes,no,S12
+Background audio and lock screen controls,player,must,yes,no,S12; F02
+Mini player above the tab bar,player,should,yes,no,inferred
+Sleep timer for music and scenes,player,must,yes,no,source 3
+Background scene image and looping sound,scenes,must,yes,no,S14; source 3
+Scene sound keeps playing after the session for a set time,scenes,should,yes,no,source 3
+Guided breathing exercise,breathe,must,yes,no,S15; sources 1 11
+Session complete screen with streak,progress,must,yes,no,S13
+Daily streak,progress,must,yes,no,source 1
+Stats: mindful minutes and sessions,progress,must,yes,no,S17; source 2
+Listening history,progress,should,yes,no,source 2
+Mood check-in with tags and note,check-in,must,yes,no,S16; sources 5 11
+Sleep and gratitude check-ins,check-in,could,yes,no,source 5
+Check-in history,check-in,should,yes,no,S18
+Favorites,library,must,yes,no,source 2
+Playlists (not for breathing timed or soundscapes),library,should,yes,no,source 2
+Download for offline,library,must,yes,no,F07; source 13
+Daily and bedtime reminders,notifications,must,yes,no,S06; source 5
+Mood and gratitude reminders,notifications,should,yes,no,source 5
+Write mindful minutes to Apple Health (guided sessions only),integrations,must,yes,no,source 4
+Delete account in the app,account,must,yes,no,S19; Apple requires it
+Apple Watch app,platforms,could,yes,no,source 13; later
+Calm audio library (meditations stories music scenes),content,must,yes,skip,licensed content Calm owns; make or license your own
+Celebrity narrators,content,could,yes,skip,talent deals not a feature
+Masterclasses,content,could,yes,skip,talent deals; out of first version
+Kids content,content,could,yes,skip,extra App Store Kids rules; later
+Calm Health and Calm Business,partners,could,yes,skip,partner and employer deals not the product
+Android and smart speaker apps,platforms,could,yes,skip,iOS only for now
